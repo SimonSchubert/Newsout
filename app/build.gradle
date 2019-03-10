@@ -1,0 +1,143 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-multiplatform'
+apply plugin: 'kotlinx-serialization'
+apply plugin: 'com.wiredforcode.spawn'
+apply plugin: 'com.squareup.sqldelight'
+
+
+sqldelight {
+    SqlDelightDatabase {
+        packageName = "com.inspiredandroid.purenews"
+        sourceFolders = ["sqldelight"]
+        schemaOutputDirectory = file("build/dbs")
+    }
+}
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.inspiredandroid.purenews"
+        minSdkVersion 22
+        targetSdkVersion 28
+        versionCode 1
+        versionName "0.1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/*.kotlin_module'
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+}
+
+kotlin {
+    targets {
+        fromPreset(presets.android, 'android')
+        // fromPreset(presets.iosX64, 'iosX64')
+        // fromPreset(presets.iosArm64, 'iosArm64')
+
+        /*
+        configure([iosX64, iosArm64]) {
+            compilations.main.outputKinds('FRAMEWORK')
+        }
+        */
+    }
+    sourceSets {
+        // iosMain
+        configure([androidMain]) {
+            dependsOn commonMain
+        }
+        /*
+        configure([iosX64Main, iosArm64Main]) {
+            dependsOn iosMain
+        }
+        */
+    }
+}
+
+repositories {
+    maven { url "https://dl.bintray.com/kotlin/kotlinx" }
+    maven { url "https://dl.bintray.com/kotlin/ktor" }
+    maven { url "https://kotlin.bintray.com/kotlinx" }
+    mavenCentral()
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+
+androidExtensions {
+    experimental = true
+}
+
+dependencies {
+    commonMainImplementation "io.ktor:ktor-client-core:1.1.3"
+    commonMainImplementation "io.ktor:ktor-client-auth:1.1.3"
+    commonMainImplementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.10.0"
+    commonMainImplementation 'org.jetbrains.kotlin:kotlin-stdlib'
+
+    androidMainImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    androidMainImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1"
+    androidMainImplementation 'androidx.appcompat:appcompat:1.0.2'
+    androidMainImplementation 'androidx.core:core-ktx:1.0.1'
+    androidMainImplementation 'com.google.android.material:material:1.0.0'
+    androidMainImplementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    androidMainImplementation "io.ktor:ktor-client-android:1.1.3"
+    androidMainImplementation 'com.google.code.gson:gson:2.8.5'
+    androidMainImplementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.10.0"
+    androidMainImplementation "com.squareup.sqldelight:android-driver:1.1.1"
+    androidMainImplementation 'com.github.bumptech.glide:glide:3.7.0'
+
+    /*
+    iosMainImplementation "com.squareup.sqldelight:ios-driver:1.1.1"
+    iosMainImplementation "io.ktor:ktor-client-ios:1.1.3"
+    iosMainImplementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.10.0"
+    iosArm64MainImplementation "io.ktor:ktor-client-ios-iosarm64:1.1.3"
+    iosX64MainImplementation "io.ktor:ktor-client-ios-iosx64:1.1.3"
+    */
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+}
+
+task iosStartSimulator(type: Exec) {
+    workingDir '.'
+    executable "sh"
+    args "-c", 'open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app'
+}
+
+task iosShutdownSimulator(type: Exec) {
+    workingDir '.'
+    executable "sh"
+    args "-c", "xcrun simctl shutdown booted"
+}
+
+task iosBuildXcode(type: Exec, dependsOn: ['compileKotlinIosX64', iosStartSimulator]) {
+    workingDir file("client-mpp-ios.xcodeproj")
+    executable "sh"
+    args "-c", "xcrun xcodebuild -scheme client-mpp-ios -project . -configuration Debug -destination 'platform=iOS Simulator,name=iPhone X,OS=latest' -derivedDataPath build"
+}
+
+task iosInstallSimulator(type: Exec, dependsOn: [iosBuildXcode]) {
+    workingDir file(".")
+    executable "sh"
+
+    def appFolder = file("client-mpp-ios.xcodeproj/build/Build/Products/Debug-iphonesimulator/client-mpp-ios.app")
+    args "-c", "xcrun simctl install booted '${appFolder.absolutePath}'"
+}
+
+task iosLaunchSimulator(type: Exec, dependsOn: [iosInstallSimulator]) {
+    workingDir file("client-mpp-ios.xcodeproj")
+    executable "sh"
+    args "-c", "xcrun simctl launch booted com.inspiredandroid.purenews"
+}
