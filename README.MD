@@ -6,7 +6,7 @@ Android and iOS mobile client for Nextcloud news App. This project shares the bu
 
 The Android client is ready to use already but the iOS client needs some work to be done first.
 
-<img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/screen01.png" width="200"><img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/screen02.png" width="200"><img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/screen03.png" width="200"><img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/screen04.png" width="200">
+<img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/screen01.png" width="200"> <img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/screen02.png" width="200"> <img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/screen03.png" width="200"> <img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/screen04.png" width="200">
 
 # Features
 

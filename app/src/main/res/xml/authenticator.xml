@@ -1,5 +1,5 @@
 <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
-                       android:accountType="com.inspiredandroid.purenews"
+                       android:accountType="com.inspiredandroid.newsout"
                        android:icon="@drawable/ic_icons8_google_news"
                        android:smallIcon="@drawable/ic_icons8_google_news"
                        android:label="@string/app_name"/>

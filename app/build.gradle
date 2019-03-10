@@ -139,5 +139,5 @@ task iosInstallSimulator(type: Exec, dependsOn: [iosBuildXcode]) {
 task iosLaunchSimulator(type: Exec, dependsOn: [iosInstallSimulator]) {
     workingDir file("client-mpp-ios.xcodeproj")
     executable "sh"
-    args "-c", "xcrun simctl launch booted com.inspiredandroid.purenews"
+    args "-c", "xcrun simctl launch booted com.inspiredandroid.newsout"
 }
