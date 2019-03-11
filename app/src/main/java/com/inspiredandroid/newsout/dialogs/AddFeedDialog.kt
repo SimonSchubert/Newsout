@@ -16,9 +16,7 @@ class AddFeedDialog : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (activity is OnAddFeedInterface) {
-            callback = activity as OnAddFeedInterface
-        }
+        callback = activity as? OnAddFeedInterface
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

@@ -42,6 +42,24 @@
                     android:visibility="gone"
                     android:layout_gravity="center_horizontal"/>
 
+            <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="12dp"
+                    android:id="@+id/radioGroup">
+                <RadioButton
+                        android:text="Newsout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/newsoutBtn"
+                        android:checked="true"/>
+                <RadioButton
+                        android:text="Nextcloud"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/nextcloudBtn" android:layout_weight="1"/>
+            </RadioGroup>
+
             <AutoCompleteTextView
                     android:id="@+id/serverPathEt"
                     android:layout_width="match_parent"
@@ -51,7 +69,7 @@
                     android:maxLines="1"
                     android:text=""
                     android:background="@color/greyLight"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="12dp"
                     android:padding="12dp"
                     android:singleLine="true"/>
 
@@ -92,16 +110,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:padding="18dp"
-                    android:text="@string/action_sign_in"
+                    android:text="Login/Create"
                     android:textStyle="bold" android:layout_marginBottom="16dp"
-                    android:maxWidth="100dp" android:layout_gravity="center_horizontal"/>
-
-
-            <!--
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="You need to have the official Nextcloud News installed on your instance. You don't have a Nextcloud account, yet? It is the best thing you can do to your data."
-                      android:layout_marginTop="24dp" android:paddingLeft="16dp" android:paddingRight="16dp"/>
-            -->
+                    android:maxWidth="160dp" android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>
     </ScrollView>

@@ -14,7 +14,20 @@ import com.inspiredandroid.newsout.dialogs.AddFeedDialog
 import kotlinx.android.synthetic.main.activity_items.*
 import kotlinx.android.synthetic.main.content_feeds.*
 
-
+/* Copyright 2019 Simon Schubert
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener, OnAddFeedInterface {
 
     private val adapter by lazy {
@@ -38,11 +51,11 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
 
         fab.setOnClickListener { view ->
             if (type == 0L) {
-                ApplicationApi.markFeedAsRead(id) {
+                Api.markFeedAsRead(id) {
                     adapter.updateItems(it)
                 }
             } else {
-                ApplicationApi.markFolderAsRead(id) {
+                Api.markFolderAsRead(id) {
                     adapter.updateItems(it)
                 }
             }
@@ -59,20 +72,23 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
                 super.onScrolled(recyclerView, dx, dy)
 
                 val positions = layoutManager.findFirstVisibleItemPositions(null)
-                positions.forEach {
-                    val viewHolder = (recyclerView.findViewHolderForAdapterPosition(it) as ItemsAdapter.ViewHolder)
-                    if (viewHolder.isUndread) {
-                        adapter.markAsRead(it, viewHolder.id)
-                        Database.getItemQueries()?.markItemAsRead(viewHolder.id)
-                        Database.getFeedQueries()?.decreaseUnreadCount(viewHolder.feedId, viewHolder.isFolder.toLong())
-                        ApplicationApi.markAsRead(viewHolder.id)
+                positions.forEach { position ->
+                    val viewHolder = recyclerView.findViewHolderForAdapterPosition(position) as? ItemsAdapter.ViewHolder
+                    viewHolder?.let {
+                        if (viewHolder.isUndread) {
+                            adapter.markAsRead(position, viewHolder.id)
+                            Database.getItemQueries()?.markItemAsRead(viewHolder.id)
+                            Database.getFeedQueries()
+                                ?.decreaseUnreadCount(viewHolder.feedId, viewHolder.isFolder.toLong())
+                            Api.markAsRead(viewHolder.id)
+                        }
                     }
                 }
             }
         }
         recyclerView.addOnScrollListener(listener)
 
-        ApplicationApi.items(id, type) {
+        Api.items(id, type) {
             adapter.updateItems(it)
             swiperefresh?.isRefreshing = false
         }
@@ -97,7 +113,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     }
 
     override fun onRefresh() {
-        ApplicationApi.items(id, type) {
+        Api.items(id, type) {
             adapter.updateItems(it)
             swiperefresh?.isRefreshing = false
         }
@@ -105,8 +121,8 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
 
     override fun onAddFeed(url: String) {
         swiperefresh?.isRefreshing = true
-        ApplicationApi.createFeed(url, id) {
-            ApplicationApi.items(id, type) {
+        Api.createFeed(url, id) {
+            Api.items(id, type) {
                 adapter.updateItems(it)
                 swiperefresh?.isRefreshing = false
             }

@@ -7,7 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.inspiredandroid.newsout.ApplicationApi
+import com.inspiredandroid.newsout.Api
 import com.inspiredandroid.newsout.Database
 import com.inspiredandroid.newsout.R
 import com.inspiredandroid.newsout.adapters.FeedsAdapter
@@ -19,6 +19,20 @@ import com.inspiredandroid.newsout.dialogs.SettingsDialog
 import kotlinx.android.synthetic.main.activity_feeds.*
 import kotlinx.android.synthetic.main.content_feeds.*
 
+/* Copyright 2019 Simon Schubert
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 class FeedsActivity : AppCompatActivity(), OnListClickInterface, SwipeRefreshLayout.OnRefreshListener,
     OnSortingChangeInterface, OnAddFeedInterface {
 
@@ -29,7 +43,7 @@ class FeedsActivity : AppCompatActivity(), OnListClickInterface, SwipeRefreshLay
         setContentView(R.layout.activity_feeds)
 
         fab.setOnClickListener { view ->
-            ApplicationApi.markAllAsRead {
+            Api.markAllAsRead {
                 adapter.updateFeeds(it)
             }
         }
@@ -45,7 +59,7 @@ class FeedsActivity : AppCompatActivity(), OnListClickInterface, SwipeRefreshLay
         super.onResume()
 
         adapter.updateFeeds(Database.getFeeds())
-        ApplicationApi.feeds {
+        Api.feeds {
             adapter.updateFeeds(it)
             swiperefresh?.isRefreshing = false
         }
@@ -73,7 +87,7 @@ class FeedsActivity : AppCompatActivity(), OnListClickInterface, SwipeRefreshLay
     }
 
     override fun onRefresh() {
-        ApplicationApi.feeds {
+        Api.feeds {
             adapter.updateFeeds(it)
             swiperefresh?.isRefreshing = false
         }
@@ -89,7 +103,7 @@ class FeedsActivity : AppCompatActivity(), OnListClickInterface, SwipeRefreshLay
 
     override fun onAddFeed(url: String) {
         swiperefresh?.isRefreshing = true
-        ApplicationApi.createFeed(url, 0) {
+        Api.createFeed(url, 0) {
             adapter.updateFeeds(Database.getFeeds())
             swiperefresh?.isRefreshing = false
         }
