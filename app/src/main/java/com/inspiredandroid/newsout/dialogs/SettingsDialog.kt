@@ -63,8 +63,9 @@ class SettingsDialog : DialogFragment(), AdapterView.OnItemSelectedListener, Com
                 accountManager.removeAccountExplicitly(it)
             }
 
-            startActivity(Intent(context, LoginActivity::class.java))
+            Database.clear()
 
+            startActivity(Intent(context, LoginActivity::class.java))
             activity?.finish()
         }
 

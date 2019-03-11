@@ -1,7 +1,5 @@
 package com.inspiredandroid.newsout
 
-import com.inspiredandroid.newsout.SqlDelightDatabase
-
 /* Copyright 2019 Simon Schubert
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +19,7 @@ object Database {
     const val SORT_TITLE = 3L
 
     fun getFeedQueries(): FeedQueries? {
-        sqlDriver?.let {driver ->
+        sqlDriver?.let { driver ->
             val database = SqlDelightDatabase(driver)
             return database.feedQueries
         }
@@ -29,7 +27,7 @@ object Database {
     }
 
     fun getItemQueries(): ItemQueries? {
-        sqlDriver?.let {driver ->
+        sqlDriver?.let { driver ->
             val database = SqlDelightDatabase(driver)
             return database.itemQueries
         }
@@ -37,7 +35,7 @@ object Database {
     }
 
     fun getUserQueries(): UserQueries? {
-        sqlDriver?.let {driver ->
+        sqlDriver?.let { driver ->
             val database = SqlDelightDatabase(driver)
             return database.userQueries
         }
@@ -49,15 +47,15 @@ object Database {
         feedQueries?.let {
             val user = getUser()
             user?.let { u ->
-                return when(u.sorting) {
+                return when (u.sorting) {
                     SORT_UNREADCOUNT ->
-                        if(u.isFolderTop.toBoolean()) {
+                        if (u.isFolderTop.toBoolean()) {
                             it.selectAllByUnreadCountAndFolder().executeAsList().toMutableList()
                         } else {
                             it.selectAllByUnreadCount().executeAsList().toMutableList()
                         }
                     SORT_TITLE ->
-                        if(u.isFolderTop.toBoolean()) {
+                        if (u.isFolderTop.toBoolean()) {
                             it.selectAllByTitleAndFolder().executeAsList().toMutableList()
                         } else {
                             it.selectAllByTitle().executeAsList().toMutableList()
@@ -83,5 +81,10 @@ object Database {
             return it.selectAll().executeAsOne()
         }
         return null
+    }
+
+    fun clear() {
+        getFeedQueries()?.clear()
+        getItemQueries()?.clear()
     }
 }
