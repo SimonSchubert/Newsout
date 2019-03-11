@@ -14,7 +14,6 @@ import com.inspiredandroid.newsout.dialogs.InfoDialog
 import io.ktor.util.InternalAPI
 import kotlinx.android.synthetic.main.activity_login.*
 
-
 /* Copyright 2019 Simon Schubert
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,22 +41,32 @@ class LoginActivity : AppCompatActivity() {
 
         passwordEt.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                attemptLogin()
+                if (mode == MODE_NEWSOUT) {
+                    attemptSignup()
+                } else {
+                    attemptLogin()
+                }
                 return@OnEditorActionListener true
             }
             false
         })
 
-        signInBtn.setOnClickListener { attemptLogin() }
+        signInBtn.setOnClickListener {
+            if (mode == MODE_NEWSOUT) {
+                attemptSignup()
+            } else {
+                attemptLogin()
+            }
+        }
         infoBtn.setOnClickListener {
             val dialog = InfoDialog.getInstance()
             dialog.show(supportFragmentManager, "TAG")
         }
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
-            if (checkedId == R.id.nextcloudBtn) {
-                mode = MODE_CUSTOM
+            mode = if (checkedId == R.id.nextcloudBtn) {
+                MODE_CUSTOM
             } else {
-                mode = MODE_NEWSOUT
+                MODE_NEWSOUT
             }
             updateButtons()
         }
@@ -94,40 +103,57 @@ class LoginActivity : AppCompatActivity() {
         val email = emailEt.text.toString()
         val password = passwordEt.text.toString()
 
-        val nextcloudUrl = if (mode == MODE_CUSTOM) {
-            serverPathEt.text.toString()
-        } else {
-            "https://nx1399.your-next.cloud"
-        }
+        val nextcloudUrl = serverPathEt.text.toString()
 
-        if (mode == MODE_CUSTOM) {
-            Api.login(nextcloudUrl, email, password, {
-                val accountManager = AccountManager.get(this)
-                val account = Account(email, "com.inspiredandroid.newsout")
-                accountManager.addAccountExplicitly(account, password, Bundle())
-                accountManager.setUserData(account, "EXTRA_BASE_URL", nextcloudUrl)
+        Api.login(nextcloudUrl, email, password, {
+            saveLogin(nextcloudUrl, email, password)
 
-                startActivity(Intent(this@LoginActivity, FeedsActivity::class.java))
-                finish()
-            }, {
-                passwordEt.error = "Password or email might be wrong"
-                progressBar.visibility = View.GONE
-                ivLogo.visibility = View.VISIBLE
-            },
-                {
-                    serverPathEt.error = "Could not connect"
-                    progressBar.visibility = View.GONE
-                    ivLogo.visibility = View.VISIBLE
-                })
-        } else {
-            Api.createAccount(email, password, {
-                progressBar.visibility = View.GONE
-                ivLogo.visibility = View.VISIBLE
-            }, {
-                progressBar.visibility = View.GONE
-                ivLogo.visibility = View.VISIBLE
-            })
-        }
+            startActivity(Intent(this@LoginActivity, FeedsActivity::class.java))
+            finish()
+        }, {
+            passwordEt.error = "Password or email might be wrong"
+            hideLoading()
+        }, {
+            serverPathEt.error = "Could not connect"
+            hideLoading()
+        })
+    }
+
+    fun attemptSignup() {
+        emailEt.error = null
+        passwordEt.error = null
+        serverPathEt.error = null
+
+        progressBar.visibility = View.VISIBLE
+        ivLogo.visibility = View.GONE
+
+        val email = emailEt.text.toString()
+        val password = passwordEt.text.toString()
+        val nextcloudUrl = ""
+
+        Api.createAccount(nextcloudUrl, email, password, {
+            saveLogin(nextcloudUrl, email, password)
+
+            startActivity(Intent(this@LoginActivity, FeedsActivity::class.java))
+            finish()
+        }, {
+            serverPathEt?.setText(nextcloudUrl)
+            attemptLogin()
+        }, {
+            hideLoading()
+        })
+    }
+
+    fun saveLogin(email: String, password: String, url: String) {
+        val accountManager = AccountManager.get(this)
+        val account = Account(email, "com.inspiredandroid.newsout")
+        accountManager.addAccountExplicitly(account, password, Bundle())
+        accountManager.setUserData(account, "EXTRA_BASE_URL", url)
+    }
+
+    fun hideLoading() {
+        progressBar.visibility = View.GONE
+        ivLogo.visibility = View.VISIBLE
     }
 
     companion object {

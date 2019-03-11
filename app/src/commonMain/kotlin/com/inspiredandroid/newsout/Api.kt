@@ -88,6 +88,56 @@ object Api {
         }
     }
 
+    @InternalAPI
+    fun createAccount(
+        url: String,
+        email: String, password: String, success: () -> Unit, userExists: () -> Unit, error: () -> Unit
+    ) {
+        nextcloudUrl = url
+        credentials = "$email:$password".encodeBase64()
+        async {
+            try {
+                val response = client.post<HttpResponse> {
+                    url("$url/ocs/v1.php/cloud/users")
+                    header("Authorization", "Basic [CREDENTIALS]")
+                    header("OCS-APIRequest", "true")
+                    header("Accept", "application/json")
+                    body = TextContent(
+                        text = "{\"userid\": \"$email\",\"password\": \"$password\",\"email\": \"$email\"}",
+                        contentType = ContentType.Application.Json
+                    )
+                }
+
+                println("code: ${response.status}")
+
+                if (response.status == HttpStatusCode.OK) {
+                    val statusCode =
+                        Json.nonstrict.parseJson(response.readText()).jsonObject.getObjectOrNull("ocs")?.getObjectOrNull(
+                            "meta"
+                        )?.get("statuscode")?.intOrNull ?: -1
+
+                    println("statusCode: $statusCode")
+
+                    done {
+                        when (statusCode) {
+                            100 -> success()
+                            102 -> userExists()
+                            else -> error()
+                        }
+                    }
+                } else {
+                    done {
+                        error()
+                    }
+                }
+            } catch (cause: Throwable) {
+                done {
+                    error()
+                }
+            }
+        }
+    }
+
     fun markFeedAsRead(feedId: Long, callback: (List<Item>) -> Unit) {
         async {
             val feedQueries = Database.getFeedQueries()
@@ -269,7 +319,7 @@ object Api {
 
             val feedQueries = Database.getFeedQueries()
             feedQueries?.let {
-                if(clear) {
+                if (clear) {
                     feedQueries.clear()
                 }
                 list.forEach {
