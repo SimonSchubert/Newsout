@@ -27,11 +27,8 @@ import kotlinx.android.synthetic.main.row_feed.*
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-class FeedsAdapter(var feeds: MutableList<Feed>, val listener: OnListClickInterface) :
+class FeedsAdapter(var feeds: MutableList<Feed>, val listener: OnFeedClickInterface) :
     RecyclerView.Adapter<FeedsAdapter.ViewHolder>() {
-
-    init {
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.row_feed, parent, false)
@@ -56,7 +53,7 @@ class FeedsAdapter(var feeds: MutableList<Feed>, val listener: OnListClickInterf
         fun bind(feed: Feed) {
             feedTitle.text = feed.title
 
-            if (feed.isFolder == 1L) {
+            if (feed.isFolder.toBoolean()) {
                 Glide.with(containerView.context).load(R.drawable.ic_folder_black_24dp)
                     .placeholder(R.drawable.ic_folder_black_24dp)
                     .into(feedIcon)

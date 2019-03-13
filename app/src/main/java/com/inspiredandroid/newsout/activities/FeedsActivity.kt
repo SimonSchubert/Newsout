@@ -48,9 +48,7 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
                 adapter.updateFeeds(it)
             }
         }
-
         swiperefresh.setOnRefreshListener(this)
-        swiperefresh.isRefreshing = true
 
         recyclerView.layoutManager = GridLayoutManager(this, calculateNumberOfColumns())
         recyclerView.adapter = adapter
@@ -60,9 +58,14 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
         super.onResume()
 
         adapter.updateFeeds(Database.getFeeds())
-        Api.feeds {
-            adapter.updateFeeds(it)
-            swiperefresh?.isRefreshing = false
+        if (Database.getUser()?.isCacheOutdated() ?: false) {
+            swiperefresh?.isRefreshing = true
+            Api.feeds({
+                adapter.updateFeeds(it)
+                swiperefresh?.isRefreshing = false
+            }, {
+                swiperefresh?.isRefreshing = false
+            })
         }
     }
 
@@ -72,7 +75,6 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-
         when {
             item?.itemId == R.id.action_settings -> {
                 val dialog = SettingsDialog.getInstance()

@@ -15,5 +15,5 @@ package com.inspiredandroid.newsout.callbacks
  * limitations under the License.
 */
 interface OnItemClickInterface {
-    fun onClickFeed(id: Long, title: String, type: Long)
+    fun onClickItem(url: String)
 }

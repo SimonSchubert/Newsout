@@ -1,7 +1,6 @@
 package com.inspiredandroid.newsout.adapters
 
-import android.content.Intent
-import android.net.Uri
+// import com.squareup.picasso.Picasso
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
@@ -11,10 +10,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.inspiredandroid.newsout.Item
-import com.inspiredandroid.newsout.R
-import com.inspiredandroid.newsout.toBoolean
-// import com.squareup.picasso.Picasso
+import com.inspiredandroid.newsout.*
+import com.inspiredandroid.newsout.callbacks.OnItemClickInterface
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.row_item.*
 
@@ -32,7 +29,8 @@ import kotlinx.android.synthetic.main.row_item.*
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-class ItemsAdapter(var feeds: List<Item>) : RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
+class ItemsAdapter(var feeds: List<Item>, val listener: OnItemClickInterface) :
+    RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
 
     val unreadMap: MutableMap<Long, Boolean> = mutableMapOf()
 
@@ -61,17 +59,12 @@ class ItemsAdapter(var feeds: List<Item>) : RecyclerView.Adapter<ItemsAdapter.Vi
         notifyDataSetChanged()
     }
 
-    fun markAsRead(position: Int, id: Long) {
-        unreadMap[id] = false
-        notifyItemChanged(position)
-    }
-
     inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         internal var id = 0L
-        internal var feedId = 0L
+        private var feedId = 0L
         internal var isUndread = false
-        internal var isFolder = false
+        private var isFolder = false
 
         fun bind(feed: Item) {
 

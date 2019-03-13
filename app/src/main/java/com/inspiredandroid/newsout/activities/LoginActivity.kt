@@ -86,9 +86,11 @@ class LoginActivity : AppCompatActivity() {
         if (mode == MODE_NEWSOUT) {
             serverPathEt.visibility = View.GONE
             signInBtn.text = "Login/Create"
+            emailEt.hint = "Email"
         } else {
             serverPathEt.visibility = View.VISIBLE
             signInBtn.text = "Login"
+            emailEt.hint = "Username/Email"
         }
     }
 
@@ -129,7 +131,7 @@ class LoginActivity : AppCompatActivity() {
 
         val email = emailEt.text.toString()
         val password = passwordEt.text.toString()
-        val nextcloudUrl = ""
+        val nextcloudUrl = "https://arnald.ocloud.de"
 
         Api.createAccount(nextcloudUrl, email, password, {
             saveLogin(nextcloudUrl, email, password)
@@ -140,6 +142,7 @@ class LoginActivity : AppCompatActivity() {
             serverPathEt?.setText(nextcloudUrl)
             attemptLogin()
         }, {
+            passwordEt.error = "Try again with a different password"
             hideLoading()
         })
     }

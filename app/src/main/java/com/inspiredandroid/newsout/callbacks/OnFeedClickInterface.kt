@@ -14,6 +14,6 @@ package com.inspiredandroid.newsout.callbacks
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-interface OnListClickInterface {
-    fun onClickList(id: Long, title: String, type: Long)
+interface OnFeedClickInterface {
+    fun onClickFeed(id: Long, title: String, type: Long)
 }

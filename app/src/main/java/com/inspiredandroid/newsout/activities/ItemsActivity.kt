@@ -1,5 +1,7 @@
 package com.inspiredandroid.newsout.activities
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -10,6 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.inspiredandroid.newsout.*
 import com.inspiredandroid.newsout.adapters.ItemsAdapter
 import com.inspiredandroid.newsout.callbacks.OnAddFeedInterface
+import com.inspiredandroid.newsout.callbacks.OnItemClickInterface
 import com.inspiredandroid.newsout.dialogs.AddFeedDialog
 import kotlinx.android.synthetic.main.activity_items.*
 import kotlinx.android.synthetic.main.content_feeds.*
@@ -28,10 +31,11 @@ import kotlinx.android.synthetic.main.content_feeds.*
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener, OnAddFeedInterface {
+class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener, OnAddFeedInterface,
+    OnItemClickInterface {
 
     private val adapter by lazy {
-        ItemsAdapter(Database.getItems(id, type))
+        ItemsAdapter(Database.getItems(id, type), this)
     }
     private val layoutManager by lazy {
         StaggeredGridLayoutManager(calculateNumberOfColumns(), StaggeredGridLayoutManager.VERTICAL)
@@ -45,9 +49,9 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        id = intent.getLongExtra("id", 0)
-        type = intent.getLongExtra("type", 0L)
-        title = intent.getStringExtra("title")
+        id = intent.getLongExtra(KEY_ID, 0)
+        type = intent.getLongExtra(KEY_TYPE, 0L)
+        title = intent.getStringExtra(KEY_TITLE)
 
         fab.setOnClickListener { view ->
             if (type == 0L) {
@@ -76,11 +80,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
                     val viewHolder = recyclerView.findViewHolderForAdapterPosition(position) as? ItemsAdapter.ViewHolder
                     viewHolder?.let {
                         if (viewHolder.isUndread) {
-                            adapter.markAsRead(position, viewHolder.id)
-                            Database.getItemQueries()?.markItemAsRead(viewHolder.id)
-                            Database.getFeedQueries()
-                                ?.decreaseUnreadCount(viewHolder.feedId, viewHolder.isFolder.toLong())
-                            Api.markAsRead(viewHolder.id)
+                            viewHolder.markAsRead()
                         }
                     }
                 }
@@ -88,10 +88,12 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         }
         recyclerView.addOnScrollListener(listener)
 
-        Api.items(id, type) {
+        Api.items(id, type, {
             adapter.updateItems(it)
             swiperefresh?.isRefreshing = false
-        }
+        }, {
+            swiperefresh?.isRefreshing = false
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -113,20 +115,31 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     }
 
     override fun onRefresh() {
-        Api.items(id, type) {
+        Api.items(id, type, {
             adapter.updateItems(it)
             swiperefresh?.isRefreshing = false
-        }
+        }, {
+            swiperefresh?.isRefreshing = false
+        })
     }
 
     override fun onAddFeed(url: String) {
         swiperefresh?.isRefreshing = true
-        Api.createFeed(url, id) {
-            Api.items(id, type) {
+        Api.createFeed(url, id, {
+            Api.items(id, type, {
                 adapter.updateItems(it)
                 swiperefresh?.isRefreshing = false
-            }
-        }
+            }, {
+                swiperefresh?.isRefreshing = false
+            })
+        }, {
+            swiperefresh?.isRefreshing = false
+        })
+    }
+
+    override fun onClickItem(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
     }
 
     private fun calculateNumberOfColumns(): Int {
@@ -137,5 +150,11 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
             columns = 1
         }
         return columns
+    }
+
+    companion object {
+        const val KEY_ID = "KEY_ID"
+        const val KEY_TYPE = "KEY_TYPE"
+        const val KEY_TITLE = "KEY_TITLE"
     }
 }

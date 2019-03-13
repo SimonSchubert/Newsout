@@ -1,7 +1,7 @@
 package com.inspiredandroid.newsout
 
+import com.soywiz.klock.DateTime
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -40,16 +40,29 @@ fun String.firstImageUrl(): String {
     return found?.value ?: ""
 }
 
+/**
+ * Convert boolean to long
+ */
 fun Boolean.toLong(): Long {
-    return if(this) {
+    return if (this) {
         1L
     } else {
         0L
     }
 }
 
+/**
+ * Convert long to boolean
+ */
 fun Long.toBoolean(): Boolean {
     return this == 1L
+}
+
+/**
+ * Is the last fetch > 5 minutes ago
+ */
+fun User.isCacheOutdated(): Boolean {
+    return DateTime.now().unixMillisLong - lastFeedFetch > 1000 * 60 * 5
 }
 
 /**
