@@ -105,9 +105,18 @@ class ItemsAdapter(var feeds: List<Item>) : RecyclerView.Adapter<ItemsAdapter.Vi
             }
 
             containerView.setOnClickListener {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(feed.url))
-                containerView.context.startActivity(browserIntent)
+                listener.onClickItem(feed.url)
+                markAsRead()
             }
+        }
+
+        fun markAsRead() {
+            Database.getItemQueries()?.markItemAsRead(id)
+            Database.getFeedQueries()
+                ?.decreaseUnreadCount(feedId, isFolder.toLong())
+            Api.markAsRead(id)
+            unreadMap[id] = false
+            notifyItemChanged(adapterPosition)
         }
     }
 }

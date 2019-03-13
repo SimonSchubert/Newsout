@@ -12,10 +12,11 @@ import com.inspiredandroid.newsout.Database
 import com.inspiredandroid.newsout.R
 import com.inspiredandroid.newsout.adapters.FeedsAdapter
 import com.inspiredandroid.newsout.callbacks.OnAddFeedInterface
-import com.inspiredandroid.newsout.callbacks.OnListClickInterface
+import com.inspiredandroid.newsout.callbacks.OnFeedClickInterface
 import com.inspiredandroid.newsout.callbacks.OnSortingChangeInterface
 import com.inspiredandroid.newsout.dialogs.AddFeedDialog
 import com.inspiredandroid.newsout.dialogs.SettingsDialog
+import com.inspiredandroid.newsout.isCacheOutdated
 import kotlinx.android.synthetic.main.activity_feeds.*
 import kotlinx.android.synthetic.main.content_feeds.*
 
@@ -33,7 +34,7 @@ import kotlinx.android.synthetic.main.content_feeds.*
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-class FeedsActivity : AppCompatActivity(), OnListClickInterface, SwipeRefreshLayout.OnRefreshListener,
+class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLayout.OnRefreshListener,
     OnSortingChangeInterface, OnAddFeedInterface {
 
     private val adapter = FeedsAdapter(Database.getFeeds(), this)
@@ -87,26 +88,30 @@ class FeedsActivity : AppCompatActivity(), OnListClickInterface, SwipeRefreshLay
     }
 
     override fun onRefresh() {
-        Api.feeds {
+        Api.feeds({
             adapter.updateFeeds(it)
             swiperefresh?.isRefreshing = false
-        }
+        }, {
+            swiperefresh?.isRefreshing = false
+        })
     }
 
-    override fun onClickList(id: Long, title: String, type: Long) {
+    override fun onClickFeed(id: Long, title: String, type: Long) {
         val intent = Intent(this, ItemsActivity::class.java)
-        intent.putExtra("id", id)
-        intent.putExtra("title", title)
-        intent.putExtra("type", type)
+        intent.putExtra(ItemsActivity.KEY_ID, id)
+        intent.putExtra(ItemsActivity.KEY_TITLE, title)
+        intent.putExtra(ItemsActivity.KEY_TYPE, type)
         startActivity(intent)
     }
 
     override fun onAddFeed(url: String) {
         swiperefresh?.isRefreshing = true
-        Api.createFeed(url, 0) {
+        Api.createFeed(url, 0, {
             adapter.updateFeeds(Database.getFeeds())
             swiperefresh?.isRefreshing = false
-        }
+        }, {
+            swiperefresh?.isRefreshing = false
+        })
     }
 
     override fun onSortingChange() {

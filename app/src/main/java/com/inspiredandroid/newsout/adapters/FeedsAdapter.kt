@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.inspiredandroid.newsout.Feed
 import com.inspiredandroid.newsout.R
-import com.inspiredandroid.newsout.callbacks.OnListClickInterface
+import com.inspiredandroid.newsout.callbacks.OnFeedClickInterface
+import com.inspiredandroid.newsout.toBoolean
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.row_feed.*
 
@@ -75,7 +76,7 @@ class FeedsAdapter(var feeds: MutableList<Feed>, val listener: OnListClickInterf
             }
 
             containerView.setOnClickListener {
-                listener.onClickList(
+                listener.onClickFeed(
                     feed.id, feed.title, feed.isFolder
                 )
             }
