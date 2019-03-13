@@ -36,7 +36,8 @@
         <activity
                 android:name=".activities.LoginActivity"
                 android:label="@string/title_activity_feeds"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/AppTheme.NoActionBar"
+                android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
