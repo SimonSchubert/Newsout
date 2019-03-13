@@ -1,10 +1,11 @@
 CREATE TABLE user (
   sorting INTEGER NOT NULL,
-  isFolderTop INTEGER NOT NULL
+  isFolderTop INTEGER NOT NULL,
+  lastFeedFetch INTEGER NOT NULL
 );
 
-INSERT INTO user (sorting, isFolderTop)
-VALUES (1, 0);
+INSERT INTO user (sorting, isFolderTop, lastFeedFetch)
+VALUES (1, 0, 0);
 
 selectAll:
 SELECT *
@@ -15,3 +16,6 @@ UPDATE user SET sorting = ?;
 
 updateFolderTop:
 UPDATE user SET isFolderTop = ?;
+
+updateFeedCache:
+UPDATE user SET lastFeedFetch = ?;

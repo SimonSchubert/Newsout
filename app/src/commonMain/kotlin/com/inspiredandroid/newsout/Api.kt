@@ -4,6 +4,7 @@ import com.inspiredandroid.newsout.models.NextcloudNewsFeed
 import com.inspiredandroid.newsout.models.NextcloudNewsFolder
 import com.inspiredandroid.newsout.models.NextcloudNewsItem
 import com.inspiredandroid.newsout.models.NextcloudNewsVersion
+import com.soywiz.klock.DateTime
 import com.squareup.sqldelight.db.SqlDriver
 import io.ktor.client.HttpClient
 import io.ktor.client.request.*
@@ -97,15 +98,10 @@ object Api {
         credentials = "$email:$password".encodeBase64()
         async {
             try {
-                val response = client.post<HttpResponse> {
-                    url("$url/ocs/v1.php/cloud/users")
-                    header("Authorization", "Basic [CREDENTIALS]")
+                val response = client.get<HttpResponse>() {
+                    url("https://schubert-simon.de/newsout/nx_login.php?email=$email&password=$password")
                     header("OCS-APIRequest", "true")
                     header("Accept", "application/json")
-                    body = TextContent(
-                        text = "{\"userid\": \"$email\",\"password\": \"$password\",\"email\": \"$email\"}",
-                        contentType = ContentType.Application.Json
-                    )
                 }
 
                 println("code: ${response.status}")
@@ -220,8 +216,8 @@ object Api {
         }
     }
 
-    fun feeds(callback: (List<Feed>) -> Unit) {
-        folders { folders ->
+    fun feeds(callback: (List<Feed>) -> Unit, error: () -> Unit) {
+        folders({ folders ->
             async {
                 try {
                     val result: String = client.get {
@@ -230,14 +226,17 @@ object Api {
                     }
                     mergeNextcloudFeedsAndFolders(folders, result, true)
 
+                    Database.getUserQueries()?.updateFeedCache(DateTime.now().unixMillisLong)
+
                     done { callback(Database.getFeeds()) }
                 } catch (cause: Throwable) {
+                    done { error() }
                 }
             }
-        }
+        }, error)
     }
 
-    private fun folders(callback: (List<NextcloudNewsFolder>) -> Unit) {
+    private fun folders(callback: (List<NextcloudNewsFolder>) -> Unit, error: () -> Unit) {
         async {
             try {
                 val result: String = client.get {
@@ -246,17 +245,20 @@ object Api {
                 }
 
                 val array = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("folders")
-                array?.let {
-                    val list = Json.nonstrict.parse(NextcloudNewsFolder.serializer().list, it.jsonArray.toString())
+                if (array != null) {
+                    val list = Json.nonstrict.parse(NextcloudNewsFolder.serializer().list, array.jsonArray.toString())
                     done { callback(list) }
+                } else {
+                    done { error() }
                 }
             } catch (cause: Throwable) {
+                done { error() }
             }
         }
     }
 
-    fun createFeed(url: String, folderId: Long, callback: () -> Unit) {
-        folders { folders ->
+    fun createFeed(url: String, folderId: Long, callback: () -> Unit, error: () -> Unit) {
+        folders({ folders ->
             async {
                 try {
                     val result: String = client.post {
@@ -273,10 +275,10 @@ object Api {
                 } catch (cause: Throwable) {
                 }
             }
-        }
+        }, error)
     }
 
-    fun items(id: Long, type: Long, callback: (List<Item>) -> Unit) {
+    fun items(id: Long, type: Long, callback: (List<Item>) -> Unit, error: () -> Unit) {
         async {
             try {
                 val result: String = client.get {
