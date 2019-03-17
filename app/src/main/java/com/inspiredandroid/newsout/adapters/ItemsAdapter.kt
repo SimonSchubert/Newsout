@@ -1,6 +1,5 @@
 package com.inspiredandroid.newsout.adapters
 
-// import com.squareup.picasso.Picasso
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
@@ -92,6 +91,7 @@ class ItemsAdapter(var feeds: List<Item>, val listener: OnItemClickInterface) :
                     .with(containerView.context)
                     .load(feed.imageUrl)
                     .into(imageView)
+                imageView.init(feed.imageUrl)
                 imageView.visibility = View.VISIBLE
             } else {
                 imageView.visibility = View.GONE
