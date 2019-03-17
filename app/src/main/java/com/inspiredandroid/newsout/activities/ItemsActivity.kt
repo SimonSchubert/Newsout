@@ -3,6 +3,7 @@ package com.inspiredandroid.newsout.activities
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -57,10 +58,12 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
             if (type == 0L) {
                 Api.markFeedAsRead(id) {
                     adapter.updateItems(it)
+                    updateFab()
                 }
             } else {
                 Api.markFolderAsRead(id) {
                     adapter.updateItems(it)
+                    updateFab()
                 }
             }
         }
@@ -79,20 +82,37 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
                 positions.forEach { position ->
                     val viewHolder = recyclerView.findViewHolderForAdapterPosition(position) as? ItemsAdapter.ViewHolder
                     viewHolder?.let {
-                        if (viewHolder.isUndread) {
-                            viewHolder.markAsRead()
+                        Handler().post {
+                            if (viewHolder.isUndread) {
+                                viewHolder.markAsRead()
+                                updateFab()
+                            }
                         }
                     }
+                }
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+                if (!recyclerView.canScrollVertically(1)) {
+                    showLoading()
+                    Api.items(id, type, true, {
+                        updateAdapterAndHideLoading(it)
+                        updateFab()
+                    }, {
+                        hideLoading()
+                    })
                 }
             }
         }
         recyclerView.addOnScrollListener(listener)
 
-        Api.items(id, type, {
-            adapter.updateItems(it)
-            swiperefresh?.isRefreshing = false
+        Api.items(id, type, false, {
+            updateAdapterAndHideLoading(it)
+            updateFab()
         }, {
-            swiperefresh?.isRefreshing = false
+            hideLoading()
         })
     }
 
@@ -115,31 +135,52 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     }
 
     override fun onRefresh() {
-        Api.items(id, type, {
-            adapter.updateItems(it)
-            swiperefresh?.isRefreshing = false
+        Api.items(id, type, false, {
+            updateAdapterAndHideLoading(it)
+            updateFab()
         }, {
-            swiperefresh?.isRefreshing = false
+            hideLoading()
         })
     }
 
     override fun onAddFeed(url: String) {
-        swiperefresh?.isRefreshing = true
+        showLoading()
         Api.createFeed(url, id, {
-            Api.items(id, type, {
-                adapter.updateItems(it)
-                swiperefresh?.isRefreshing = false
+            Api.items(id, type, false, {
+                updateAdapterAndHideLoading(it)
+                updateFab()
             }, {
-                swiperefresh?.isRefreshing = false
+                hideLoading()
             })
         }, {
-            swiperefresh?.isRefreshing = false
+            hideLoading()
         })
+    }
+
+    private fun updateFab() {
+        if (adapter.unreadMap.values.any { it }) {
+            fab?.show()
+        } else {
+            fab?.hide()
+        }
     }
 
     override fun onClickItem(url: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         startActivity(intent)
+    }
+
+    private fun updateAdapterAndHideLoading(items: List<Item>) {
+        adapter.updateItems(items)
+        swiperefresh?.isRefreshing = false
+    }
+
+    private fun hideLoading() {
+        swiperefresh?.isRefreshing = false
+    }
+
+    private fun showLoading() {
+        swiperefresh?.isRefreshing = true
     }
 
     private fun calculateNumberOfColumns(): Int {
