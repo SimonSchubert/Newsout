@@ -58,9 +58,7 @@ class FeedsAdapter(var feeds: MutableList<Feed>, val listener: OnFeedClickInterf
                     .placeholder(R.drawable.ic_folder_black_24dp)
                     .into(feedIcon)
             } else {
-                if (feed.faviconUrl.isNotEmpty()) {
-                    Glide.with(containerView.context).load(feed.faviconUrl).into(feedIcon)
-                }
+                Glide.with(containerView.context).load(feed.faviconUrl).placeholder(R.drawable.ic_icons8_rss).into(feedIcon)
             }
 
             if (feed.unreadCount > 0L) {
