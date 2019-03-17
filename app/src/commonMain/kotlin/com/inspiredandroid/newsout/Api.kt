@@ -104,15 +104,11 @@ object Api {
                     header("Accept", "application/json")
                 }
 
-                println("code: ${response.status}")
-
                 if (response.status == HttpStatusCode.OK) {
                     val statusCode =
                         Json.nonstrict.parseJson(response.readText()).jsonObject.getObjectOrNull("ocs")?.getObjectOrNull(
                             "meta"
                         )?.get("statuscode")?.intOrNull ?: -1
-
-                    println("statusCode: $statusCode")
 
                     done {
                         when (statusCode) {
@@ -224,7 +220,7 @@ object Api {
                         url("$baseUrl/feeds")
                         header("Authorization", "Basic $credentials")
                     }
-                    mergeNextcloudFeedsAndFolders(folders, result, true)
+                    mergeFeedsAndFolders(folders, result, true)
 
                     Database.getUserQueries()?.updateFeedCache(DateTime.now().unixMillisLong)
 
@@ -245,12 +241,89 @@ object Api {
                 }
 
                 val array = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("folders")
+
                 if (array != null) {
                     val list = Json.nonstrict.parse(NextcloudNewsFolder.serializer().list, array.jsonArray.toString())
                     done { callback(list) }
                 } else {
                     done { error() }
                 }
+            } catch (cause: Throwable) {
+                done { error() }
+            }
+        }
+    }
+
+    fun renameFolder(id: Long, title: String, callback: () -> Unit, error: () -> Unit) {
+        async {
+            try {
+                val result: String = client.put {
+                    url("$baseUrl/folders/$id")
+                    header("Authorization", "Basic $credentials")
+                    body = TextContent(
+                        text = "{\"name\": \"$title\"}",
+                        contentType = ContentType.Application.Json
+                    )
+                }
+
+                Database.getFeedQueries()?.renameFolderFeed(title, id)
+
+                done { callback() }
+            } catch (cause: Throwable) {
+                done { error() }
+            }
+        }
+    }
+
+    fun renameFeed(id: Long, title: String, callback: () -> Unit, error: () -> Unit) {
+        async {
+            try {
+                val result: String = client.put {
+                    url("$baseUrl/feeds/$id/rename")
+                    header("Authorization", "Basic $credentials")
+                    body = TextContent(
+                        text = "{\"feedTitle\": \"$title\"}",
+                        contentType = ContentType.Application.Json
+                    )
+                }
+
+                Database.getFeedQueries()?.renameFeed(title, id)
+
+                done { callback() }
+            } catch (cause: Throwable) {
+                done { error() }
+            }
+        }
+    }
+
+    fun deleteFeed(id: Long, callback: () -> Unit, error: () -> Unit) {
+        async {
+            try {
+                val result: String = client.delete {
+                    url("$baseUrl/feeds/$id")
+                    header("Authorization", "Basic $credentials")
+                }
+
+                Database.getFeedQueries()?.deleteFeed(id)
+
+                done { callback() }
+            } catch (cause: Throwable) {
+                done { error() }
+            }
+        }
+    }
+
+    fun deleteFolder(id: Long, callback: () -> Unit, error: () -> Unit) {
+        async {
+            try {
+                val result: String = client.delete {
+                    url("$baseUrl/folders/$id")
+                    header("Authorization", "Basic $credentials")
+                }
+
+                Database.getFeedQueries()?.deleteFolderFeed(id)
+
+                done { callback() }
             } catch (cause: Throwable) {
                 done { error() }
             }
@@ -269,26 +342,33 @@ object Api {
                             contentType = ContentType.Application.Json
                         )
                     }
-                    mergeNextcloudFeedsAndFolders(folders, result, false)
+
+                    mergeFeedsAndFolders(folders, result, false)
 
                     done { callback() }
                 } catch (cause: Throwable) {
+                    done { error() }
                 }
             }
         }, error)
     }
 
-    fun items(id: Long, type: Long, callback: (List<Item>) -> Unit, error: () -> Unit) {
+    fun items(id: Long, type: Long, offset: Boolean, callback: (List<Item>) -> Unit, error: () -> Unit) {
         async {
             try {
+                var offsetString = ""
+                if (offset) {
+                    val minId = Database.getItemQueries()?.minId(id, type)?.executeAsOne()?.MIN ?: 0L
+                    offsetString = "&offset=$minId"
+                }
                 val result: String = client.get {
-                    url("$baseUrl/items?getRead=true&batchSize=-1&type=$type&id=$id")
+                    url("$baseUrl/items?getRead=true&batchSize=20&type=$type&id=$id$offsetString")
                     header("Authorization", "Basic $credentials")
                 }
 
                 val array = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("items")
-                array?.let {
-                    val list = Json.nonstrict.parse(NextcloudNewsItem.serializer().list, it.jsonArray.toString())
+                if (array != null) {
+                    val list = Json.nonstrict.parse(NextcloudNewsItem.serializer().list, array.jsonArray.toString())
 
                     val itemQueries = Database.getItemQueries()
                     itemQueries?.let {
@@ -308,13 +388,16 @@ object Api {
                             callback(itemQueries.selectAllByFeedIdAndType(id, type).executeAsList())
                         }
                     }
+                } else {
+                    done { error() }
                 }
             } catch (cause: Throwable) {
+                done { error() }
             }
         }
     }
 
-    fun mergeNextcloudFeedsAndFolders(folders: List<NextcloudNewsFolder>, result: String, clear: Boolean) {
+    private fun mergeFeedsAndFolders(folders: List<NextcloudNewsFolder>, result: String, clear: Boolean) {
         val feedsArray = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("feeds")
         feedsArray?.let {
             val list = Json.nonstrict.parse(NextcloudNewsFeed.serializer().list, it.jsonArray.toString())

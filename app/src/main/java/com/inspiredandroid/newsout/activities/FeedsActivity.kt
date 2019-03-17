@@ -7,16 +7,15 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.inspiredandroid.newsout.Api
-import com.inspiredandroid.newsout.Database
-import com.inspiredandroid.newsout.R
+import com.inspiredandroid.newsout.*
 import com.inspiredandroid.newsout.adapters.FeedsAdapter
 import com.inspiredandroid.newsout.callbacks.OnAddFeedInterface
+import com.inspiredandroid.newsout.callbacks.OnEditFeedInterface
 import com.inspiredandroid.newsout.callbacks.OnFeedClickInterface
 import com.inspiredandroid.newsout.callbacks.OnSortingChangeInterface
 import com.inspiredandroid.newsout.dialogs.AddFeedDialog
+import com.inspiredandroid.newsout.dialogs.EditFeedDialog
 import com.inspiredandroid.newsout.dialogs.SettingsDialog
-import com.inspiredandroid.newsout.isCacheOutdated
 import kotlinx.android.synthetic.main.activity_feeds.*
 import kotlinx.android.synthetic.main.content_feeds.*
 
@@ -35,7 +34,7 @@ import kotlinx.android.synthetic.main.content_feeds.*
  * limitations under the License.
 */
 class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLayout.OnRefreshListener,
-    OnSortingChangeInterface, OnAddFeedInterface {
+    OnSortingChangeInterface, OnAddFeedInterface, OnEditFeedInterface {
 
     private val adapter = FeedsAdapter(Database.getFeeds(), this)
 
@@ -45,7 +44,8 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
 
         fab.setOnClickListener { view ->
             Api.markAllAsRead {
-                adapter.updateFeeds(it)
+                updateAdapterAndHideLoading(it)
+                updateFab()
             }
         }
         swiperefresh.setOnRefreshListener(this)
@@ -59,12 +59,12 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
 
         adapter.updateFeeds(Database.getFeeds())
         if (Database.getUser()?.isCacheOutdated() ?: false) {
-            swiperefresh?.isRefreshing = true
+            showLoading()
             Api.feeds({
-                adapter.updateFeeds(it)
-                swiperefresh?.isRefreshing = false
+                updateAdapterAndHideLoading(it)
+                updateFab()
             }, {
-                swiperefresh?.isRefreshing = false
+                hideLoading()
             })
         }
     }
@@ -91,10 +91,10 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
 
     override fun onRefresh() {
         Api.feeds({
-            adapter.updateFeeds(it)
-            swiperefresh?.isRefreshing = false
+            updateAdapterAndHideLoading(it)
+            updateFab()
         }, {
-            swiperefresh?.isRefreshing = false
+            hideLoading()
         })
     }
 
@@ -106,18 +106,84 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
         startActivity(intent)
     }
 
+    override fun onLongClickFeed(id: Long, title: String, isFolder: Boolean) {
+        val dialog = EditFeedDialog.getInstance(id, title, isFolder)
+        dialog.show(supportFragmentManager, "TAG")
+    }
+
     override fun onAddFeed(url: String) {
-        swiperefresh?.isRefreshing = true
+        showLoading()
         Api.createFeed(url, 0, {
-            adapter.updateFeeds(Database.getFeeds())
-            swiperefresh?.isRefreshing = false
+            updateAdapterAndHideLoading(Database.getFeeds())
+            updateFab()
         }, {
-            swiperefresh?.isRefreshing = false
+            hideLoading()
+            val dialog = AddFeedDialog.getInstance(url)
+            dialog.show(supportFragmentManager, "TAG")
         })
+    }
+
+    override fun onEditFeed(id: Long, title: String, isFolder: Boolean) {
+        showLoading()
+        if (isFolder) {
+            Api.renameFolder(id, title, {
+                updateAdapterAndHideLoading(Database.getFeeds())
+            }, {
+                hideLoading()
+                val dialog = EditFeedDialog.getInstance(id, title, isFolder, true)
+                dialog.show(supportFragmentManager, "TAG")
+            })
+        } else {
+            Api.renameFeed(id, title, {
+                updateAdapterAndHideLoading(Database.getFeeds())
+            }, {
+                hideLoading()
+                val dialog = EditFeedDialog.getInstance(id, title, isFolder, true)
+                dialog.show(supportFragmentManager, "TAG")
+            })
+        }
+    }
+
+    override fun onDeleteFeed(id: Long, title: String, isFolder: Boolean) {
+        showLoading()
+        if (isFolder) {
+            Api.deleteFolder(id, {
+                updateAdapterAndHideLoading(Database.getFeeds())
+            }, {
+                hideLoading()
+            })
+        } else {
+            Api.deleteFeed(id, {
+                updateAdapterAndHideLoading(Database.getFeeds())
+            }, {
+                hideLoading()
+            })
+        }
+    }
+
+    private fun updateAdapterAndHideLoading(feeds: List<Feed>) {
+        adapter.updateFeeds(feeds)
+        swiperefresh?.isRefreshing = false
+    }
+
+    private fun hideLoading() {
+        swiperefresh?.isRefreshing = false
+    }
+
+    private fun showLoading() {
+        swiperefresh?.isRefreshing = true
     }
 
     override fun onSortingChange() {
         adapter.updateFeeds(Database.getFeeds())
+    }
+
+    private fun updateFab() {
+        if (adapter.feeds.any { it.unreadCount > 0 }) {
+            fab.show()
+        } else {
+            fab.hide()
+        }
     }
 
     private fun calculateNumberOfColumns(): Int {

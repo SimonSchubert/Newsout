@@ -34,6 +34,18 @@ SELECT *
 FROM feed
 WHERE id=? AND isFolder=1;
 
+renameFolderFeed:
+UPDATE feed SET title = ? WHERE id=? AND isFolder=1;
+
+renameFeed:
+UPDATE feed SET title = ? WHERE id=? AND isFolder=0;
+
+deleteFolderFeed:
+DELETE FROM feed WHERE id=? AND isFolder=1;
+
+deleteFeed:
+DELETE FROM feed WHERE id=? AND isFolder=0;
+
 insert:
 INSERT INTO feed(id, title, faviconUrl, unreadCount, ordering, isFolder)
 VALUES (?, ?, ?, ?, ?, ?);

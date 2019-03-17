@@ -77,6 +77,10 @@ class FeedsAdapter(var feeds: MutableList<Feed>, val listener: OnFeedClickInterf
                     feed.id, feed.title, feed.isFolder
                 )
             }
+            containerView.setOnLongClickListener {
+                listener.onLongClickFeed(feed.id, feed.title, feed.isFolder.toBoolean())
+                true
+            }
         }
     }
 }
