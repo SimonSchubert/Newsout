@@ -25,7 +25,7 @@ data class ExploreFeed(
         val exploreFeeds = listOf(
             ExploreFeed("Nextcloud", "https://nextcloud.com/blogfeed"),
             ExploreFeed("Opensource.com", "https://opensource.com/feed"),
-            ExploreFeed("Electrek", "electrek.co/feed/"),
+            ExploreFeed("Electrek", "https://electrek.co/feed/"),
             ExploreFeed("Bitwarden", "https://blog.bitwarden.com/"),
             ExploreFeed("Hacker News", "https://news.ycombinator.com/rss"),
             ExploreFeed("Purism", "https://puri.sm/feed/"),

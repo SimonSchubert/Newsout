@@ -11,7 +11,7 @@
             android:layout_width="match_parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_height="wrap_content" android:id="@+id/textView01"
-            android:text="This software is open source. You need to have the official news app installed on your Nextcloud instance and log into this app with your Nextcloud credentials."/>
+            android:text="This software is open source. You can either create an account on the Newsout Nextcloud instance or log into your own Nextcloud instance."/>
     <Button
             android:text="Rate"
             android:layout_marginTop="8dp"

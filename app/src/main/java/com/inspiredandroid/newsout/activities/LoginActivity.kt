@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.inspiredandroid.newsout.Api
 import com.inspiredandroid.newsout.R
 import com.inspiredandroid.newsout.dialogs.InfoDialog
+import com.inspiredandroid.newsout.hideKeyboard
+import com.inspiredandroid.newsout.isEmailValid
 import io.ktor.util.InternalAPI
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -95,17 +97,17 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun attemptLogin() {
+        hideKeyboard()
         emailEt.error = null
         passwordEt.error = null
         serverPathEt.error = null
-
-        progressBar.visibility = View.VISIBLE
-        ivLogo.visibility = View.GONE
 
         val email = emailEt.text.toString()
         val password = passwordEt.text.toString()
 
         val nextcloudUrl = serverPathEt.text.toString()
+
+        showLoading()
 
         Api.login(nextcloudUrl, email, password, {
             saveLogin(nextcloudUrl, email, password)
@@ -121,17 +123,26 @@ class LoginActivity : AppCompatActivity() {
         })
     }
 
-    fun attemptSignup() {
+    private fun attemptSignup() {
+        hideKeyboard()
         emailEt.error = null
         passwordEt.error = null
         serverPathEt.error = null
 
-        progressBar.visibility = View.VISIBLE
-        ivLogo.visibility = View.GONE
-
         val email = emailEt.text.toString()
         val password = passwordEt.text.toString()
-        val nextcloudUrl = "https://arnald.ocloud.de"
+        val nextcloudUrl = "https://nx3217.your-next.cloud"
+
+        if(!email.isEmailValid()) {
+            emailEt.error = "Please enter a correct email address"
+            return
+        }
+        if(password.length < 6) {
+            passwordEt.error = "Password is too short"
+            return
+        }
+
+        showLoading()
 
         Api.createAccount(nextcloudUrl, email, password, {
             saveLogin(nextcloudUrl, email, password)
@@ -147,16 +158,21 @@ class LoginActivity : AppCompatActivity() {
         })
     }
 
-    fun saveLogin(email: String, password: String, url: String) {
+    private fun saveLogin(url: String, email: String, password: String) {
         val accountManager = AccountManager.get(this)
         val account = Account(email, "com.inspiredandroid.newsout")
         accountManager.addAccountExplicitly(account, password, Bundle())
         accountManager.setUserData(account, "EXTRA_BASE_URL", url)
     }
 
-    fun hideLoading() {
+    private fun hideLoading() {
         progressBar.visibility = View.GONE
         ivLogo.visibility = View.VISIBLE
+    }
+
+    private fun showLoading() {
+        progressBar.visibility = View.VISIBLE
+        ivLogo.visibility = View.GONE
     }
 
     companion object {

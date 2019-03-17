@@ -71,7 +71,8 @@
                     android:background="@color/greyLight"
                     android:layout_marginTop="12dp"
                     android:padding="12dp"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:nextFocusForward="@id/emailEt"/>
 
             <AutoCompleteTextView
                     android:id="@+id/emailEt"
@@ -84,7 +85,8 @@
                     android:background="@color/greyLight"
                     android:padding="12dp"
                     android:layout_marginTop="16dp"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:nextFocusForward="@id/passwordEt"/>
 
             <EditText
                     android:id="@+id/passwordEt"
@@ -93,14 +95,14 @@
                     android:hint="@string/prompt_password"
                     android:imeActionId="6"
                     android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
+                    android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:text=""
                     android:background="@color/greyLight"
                     android:padding="12dp"
                     android:layout_marginTop="16dp"
-                    android:singleLine="true"/>
+                    android:singleLine="true" />
 
 
             <Button

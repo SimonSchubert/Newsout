@@ -1,6 +1,14 @@
 package com.inspiredandroid.newsout
 
 import android.content.res.Resources
+import android.content.Context.INPUT_METHOD_SERVICE
+import androidx.core.content.ContextCompat.getSystemService
+import android.app.Activity
+import android.content.Context
+import android.util.Patterns
+import android.view.inputmethod.InputMethodManager
+import java.util.regex.Pattern
+
 
 /* Copyright 2019 Simon Schubert
  *
@@ -22,3 +30,11 @@ val Int.dp: Int
 
 val Int.px: Int
     get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+fun Activity.hideKeyboard() {
+    val view = currentFocus
+    if (view != null) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+}
