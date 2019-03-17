@@ -50,8 +50,20 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
         }
         swiperefresh.setOnRefreshListener(this)
 
-        recyclerView.layoutManager = GridLayoutManager(this, calculateNumberOfColumns())
+        val layoutManager = GridLayoutManager(this, calculateNumberOfColumns())
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (adapter.getItemViewType(position)) {
+                    FeedsAdapter.TYPE_NORMAL -> 1
+                    FeedsAdapter.TYPE_HEADER -> calculateNumberOfColumns()
+                    else -> -1
+                }
+            }
+        }
+        recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
+
+        updateFab()
     }
 
     override fun onResume() {
@@ -149,16 +161,22 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
         if (isFolder) {
             Api.deleteFolder(id, {
                 updateAdapterAndHideLoading(Database.getFeeds())
+                updateFab()
             }, {
                 hideLoading()
             })
         } else {
             Api.deleteFeed(id, {
                 updateAdapterAndHideLoading(Database.getFeeds())
+                updateFab()
             }, {
                 hideLoading()
             })
         }
+    }
+
+    override fun onSortingChange() {
+        adapter.updateFeeds(Database.getFeeds())
     }
 
     private fun updateAdapterAndHideLoading(feeds: List<Feed>) {
@@ -172,10 +190,6 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
 
     private fun showLoading() {
         swiperefresh?.isRefreshing = true
-    }
-
-    override fun onSortingChange() {
-        adapter.updateFeeds(Database.getFeeds())
     }
 
     private fun updateFab() {

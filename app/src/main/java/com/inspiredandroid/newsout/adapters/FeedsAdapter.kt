@@ -4,7 +4,9 @@ import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.inspiredandroid.newsout.Feed
 import com.inspiredandroid.newsout.R
@@ -28,19 +30,43 @@ import kotlinx.android.synthetic.main.row_feed.*
  * limitations under the License.
 */
 class FeedsAdapter(var feeds: MutableList<Feed>, val listener: OnFeedClickInterface) :
-    RecyclerView.Adapter<FeedsAdapter.ViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.row_feed, parent, false)
-        return ViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            TYPE_NORMAL -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.row_feed, parent, false)
+                ViewHolder(view)
+            }
+            else -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.row_feed_header, parent, false)
+                HeaderViewHolder(view)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
-        return feeds.count()
+        return if (feeds.count() > 0) {
+            feeds.count()
+        } else {
+            1
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(feeds[position])
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        return if (feeds.count() > 0) {
+            (holder as ViewHolder).bind(feeds[position])
+        } else {
+            (holder as HeaderViewHolder).bind()
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (feeds.count() > 0) {
+            TYPE_NORMAL
+        } else {
+            TYPE_HEADER
+        }
     }
 
     fun updateFeeds(nextcloudNewsFeed: List<Feed>) {
@@ -58,7 +84,8 @@ class FeedsAdapter(var feeds: MutableList<Feed>, val listener: OnFeedClickInterf
                     .placeholder(R.drawable.ic_folder_black_24dp)
                     .into(feedIcon)
             } else {
-                Glide.with(containerView.context).load(feed.faviconUrl).placeholder(R.drawable.ic_icons8_rss).into(feedIcon)
+                Glide.with(containerView.context).load(feed.faviconUrl).placeholder(R.drawable.ic_icons8_rss)
+                    .into(feedIcon)
             }
 
             if (feed.unreadCount > 0L) {
@@ -71,14 +98,24 @@ class FeedsAdapter(var feeds: MutableList<Feed>, val listener: OnFeedClickInterf
             }
 
             containerView.setOnClickListener {
-                listener.onClickFeed(
-                    feed.id, feed.title, feed.isFolder
-                )
+                listener.onClickFeed(feed.id, feed.title, feed.isFolder)
             }
             containerView.setOnLongClickListener {
                 listener.onLongClickFeed(feed.id, feed.title, feed.isFolder.toBoolean())
                 true
             }
         }
+    }
+
+    inner class HeaderViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
+        LayoutContainer {
+
+        fun bind() {
+        }
+    }
+
+    companion object {
+        const val TYPE_NORMAL = 0
+        const val TYPE_HEADER = 1
     }
 }
