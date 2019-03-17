@@ -18,10 +18,10 @@ import kotlinx.android.synthetic.main.row_item.*
  * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
  * that can be found in the LICENSE file.
  */
-class ItemsAdapter(private var feeds: List<Item>, val listener: OnItemClickInterface) :
+class ItemsAdapter(private var feeds: List<Item>, private val listener: OnItemClickInterface) :
     RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
 
-    val unreadMap: MutableMap<Long, Boolean> = mutableMapOf()
+    internal val unreadMap: MutableMap<Long, Boolean> = mutableMapOf()
 
     init {
         updateItems(feeds)
@@ -40,6 +40,9 @@ class ItemsAdapter(private var feeds: List<Item>, val listener: OnItemClickInter
         holder.bind(feeds[position])
     }
 
+    /**
+     * Update adapter data and notify change
+     */
     fun updateItems(items: List<Item>) {
         feeds = items
         feeds.forEach {
@@ -55,7 +58,7 @@ class ItemsAdapter(private var feeds: List<Item>, val listener: OnItemClickInter
         internal var isUndread = false
         private var isFolder = false
 
-        fun bind(feed: Item) {
+        internal fun bind(feed: Item) {
 
             id = feed.id
             feedId = feed.feedId
@@ -93,7 +96,7 @@ class ItemsAdapter(private var feeds: List<Item>, val listener: OnItemClickInter
             }
         }
 
-        fun markAsRead() {
+        internal fun markAsRead() {
             Database.getItemQueries()?.markItemAsRead(id)
             Database.getFeedQueries()
                 ?.decreaseUnreadCount(feedId, isFolder.toLong())

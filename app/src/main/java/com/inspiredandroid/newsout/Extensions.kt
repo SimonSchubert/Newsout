@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.view.inputmethod.InputMethodManager
 
-
 /*
  * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
  * that can be found in the LICENSE file.

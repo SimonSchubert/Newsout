@@ -12,12 +12,12 @@ The Android client is ready to use already but the iOS client needs some work to
 
 ## Features
 
-- Sync of feeds and unread marker
-- Change sorting order
-- Add new feeds
-- Rename feeds/folders
-- Delete feeds/folders
-- Mark all feeds or a single feed as read
-- Explore popular feeds
+  - Sync of feeds and unread marker
+  - Change sorting order
+  - Add new feeds
+  - Rename feeds/folders
+  - Delete feeds/folders
+  - Mark all feeds or a single feed as read
+  - Explore popular feeds
 
 Compare Dropbox/Google Drive/Nextcloud: [https://nextcloud.com/compare](https://nextcloud.com/compare) 

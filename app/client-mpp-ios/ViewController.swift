@@ -21,8 +21,8 @@ class ViewController: UIViewController {
         api.version { (version) in
             print("Version: " + version.version!)
             
-            let vc = self.storyboard?.instantiateViewController(withIdentifier: "feeds") as! FeedsViewController
-            self.present(vc, animated: true, completion: nil)
+            let feedsVc = self.storyboard?.instantiateViewController(withIdentifier: "feeds") as! FeedsViewController
+            self.present(feedsVc, animated: true, completion: nil)
             
             return KotlinUnit()
         }

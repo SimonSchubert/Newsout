@@ -69,4 +69,7 @@ fun String.snipped(): String {
     }
 }
 
+/**
+ * Check if email is valid
+ */
 fun String.isEmailValid(): Boolean = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})".toRegex().matches(this)

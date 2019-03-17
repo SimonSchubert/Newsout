@@ -5,13 +5,6 @@ package com.inspiredandroid.newsout.callbacks
  * that can be found in the LICENSE file.
  */
 interface OnEditFeedInterface {
-    /**
-     * Edit feed
-     */
     fun onEditFeed(id: Long, title: String, isFolder: Boolean)
-
-    /**
-     * Delete feed
-     */
     fun onDeleteFeed(id: Long, title: String, isFolder: Boolean)
 }

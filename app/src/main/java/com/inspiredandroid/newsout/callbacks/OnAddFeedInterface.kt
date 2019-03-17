@@ -5,8 +5,5 @@ package com.inspiredandroid.newsout.callbacks
  * that can be found in the LICENSE file.
  */
 interface OnAddFeedInterface {
-    /**
-     * Add feed
-     */
     fun onAddFeed(url: String)
 }

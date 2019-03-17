@@ -5,13 +5,6 @@ package com.inspiredandroid.newsout.callbacks
  * that can be found in the LICENSE file.
  */
 interface OnFeedClickInterface {
-    /**
-     * Click feed
-     */
     fun onClickFeed(id: Long, title: String, type: Long)
-
-    /**
-     * Long click feed
-     */
     fun onLongClickFeed(id: Long, title: String, isFolder: Boolean)
 }

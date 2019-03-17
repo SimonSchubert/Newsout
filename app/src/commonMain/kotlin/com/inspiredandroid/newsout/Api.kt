@@ -242,10 +242,6 @@ object Api {
         }, error)
     }
 
-    /**
-     * Gets folders
-     * @see <a href=""></a>
-     */
     private fun folders(callback: (List<NextcloudNewsFolder>) -> Unit, error: () -> Unit) {
         async {
             try {

@@ -7,6 +7,9 @@ import androidx.appcompat.widget.AppCompatImageView
 /*
  * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
  * that can be found in the LICENSE file.
+ *
+ * Stores the views width and height in a map indexed by a unique view id. The next time a view with the same id will be
+ * loaded it restores the width and height.
  */
 class AspectRatioHolderImageView : AppCompatImageView {
 

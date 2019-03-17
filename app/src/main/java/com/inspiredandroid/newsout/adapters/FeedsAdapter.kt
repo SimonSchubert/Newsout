@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.row_feed.*
  * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
  * that can be found in the LICENSE file.
  */
-class FeedsAdapter(var feeds: MutableList<Feed>, val listener: OnFeedClickInterface) :
+class FeedsAdapter(internal var feeds: MutableList<Feed>, private val listener: OnFeedClickInterface) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -55,14 +55,14 @@ class FeedsAdapter(var feeds: MutableList<Feed>, val listener: OnFeedClickInterf
         }
     }
 
-    fun updateFeeds(nextcloudNewsFeed: List<Feed>) {
+    internal fun updateFeeds(nextcloudNewsFeed: List<Feed>) {
         feeds = nextcloudNewsFeed.toMutableList()
         notifyDataSetChanged()
     }
 
     inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-        fun bind(feed: Feed) {
+        internal fun bind(feed: Feed) {
             feedTitle.text = feed.title
 
             if (feed.isFolder.toBoolean()) {
