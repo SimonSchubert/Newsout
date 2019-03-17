@@ -1,6 +1,6 @@
-![GitHub](https://img.shields.io/github/license/SimonSchubert/NewsOut.svg)
-![Codacy grade](https://img.shields.io/codacy/grade/86f6598a08a1476585b3b7dda5598360.svg)
-![Liberapay receiving](https://img.shields.io/liberapay/receives/arnald.svg)
+[![GitHub](https://img.shields.io/github/license/SimonSchubert/NewsOut.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Codacy grade](https://img.shields.io/codacy/grade/86f6598a08a1476585b3b7dda5598360.svg)](https://app.codacy.com/project/sschubert89/LinuxCommandBibliotheca/dashboard)
+[![Liberapay receiving](https://img.shields.io/liberapay/receives/arnald.svg)](https://liberapay.com/arnald/donate)
 
 # News-Out
 
