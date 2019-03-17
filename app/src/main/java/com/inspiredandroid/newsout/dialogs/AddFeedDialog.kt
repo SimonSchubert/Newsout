@@ -22,12 +22,24 @@ class AddFeedDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_feed, null)
 
+        var url = arguments?.getString("url", "") ?: ""
+        if (url.isNotEmpty()) {
+            view.findViewById<EditText>(R.id.editText).setText(url)
+            view.findViewById<EditText>(R.id.editText).error = "Something went wrong"
+        }
+
         return AlertDialog.Builder(requireContext())
-            .setTitle("Add Feed")
+            .setTitle("Add feed")
             .setView(view)
             .setPositiveButton("Add") { _, _ ->
-                val url = view.findViewById<EditText>(R.id.editText).text.toString()
+                url = view.findViewById<EditText>(R.id.editText).text.toString()
                 callback?.onAddFeed(url)
+            }
+            .setNeutralButton("Explore") { _, _ ->
+                activity?.supportFragmentManager?.let {
+                    val dialog = ExploreFeedsDialog.getInstance()
+                    dialog.show(it, "TAG")
+                }
             }
             .setNegativeButton("Cancel") { _, _ -> }
             .create()
@@ -35,8 +47,12 @@ class AddFeedDialog : DialogFragment() {
 
     companion object {
 
-        internal fun getInstance(): AddFeedDialog {
-            return AddFeedDialog()
+        internal fun getInstance(url: String = ""): AddFeedDialog {
+            val dialog = AddFeedDialog()
+            val bundle = Bundle()
+            bundle.putString("url", url)
+            dialog.arguments = bundle
+            return dialog
         }
     }
 }
