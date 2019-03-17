@@ -1,23 +1,16 @@
 package com.inspiredandroid.newsout
 
-/* Copyright 2019 Simon Schubert
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
+/*
+ * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
+ * that can be found in the LICENSE file.
+ */
 object Database {
     const val SORT_UNREADCOUNT = 1L
     const val SORT_TITLE = 3L
 
+    /**
+     * Gets the feed queries
+     */
     fun getFeedQueries(): FeedQueries? {
         sqlDriver?.let { driver ->
             val database = SqlDelightDatabase(driver)
@@ -26,6 +19,9 @@ object Database {
         return null
     }
 
+    /**
+     * Gets the item queries
+     */
     fun getItemQueries(): ItemQueries? {
         sqlDriver?.let { driver ->
             val database = SqlDelightDatabase(driver)
@@ -34,6 +30,9 @@ object Database {
         return null
     }
 
+    /**
+     * Get the user queries
+     */
     fun getUserQueries(): UserQueries? {
         sqlDriver?.let { driver ->
             val database = SqlDelightDatabase(driver)
@@ -42,6 +41,9 @@ object Database {
         return null
     }
 
+    /**
+     * Get all feeds sorted by unread count or title based on the the user settings
+     */
     fun getFeeds(): MutableList<Feed> {
         val feedQueries = getFeedQueries()
         feedQueries?.let {
@@ -67,6 +69,9 @@ object Database {
         return arrayListOf()
     }
 
+    /**
+     * Get items by feed or folder
+     */
     fun getItems(feedId: Long, type: Long): MutableList<Item> {
         val itemQueries = getItemQueries()
         itemQueries?.let {
@@ -75,6 +80,9 @@ object Database {
         return arrayListOf()
     }
 
+    /**
+     * Get the only and one user from the database
+     */
     fun getUser(): User? {
         val userQueries = getUserQueries()
         userQueries?.let {
@@ -83,6 +91,9 @@ object Database {
         return null
     }
 
+    /**
+     * Clear feeds and items
+     */
     fun clear() {
         getFeedQueries()?.clear()
         getItemQueries()?.clear()

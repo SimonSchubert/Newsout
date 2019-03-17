@@ -25,25 +25,15 @@ internal expect val ApplicationDispatcher: CoroutineDispatcher
 internal expect var sqlDriver: SqlDriver?
 internal expect fun done(block: suspend CoroutineScope.() -> Unit)
 
-/* Copyright 2019 Simon Schubert
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
+/*
+ * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
+ * that can be found in the LICENSE file.
+ */
 object Api {
     private val client = HttpClient()
 
-    var credentials = ""
-    var nextcloudUrl = ""
+    private var credentials = ""
+    private var nextcloudUrl = ""
     private val baseUrl get() = "$nextcloudUrl/index.php/apps/news/api/v1-2"
 
     @InternalAPI
@@ -81,7 +71,7 @@ object Api {
                         unauthorized()
                     }
                 }
-            } catch (cause: Throwable) {
+            } catch (ignore: Throwable) {
                 done {
                     error()
                 }
@@ -98,7 +88,7 @@ object Api {
         credentials = "$email:$password".encodeBase64()
         async {
             try {
-                val response = client.get<HttpResponse>() {
+                val response = client.get<HttpResponse> {
                     url("https://schubert-simon.de/newsout/nx_login.php?email=$email&password=$password")
                     header("OCS-APIRequest", "true")
                     header("Accept", "application/json")
@@ -122,7 +112,7 @@ object Api {
                         error()
                     }
                 }
-            } catch (cause: Throwable) {
+            } catch (ignore: Throwable) {
                 done {
                     error()
                 }
@@ -130,6 +120,10 @@ object Api {
         }
     }
 
+    /**
+     * Marks feed as read
+     * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-items-of-a-feed-as-read">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-items-of-a-feed-as-read</a>
+     */
     fun markFeedAsRead(feedId: Long, callback: (List<Item>) -> Unit) {
         async {
             val feedQueries = Database.getFeedQueries()
@@ -150,11 +144,15 @@ object Api {
                     url("$baseUrl/feeds/$feedId/read?newestItemId=$maxId")
                     header("Authorization", "Basic $credentials")
                 }
-            } catch (cause: Throwable) {
+            } catch (ignore: Throwable) {
             }
         }
     }
 
+    /**
+     * Marks items of a folder as read
+     * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-items-of-a-folder-as-read">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-items-of-a-folder-as-read</a>
+     */
     fun markFolderAsRead(folderId: Long, callback: (List<Item>) -> Unit) {
         async {
             val feedQueries = Database.getFeedQueries()
@@ -175,11 +173,15 @@ object Api {
                     url("$baseUrl/folders/$folderId/read?newestItemId=$maxId")
                     header("Authorization", "Basic $credentials")
                 }
-            } catch (cause: Throwable) {
+            } catch (ignore: Throwable) {
             }
         }
     }
 
+    /**
+     * Marks all items as read
+     * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-all-items-as-read">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-all-items-as-read</a>
+     */
     fun markAllAsRead(callback: (List<Feed>) -> Unit) {
         async {
             val feedQueries = Database.getFeedQueries()
@@ -195,23 +197,31 @@ object Api {
                     url("$baseUrl/items/read?newestItemId=$maxId")
                     header("Authorization", "Basic $credentials")
                 }
-            } catch (cause: Throwable) {
+            } catch (ignore: Throwable) {
             }
         }
     }
 
-    fun markAsRead(itemId: Long) {
+    /**
+     * Marks item as read
+     * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-an-item-as-read">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-an-item-as-read</a>
+     */
+    fun markItemAsRead(itemId: Long) {
         async {
             try {
                 client.put {
                     url("$baseUrl/items/$itemId/read")
                     header("Authorization", "Basic $credentials")
                 }
-            } catch (cause: Throwable) {
+            } catch (ignore: Throwable) {
             }
         }
     }
 
+    /**
+     * Gets feeds
+     * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#get-all-feeds">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#get-all-feeds</a>
+     */
     fun feeds(callback: (List<Feed>) -> Unit, error: () -> Unit) {
         folders({ folders ->
             async {
@@ -225,13 +235,17 @@ object Api {
                     Database.getUserQueries()?.updateFeedCache(DateTime.now().unixMillisLong)
 
                     done { callback(Database.getFeeds()) }
-                } catch (cause: Throwable) {
+                } catch (ignore: Throwable) {
                     done { error() }
                 }
             }
         }, error)
     }
 
+    /**
+     * Gets folders
+     * @see <a href=""></a>
+     */
     private fun folders(callback: (List<NextcloudNewsFolder>) -> Unit, error: () -> Unit) {
         async {
             try {
@@ -248,12 +262,16 @@ object Api {
                 } else {
                     done { error() }
                 }
-            } catch (cause: Throwable) {
+            } catch (ignore: Throwable) {
                 done { error() }
             }
         }
     }
 
+    /**
+     * Renames a folder
+     * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#rename-a-folder">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#rename-a-folder</a>
+     */
     fun renameFolder(id: Long, title: String, callback: () -> Unit, error: () -> Unit) {
         async {
             try {
@@ -269,12 +287,16 @@ object Api {
                 Database.getFeedQueries()?.renameFolderFeed(title, id)
 
                 done { callback() }
-            } catch (cause: Throwable) {
+            } catch (ignore: Throwable) {
                 done { error() }
             }
         }
     }
 
+    /**
+     * Renames a feed
+     * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#rename-a-feed">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#rename-a-feed</a>
+     */
     fun renameFeed(id: Long, title: String, callback: () -> Unit, error: () -> Unit) {
         async {
             try {
@@ -290,12 +312,16 @@ object Api {
                 Database.getFeedQueries()?.renameFeed(title, id)
 
                 done { callback() }
-            } catch (cause: Throwable) {
+            } catch (ignore: Throwable) {
                 done { error() }
             }
         }
     }
 
+    /**
+     * Deletes a feed
+     * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#delete-a-feed">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#delete-a-feed</a>
+     */
     fun deleteFeed(id: Long, callback: () -> Unit, error: () -> Unit) {
         async {
             try {
@@ -307,12 +333,16 @@ object Api {
                 Database.getFeedQueries()?.deleteFeed(id)
 
                 done { callback() }
-            } catch (cause: Throwable) {
+            } catch (ignore: Throwable) {
                 done { error() }
             }
         }
     }
 
+    /**
+     * Deletes a folder
+     * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#delete-a-folder">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#delete-a-folder</a>
+     */
     fun deleteFolder(id: Long, callback: () -> Unit, error: () -> Unit) {
         async {
             try {
@@ -324,12 +354,16 @@ object Api {
                 Database.getFeedQueries()?.deleteFolderFeed(id)
 
                 done { callback() }
-            } catch (cause: Throwable) {
+            } catch (ignore: Throwable) {
                 done { error() }
             }
         }
     }
 
+    /**
+     * Creates a feed
+     * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#create-a-feed">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#create-a-feed</a>
+     */
     fun createFeed(url: String, folderId: Long, callback: () -> Unit, error: () -> Unit) {
         folders({ folders ->
             async {
@@ -346,13 +380,17 @@ object Api {
                     mergeFeedsAndFolders(folders, result, false)
 
                     done { callback() }
-                } catch (cause: Throwable) {
+                } catch (ignore: Throwable) {
                     done { error() }
                 }
             }
         }, error)
     }
 
+    /**
+     * Get items
+     * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#get-items">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#get-items</a>
+     */
     fun items(id: Long, type: Long, offset: Boolean, callback: (List<Item>) -> Unit, error: () -> Unit) {
         async {
             try {
@@ -391,7 +429,7 @@ object Api {
                 } else {
                     done { error() }
                 }
-            } catch (cause: Throwable) {
+            } catch (ignore: Throwable) {
                 done { error() }
             }
         }

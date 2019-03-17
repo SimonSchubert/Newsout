@@ -75,6 +75,7 @@
                     android:nextFocusForward="@id/emailEt"/>
 
             <AutoCompleteTextView
+                    android:autofillHints="emailAddress"
                     android:id="@+id/emailEt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -90,11 +91,10 @@
 
             <EditText
                     android:id="@+id/passwordEt"
+                    android:autofillHints="password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
-                    android:imeActionId="6"
-                    android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:maxLines="1"

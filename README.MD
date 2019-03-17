@@ -1,4 +1,6 @@
 ![GitHub](https://img.shields.io/github/license/SimonSchubert/NewsOut.svg)
+![Codacy grade](https://img.shields.io/codacy/grade/86f6598a08a1476585b3b7dda5598360.svg)
+![Liberapay receiving](https://img.shields.io/liberapay/receives/arnald.svg)
 
 # News-Out
 
@@ -10,10 +12,12 @@ The Android client is ready to use already but the iOS client needs some work to
 
 ## Features
 
-  - Sync of feeds and unread marker
-  - Change sorting order
-  - Add new feeds
-  - Mark all feeds or a single feed as read
+- Sync of feeds and unread marker
+- Change sorting order
+- Add new feeds
+- Rename feeds/folders
+- Delete feeds/folders
+- Mark all feeds or a single feed as read
+- Explore popular feeds
 
-
-Compare Dropbox/Google Drive/Nextcloud: https://nextcloud.com/compare/
+Compare Dropbox/Google Drive/Nextcloud: [https://nextcloud.com/compare](https://nextcloud.com/compare) 

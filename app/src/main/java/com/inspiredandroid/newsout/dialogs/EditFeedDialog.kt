@@ -9,9 +9,13 @@ import androidx.fragment.app.DialogFragment
 import com.inspiredandroid.newsout.R
 import com.inspiredandroid.newsout.callbacks.OnEditFeedInterface
 
+/*
+ * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
+ * that can be found in the LICENSE file.
+ */
 class EditFeedDialog : DialogFragment() {
 
-    var callback: OnEditFeedInterface? = null
+    private var callback: OnEditFeedInterface? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

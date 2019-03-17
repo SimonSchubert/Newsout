@@ -16,30 +16,20 @@ import com.inspiredandroid.newsout.isEmailValid
 import io.ktor.util.InternalAPI
 import kotlinx.android.synthetic.main.activity_login.*
 
-/* Copyright 2019 Simon Schubert
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
+/*
+ * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
+ * that can be found in the LICENSE file.
+ */
 @InternalAPI
 class LoginActivity : AppCompatActivity() {
 
-    var mode = MODE_NEWSOUT
+    private var mode = MODE_NEWSOUT
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        updateButtons()
+        updateMode()
 
         passwordEt.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
@@ -70,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 MODE_NEWSOUT
             }
-            updateButtons()
+            updateMode()
         }
 
         val accountManager = AccountManager.get(this)
@@ -84,7 +74,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateButtons() {
+    private fun updateMode() {
         if (mode == MODE_NEWSOUT) {
             serverPathEt.visibility = View.GONE
             signInBtn.text = "Login/Create"
@@ -133,11 +123,11 @@ class LoginActivity : AppCompatActivity() {
         val password = passwordEt.text.toString()
         val nextcloudUrl = "https://nx3217.your-next.cloud"
 
-        if(!email.isEmailValid()) {
+        if (!email.isEmailValid()) {
             emailEt.error = "Please enter a correct email address"
             return
         }
-        if(password.length < 6) {
+        if (password.length < 6) {
             passwordEt.error = "Password is too short"
             return
         }
