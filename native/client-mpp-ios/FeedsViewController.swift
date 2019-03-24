@@ -46,12 +46,22 @@ class FeedsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let itemsVc = self.storyboard?.instantiateViewController(withIdentifier: "items") as! ItemsViewController
-        
         let item = data[indexPath.row]
-        itemsVc.id = item.id
-        itemsVc.type = item.isFolder
-        self.present(itemsVc, animated: true, completion: nil)
+        performSegue(withIdentifier: "items", sender: item)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if segue.destination is ItemsViewController
+        {
+            let vc = segue.destination as? ItemsViewController
+            if sender is Feed {
+                let feed = (sender as? Feed)
+                vc?.id = feed?.id ?? 0
+                vc?.type = feed?.isFolder ?? 0
+            }
+        }
     }
     
     @objc private func refreshFeedData(_ sender: Any) {

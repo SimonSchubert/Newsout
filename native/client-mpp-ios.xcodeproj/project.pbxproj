@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2C9BE46421183DE400670E90 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9BE46321183DE400670E90 /* AppDelegate.swift */; };
-		2C9BE46621183DE400670E90 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9BE46521183DE400670E90 /* ViewController.swift */; };
+		2C9BE46621183DE400670E90 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9BE46521183DE400670E90 /* LoginViewController.swift */; };
 		2C9BE46921183DE400670E90 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C9BE46721183DE400670E90 /* Main.storyboard */; };
 		2C9BE46B21183DE600670E90 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C9BE46A21183DE600670E90 /* Assets.xcassets */; };
 		2C9BE46E21183DE600670E90 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C9BE46C21183DE600670E90 /* LaunchScreen.storyboard */; };
@@ -37,7 +37,7 @@
 		03663DC3D93A68F83B8B3AFD /* Pods-client-mpp-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-client-mpp-ios.release.xcconfig"; path = "Target Support Files/Pods-client-mpp-ios/Pods-client-mpp-ios.release.xcconfig"; sourceTree = "<group>"; };
 		2C9BE46021183DE400670E90 /* client-mpp-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "client-mpp-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C9BE46321183DE400670E90 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2C9BE46521183DE400670E90 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2C9BE46521183DE400670E90 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		2C9BE46821183DE400670E90 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2C9BE46A21183DE600670E90 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C9BE46D21183DE600670E90 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -94,7 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				2C9BE46321183DE400670E90 /* AppDelegate.swift */,
-				2C9BE46521183DE400670E90 /* ViewController.swift */,
+				2C9BE46521183DE400670E90 /* LoginViewController.swift */,
 				F4E63EFF2225DEA20055879B /* FeedsViewController.swift */,
 				F41A3F5B2243DFCC0075AB70 /* ItemsViewController.swift */,
 				2C9BE46721183DE400670E90 /* Main.storyboard */,
@@ -194,12 +194,14 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-client-mpp-ios/Pods-client-mpp-ios-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftKeychainWrapper/SwiftKeychainWrapper.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftKeychainWrapper.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -254,7 +256,7 @@
 			files = (
 				F4E63F002225DEA20055879B /* FeedsViewController.swift in Sources */,
 				F41A3F5C2243DFCC0075AB70 /* ItemsViewController.swift in Sources */,
-				2C9BE46621183DE400670E90 /* ViewController.swift in Sources */,
+				2C9BE46621183DE400670E90 /* LoginViewController.swift in Sources */,
 				2C9BE46421183DE400670E90 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
