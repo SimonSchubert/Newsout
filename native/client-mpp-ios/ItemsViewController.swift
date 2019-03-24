@@ -12,10 +12,10 @@ class ItemsViewController: UITableViewController {
     var data = ([Item])()
     var id: Int64 = 0
     var type: Int64 = 0
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         let refreshControl = UIRefreshControl()
         if #available(iOS 10.0, *) {
             tableView.refreshControl = refreshControl
@@ -23,47 +23,54 @@ class ItemsViewController: UITableViewController {
             tableView.addSubview(refreshControl)
         }
         refreshControl.addTarget(self, action: #selector(refreshItemData(_:)), for: .valueChanged)
-        
+
+        tableView.tableFooterView = UIView()
+
+        let database = Database()
+        self.data = database.getItems(feedId: id, type: type) as! [Item]
+        self.tableView?.reloadData()
+
+        self.tableView.refreshManually()
         fetchItemData()
     }
-    
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
     }
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "item", for: indexPath) as! ItemTableViewCell
-        
+
         let item = data[indexPath.row]
-        
+
         cell.titleLabel?.text = item.title
         cell.coverImageView?.kf.setImage(with: URL(string: item.imageUrl))
         cell.accessoryType = .disclosureIndicator
-        
+
         return cell
     }
-    
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = data[indexPath.row]
 
         guard let url = URL(string: item.url) else { return }
         UIApplication.shared.open(url)
     }
-    
+
     @objc private func refreshItemData(_ sender: Any) {
         fetchItemData()
     }
-    
+
     private func fetchItemData() {
         api.items(id: id
-            , type: type
-            , offset: false
-            , callback: { (items) in
-            self.data = items
-            self.tableView?.reloadData()
-            self.refreshControl?.endRefreshing()
-            return KotlinUnit()
-        }) { () in
+                  , type: type
+                  , offset: false
+                  , callback: { (items) in
+                      self.data = items
+                      self.tableView?.reloadData()
+                      self.refreshControl?.endRefreshing()
+                      return KotlinUnit()
+                  }) { () in
             return KotlinUnit()
         }
     }

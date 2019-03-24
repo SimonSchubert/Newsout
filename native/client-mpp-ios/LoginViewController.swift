@@ -13,27 +13,26 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var urlText: UITextField!
     @IBOutlet weak var emailText: UITextField!
     @IBOutlet weak var passwordText: UITextField!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.loginButton.addTarget(self, action: #selector(didButtonClick), for: .touchUpInside)
     }
-    
+
     @objc func didButtonClick(_ sender: UIButton) {
         let url = urlText.text ?? ""
         let email = emailText.text ?? ""
         let password = passwordText.text ?? ""
-        
+
         let api = Api()
-        
+
         api.login(url: url, email: email, password: password, callback: { (version) in
             KeychainWrapper.standard.set(url, forKey: "SERVER")
             KeychainWrapper.standard.set(email, forKey: "EMAIL")
             KeychainWrapper.standard.set(password, forKey: "PASSWORD")
-            print("Version: " + version.version!)
-            let feedsVc = self.storyboard?.instantiateViewController(withIdentifier: "navigation") as! FeedsViewController
-            self.present(feedsVc, animated: true, completion: nil)
+            let navigationVc = self.storyboard?.instantiateViewController(withIdentifier: "navigation")
+            self.present(navigationVc!, animated: true, completion: nil)
             return KotlinUnit()
         }, unauthorized: { () in
             return KotlinUnit()

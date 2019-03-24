@@ -11,21 +11,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        
+
         let database = Database()
         database.setup()
-        
+
         let url: String = KeychainWrapper.standard.string(forKey: "SERVER") ?? ""
         if(!url.isEmpty) {
             let email: String = KeychainWrapper.standard.string(forKey: "EMAIL") ?? ""
             let password: String = KeychainWrapper.standard.string(forKey: "PASSWORD") ?? ""
-            
+
             let api = Api()
             api.setCredentials(url: url, email: email, password: password)
-            
-            self.window = UIWindow(frame: UIScreen.main.bounds)
+
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let initialViewController = storyboard.instantiateViewController(withIdentifier: "navigation")
+            self.window = UIWindow(frame: UIScreen.main.bounds)
             self.window?.rootViewController = initialViewController
             self.window?.makeKeyAndVisible()
         }
