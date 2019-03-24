@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.row_item.*
  * that can be found in the LICENSE file.
  */
 class ItemsAdapter(private var feeds: List<Item>, private val listener: OnItemClickInterface) :
-    RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
+    RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
 
     internal val unreadMap: MutableMap<Long, Boolean> = mutableMapOf()
 
@@ -27,16 +27,16 @@ class ItemsAdapter(private var feeds: List<Item>, private val listener: OnItemCl
         updateItems(feeds)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.row_item, parent, false)
-        return ViewHolder(view)
+        return ItemViewHolder(view)
     }
 
     override fun getItemCount(): Int {
         return feeds.count()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bind(feeds[position])
     }
 
@@ -51,7 +51,8 @@ class ItemsAdapter(private var feeds: List<Item>, private val listener: OnItemCl
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    inner class ItemViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
+        LayoutContainer {
 
         internal var id = 0L
         private var feedId = 0L
@@ -97,12 +98,15 @@ class ItemsAdapter(private var feeds: List<Item>, private val listener: OnItemCl
         }
 
         internal fun markAsRead() {
-            Database.getItemQueries()?.markItemAsRead(id)
-            Database.getFeedQueries()
-                ?.decreaseUnreadCount(feedId, isFolder.toLong())
-            Api.markItemAsRead(id)
-            unreadMap[id] = false
-            notifyItemChanged(adapterPosition)
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                Database.getItemQueries()?.markItemAsRead(id)
+                Database.getFeedQueries()
+                    ?.decreaseUnreadCount(feedId, isFolder.toLong())
+                Api.markItemAsRead(id)
+                unreadMap[id] = false
+                notifyItemChanged(position)
+            }
         }
     }
 }
