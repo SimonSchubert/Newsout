@@ -27,17 +27,20 @@
 
         <activity
                 android:name=".activities.ItemsActivity"
-                android:label="">
+                android:label=""
+                android:launchMode="singleTask">
         </activity>
         <activity
                 android:name=".activities.FeedsActivity"
-                android:label="@string/title_activity_feeds">
+                android:label="@string/title_activity_feeds"
+                android:launchMode="singleTask">
         </activity>
         <activity
                 android:name=".activities.LoginActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar"
-                android:windowSoftInputMode="stateHidden">
+                android:windowSoftInputMode="stateHidden"
+                android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
