@@ -13,7 +13,7 @@
         <!--Login View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="LoginViewController" customModule="client_mpp_ios" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="login" id="BYZ-38-t0r" customClass="LoginViewController" customModule="client_mpp_ios" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -113,10 +113,10 @@
             </objects>
             <point key="canvasLocation" x="790" y="134"/>
         </scene>
-        <!--News-->
+        <!--Feeds-->
         <scene sceneID="UOz-Gs-C59">
             <objects>
-                <tableViewController storyboardIdentifier="feeds" id="w0K-Mo-nMQ" customClass="FeedsViewController" customModule="client_mpp_ios" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="feeds" title="Feeds" id="w0K-Mo-nMQ" customClass="FeedsViewController" customModule="client_mpp_ios" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="l9S-pR-6Pu">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -143,8 +143,8 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pQa-1e-FRC">
-                                            <rect key="frame" x="2" y="2" width="40" height="40"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pQa-1e-FRC">
+                                            <rect key="frame" x="6" y="6" width="32" height="32"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                     </subviews>
@@ -161,7 +161,9 @@
                             <outlet property="delegate" destination="w0K-Mo-nMQ" id="Pr2-dL-04k"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="News" id="QUm-co-xEw"/>
+                    <navigationItem key="navigationItem" title="News" leftItemsSupplementBackButton="YES" id="QUm-co-xEw">
+                        <barButtonItem key="backBarButtonItem" title=" " id="Syk-UW-SJP"/>
+                    </navigationItem>
                     <connections>
                         <segue destination="z5k-tQ-9YX" kind="show" identifier="items" id="qzQ-nu-DxM"/>
                     </connections>
@@ -170,10 +172,10 @@
             </objects>
             <point key="canvasLocation" x="1578" y="134"/>
         </scene>
-        <!--Title-->
+        <!--Items-->
         <scene sceneID="2sQ-Pc-acD">
             <objects>
-                <tableViewController storyboardIdentifier="items" id="z5k-tQ-9YX" customClass="ItemsViewController" customModule="client_mpp_ios" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="items" title="Items" id="z5k-tQ-9YX" customClass="ItemsViewController" customModule="client_mpp_ios" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="M3v-1P-WcJ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
