@@ -54,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
             val dialog = InfoDialog.getInstance()
             dialog.show(supportFragmentManager, "TAG")
         }
-        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
             mode = if (checkedId == R.id.nextcloudBtn) {
                 MODE_CUSTOM
             } else {

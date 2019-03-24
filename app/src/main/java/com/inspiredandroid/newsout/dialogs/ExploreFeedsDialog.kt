@@ -32,9 +32,9 @@ class ExploreFeedsDialog : DialogFragment() {
 
         builderSingle.setNegativeButton(
             "cancel"
-        ) { dialog, which -> dialog.dismiss() }
+        ) { dialog, _ -> dialog.dismiss() }
 
-        builderSingle.setAdapter(arrayAdapter) { dialog, which ->
+        builderSingle.setAdapter(arrayAdapter) { _, which ->
             callback?.onAddFeed(ExploreFeed.exploreFeeds[which].url)
         }
         return builderSingle.create()

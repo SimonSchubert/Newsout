@@ -14,8 +14,6 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.TextContent
 import io.ktor.util.InternalAPI
 import io.ktor.util.encodeBase64
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.list
@@ -34,9 +32,10 @@ object Api {
     @ThreadLocal
     private var nextcloudUrl = ""
     @ThreadLocal
-    private val baseUrl get() = "$nextcloudUrl/index.php/apps/news/api/v1-2"
+    private val baseUrl
+        get() = "$nextcloudUrl/index.php/apps/news/api/v1-2"
 
-    init{
+    init {
 
     }
 

@@ -32,7 +32,7 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feeds)
 
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener { _ ->
             Api.markAllAsRead {
                 updateAdapterAndHideLoading(it)
                 updateFab()

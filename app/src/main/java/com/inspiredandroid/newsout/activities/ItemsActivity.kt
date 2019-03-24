@@ -45,7 +45,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         type = intent.getLongExtra(KEY_TYPE, 0L)
         title = intent.getStringExtra(KEY_TITLE)
 
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener { _ ->
             if (type == 0L) {
                 Api.markFeedAsRead(id) {
                     adapter.updateItems(it)
