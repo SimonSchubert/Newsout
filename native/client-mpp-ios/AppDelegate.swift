@@ -1,5 +1,6 @@
 import UIKit
 import main
+import SwiftKeychainWrapper
 
 /*
  * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
@@ -10,6 +11,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
+        let database = Database()
+        database.setup()
+        
+        let url: String = KeychainWrapper.standard.string(forKey: "SERVER") ?? ""
+        if(!url.isEmpty) {
+            let email: String = KeychainWrapper.standard.string(forKey: "EMAIL") ?? ""
+            let password: String = KeychainWrapper.standard.string(forKey: "PASSWORD") ?? ""
+            
+            let api = Api()
+            api.setCredentials(url: url, email: email, password: password)
+            
+            self.window = UIWindow(frame: UIScreen.main.bounds)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let initialViewController = storyboard.instantiateViewController(withIdentifier: "navigation")
+            self.window?.rootViewController = initialViewController
+            self.window?.makeKeyAndVisible()
+        }
+
         return true
     }
 
@@ -28,5 +48,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
     }
-
 }
