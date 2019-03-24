@@ -45,6 +45,10 @@ object Api {
         nextcloudUrl = url
     }
 
+    fun isCredentialsAvailable(): Boolean {
+        return credentials.isNotEmpty() && nextcloudUrl.isNotEmpty()
+    }
+
     @InternalAPI
     fun login(
         url: String,
@@ -225,27 +229,33 @@ object Api {
      * Gets feeds
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#get-all-feeds">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#get-all-feeds</a>
      */
-    fun feeds(callback: (List<Feed>) -> Unit, error: () -> Unit) {
+    fun feeds(callback: (List<Feed>) -> Unit, error: () -> Unit, unauthorized: () -> Unit) {
         folders({ folders ->
             async {
                 try {
-                    val result: String = client.get {
+                    val response = client.get<HttpResponse> {
                         url("$baseUrl/feeds")
                         header("Authorization", "Basic $credentials")
                     }
-                    mergeFeedsAndFolders(folders, result, true)
+                    when {
+                        response.status == HttpStatusCode.OK -> {
+                            mergeFeedsAndFolders(folders, response.readText(), true)
 
-                    Database.getUserQueries()?.updateFeedCache(DateTime.now().unixMillisLong)
+                            Database.getUserQueries()?.updateFeedCache(DateTime.now().unixMillisLong)
 
-                    done { callback(Database.getFeeds()) }
+                            done { callback(Database.getFeeds()) }
+                        }
+                        response.status == HttpStatusCode.Unauthorized -> done { unauthorized() }
+                        else -> done { error() }
+                    }
                 } catch (ignore: Throwable) {
                     done { error() }
                 }
             }
-        }, error)
+        }, error, unauthorized)
     }
 
-    private fun folders(callback: (List<NextcloudNewsFolder>) -> Unit, error: () -> Unit) {
+    private fun folders(callback: (List<NextcloudNewsFolder>) -> Unit, error: () -> Unit, unauthorized: () -> Unit) {
         async {
             try {
                 val result: String = client.get {
@@ -383,7 +393,7 @@ object Api {
                     done { error() }
                 }
             }
-        }, error)
+        }, error, {})
     }
 
     /**
@@ -438,8 +448,6 @@ object Api {
         val feedsArray = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("feeds")
         feedsArray?.let {
             val list = Json.nonstrict.parse(NextcloudNewsFeed.serializer().list, it.jsonArray.toString())
-
-            println("fetched feeds: " + list.count())
 
             val feedQueries = Database.getFeedQueries()
             feedQueries?.let {
