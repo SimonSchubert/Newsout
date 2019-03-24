@@ -1,0 +1,59 @@
+CREATE TABLE item (
+  id INTEGER PRIMARY KEY,
+  feedId INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  imageUrl TEXT NOT NULL,
+  url TEXT NOT NULL,
+  isUnread INTEGER NOT NULL,
+  isFolder INTEGER NOT NULL,
+  isStarred INTEGER NOT NULL,
+  creationDate INTEGER NOT NULL
+);
+
+CREATE INDEX item_id ON item(id);
+
+selectAllByFeedIdAndType:
+SELECT *
+FROM item
+WHERE feedId=? AND isFolder=?
+ORDER BY id DESC;
+
+insert:
+INSERT OR REPLACE INTO item(id, feedId, title, imageUrl, url, isUnread, isFolder, isStarred, creationDate)
+VALUES (?, ?, ?, ?, ?, ?, ?, 0, datetime('now'));
+
+maxIdAll:
+SELECT MAX(id)
+FROM item;
+
+maxId:
+SELECT MAX(id)
+FROM item
+WHERE feedId=? AND isFolder=?;
+
+minId:
+SELECT MIN(id)
+FROM item
+WHERE feedId=? AND isFolder=?;
+
+markAllAsRead:
+UPDATE item
+SET isUnread = 0;
+
+markItemAsRead:
+UPDATE item
+SET isUnread = 0
+WHERE id=?;
+
+markAsRead:
+UPDATE item
+SET isUnread = 0
+WHERE feedId=? AND isFolder=?;
+
+clear:
+DELETE FROM item;
+
+tidy:
+SELECT *
+FROM item
+WHERE creationDate <= datetime('now', '-7 days');

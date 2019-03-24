@@ -1,0 +1,104 @@
+apply plugin: 'kotlin-multiplatform'
+apply plugin: 'kotlinx-serialization'
+apply plugin: 'com.squareup.sqldelight'
+
+sqldelight {
+    SqlDelightDatabase {
+        packageName = "com.inspiredandroid.newsout"
+        sourceFolders = ["sqldelight"]
+        schemaOutputDirectory = file("build/dbs")
+    }
+}
+
+repositories {
+    maven { url "https://dl.bintray.com/kotlin/kotlinx" }
+    maven { url "https://dl.bintray.com/kotlin/ktor" }
+    maven { url "https://kotlin.bintray.com/kotlinx" }
+    maven { url "https://dl.bintray.com/soywiz/soywiz" }
+    mavenCentral()
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+
+kotlin {
+    targets {
+        final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") \
+                              ? presets.iosArm64 : presets.iosX64
+
+        fromPreset(iOSTarget, 'ios') {
+            compilations.main.outputKinds('FRAMEWORK')
+            compilations.each {
+                it.extraOpts("-linkerOpts", "-lsqlite3")
+            }
+        }
+
+        fromPreset(presets.jvm, 'android')
+
+        fromPreset(presets.iosX64, 'iosX64')
+        fromPreset(presets.iosArm64, 'iosArm64')
+        configure([iosX64, iosArm64]) {
+            compilations.main.outputKinds('FRAMEWORK')
+        }
+    }
+
+    sourceSets {
+        configure([iosX64Main, iosArm64Main]) {
+            dependsOn iosMain
+        }
+
+        commonMain.dependencies {
+            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.1.1"
+            implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.10.0"
+            implementation "io.ktor:ktor-client-core:1.1.3"
+            implementation "io.ktor:ktor-client-auth:1.1.3"
+            implementation "com.soywiz:klock:1.1.1"
+            implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+        }
+
+        androidMain.dependencies {
+            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1"
+            implementation "com.squareup.sqldelight:runtime-jvm:1.1.1"
+            implementation "io.ktor:ktor-client-android:1.1.3"
+            implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.10.0"
+        }
+
+        iosMain.dependencies {
+            implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-native:1.1.1'
+            implementation "com.squareup.sqldelight:ios-driver:1.1.1"
+            implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.10.0"
+            implementation "io.ktor:ktor-client-ios:1.1.3"
+        }
+
+        iosArm64Main.dependencies {
+            implementation "io.ktor:ktor-client-ios-iosarm64:1.1.3"
+        }
+
+        iosX64Main.dependencies {
+            implementation "io.ktor:ktor-client-ios-iosx64:1.1.3"
+        }
+    }
+}
+
+configurations {
+    compileClasspath
+}
+
+task packForXCode(type: Sync) {
+    final File frameworkDir = new File(buildDir, "xcode-frameworks")
+    final String mode = project.findProperty("XCODE_CONFIGURATION")?.toUpperCase() ?: 'DEBUG'
+
+    inputs.property "mode", mode
+    dependsOn kotlin.targets.ios.compilations.main.linkTaskName("FRAMEWORK", mode)
+
+    from { kotlin.targets.ios.compilations.main.getBinary("FRAMEWORK", mode).parentFile }
+    into frameworkDir
+
+    doLast {
+        new File(frameworkDir, 'gradlew').with {
+            text = "#!/bin/bash\nexport 'JAVA_HOME=${System.getProperty("java.home")}'\ncd '${rootProject.rootDir}'\n./gradlew \$@\n"
+            setExecutable(true)
+        }
+    }
+}
+
+tasks.build.dependsOn packForXCode

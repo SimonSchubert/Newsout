@@ -1,0 +1,68 @@
+CREATE TABLE feed (
+  id INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  faviconUrl TEXT NOT NULL,
+  unreadCount INTEGER NOT NULL,
+  ordering INTEGER NOT NULL,
+  isFolder INTEGER NOT NULL
+);
+
+CREATE INDEX feed_id ON feed(id);
+
+selectAllByUnreadCount:
+SELECT *
+FROM feed
+ORDER BY unreadCount DESC;
+
+selectAllByUnreadCountAndFolder:
+SELECT *
+FROM feed
+ORDER BY isFolder DESC, unreadCount DESC;
+
+selectAllByTitle:
+SELECT *
+FROM feed
+ORDER BY title COLLATE NOCASE ASC;
+
+selectAllByTitleAndFolder:
+SELECT *
+FROM feed
+ORDER BY isFolder DESC, title COLLATE NOCASE ASC;
+
+selectFolderFeedById:
+SELECT *
+FROM feed
+WHERE id=? AND isFolder=1;
+
+renameFolderFeed:
+UPDATE feed SET title = ? WHERE id=? AND isFolder=1;
+
+renameFeed:
+UPDATE feed SET title = ? WHERE id=? AND isFolder=0;
+
+deleteFolderFeed:
+DELETE FROM feed WHERE id=? AND isFolder=1;
+
+deleteFeed:
+DELETE FROM feed WHERE id=? AND isFolder=0;
+
+insert:
+INSERT INTO feed(id, title, faviconUrl, unreadCount, ordering, isFolder)
+VALUES (?, ?, ?, ?, ?, ?);
+
+increaseUnreadCountForFolderFeed:
+UPDATE feed SET unreadCount = unreadCount + ? WHERE id=? AND isFolder=1;
+
+markAllAsRead:
+UPDATE feed SET unreadCount = 0;
+
+markAsRead:
+UPDATE feed SET unreadCount = 0
+WHERE id=? AND isFolder=?;
+
+decreaseUnreadCount:
+UPDATE feed SET unreadCount = unreadCount - 1
+WHERE id=? AND isFolder=?;
+
+clear:
+DELETE FROM feed;

@@ -11,3 +11,5 @@
 /build
 /captures
 .externalNativeBuild
+/shared/build
+/native/Pods
