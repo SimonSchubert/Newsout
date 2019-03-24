@@ -8,11 +8,8 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.inspiredandroid.newsout.Api
-import com.inspiredandroid.newsout.R
+import com.inspiredandroid.newsout.*
 import com.inspiredandroid.newsout.dialogs.InfoDialog
-import com.inspiredandroid.newsout.hideKeyboard
-import com.inspiredandroid.newsout.isEmailValid
 import io.ktor.util.InternalAPI
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -82,7 +79,7 @@ class LoginActivity : AppCompatActivity() {
         } else {
             serverPathEt.visibility = View.VISIBLE
             signInBtn.text = "Login"
-            emailEt.hint = "Username/Email"
+            emailEt.hint = "Email/Username"
         }
     }
 
@@ -100,16 +97,22 @@ class LoginActivity : AppCompatActivity() {
         showLoading()
 
         Api.login(nextcloudUrl, email, password, {
-            saveLogin(nextcloudUrl, email, password)
+            if (isThere()) {
+                saveLogin(nextcloudUrl, email, password)
 
-            startActivity(Intent(this@LoginActivity, FeedsActivity::class.java))
-            finish()
+                startActivity(Intent(this@LoginActivity, FeedsActivity::class.java))
+                finish()
+            }
         }, {
-            passwordEt.error = "Password or email might be wrong"
-            hideLoading()
+            if (isThere()) {
+                passwordEt.error = "Password or email might be wrong"
+                hideLoading()
+            }
         }, {
-            serverPathEt.error = "Could not connect"
-            hideLoading()
+            if (isThere()) {
+                serverPathEt.error = "Could not connect"
+                hideLoading()
+            }
         })
     }
 
@@ -135,16 +138,22 @@ class LoginActivity : AppCompatActivity() {
         showLoading()
 
         Api.createAccount(nextcloudUrl, email, password, {
-            saveLogin(nextcloudUrl, email, password)
+            if (isThere()) {
+                saveLogin(nextcloudUrl, email, password)
 
-            startActivity(Intent(this@LoginActivity, FeedsActivity::class.java))
-            finish()
+                startActivity(Intent(this@LoginActivity, FeedsActivity::class.java))
+                finish()
+            }
         }, {
-            serverPathEt?.setText(nextcloudUrl)
-            attemptLogin()
+            if (isThere()) {
+                serverPathEt?.setText(nextcloudUrl)
+                attemptLogin()
+            }
         }, {
-            passwordEt.error = "Try again with a different password"
-            hideLoading()
+            if (isThere()) {
+                passwordEt.error = "Try again with a different password"
+                hideLoading()
+            }
         })
     }
 

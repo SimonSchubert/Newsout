@@ -32,3 +32,7 @@ fun Activity.hideKeyboard() {
         imm?.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
+
+fun Activity.isThere(): Boolean {
+    return !isDestroyed && !isFinishing
+}

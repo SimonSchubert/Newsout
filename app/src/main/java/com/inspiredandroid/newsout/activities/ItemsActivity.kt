@@ -71,11 +71,12 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
 
                 val positions = layoutManager.findFirstVisibleItemPositions(null)
                 positions.forEach { position ->
-                    val viewHolder = recyclerView.findViewHolderForAdapterPosition(position) as? ItemsAdapter.ViewHolder
+                    val viewHolder =
+                        recyclerView.findViewHolderForAdapterPosition(position) as? ItemsAdapter.ItemViewHolder
                     viewHolder?.let {
-                        Handler().post {
-                            if (viewHolder.isUndread) {
-                                viewHolder.markAsRead()
+                        if (it.isUndread) {
+                            Handler().post {
+                                it.markAsRead()
                                 updateFab()
                             }
                         }
@@ -89,10 +90,14 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
                 if (!recyclerView.canScrollVertically(1)) {
                     showLoading()
                     Api.items(id, type, true, {
-                        updateAdapterAndHideLoading(it)
-                        updateFab()
+                        if (isThere()) {
+                            updateAdapterAndHideLoading(it)
+                            updateFab()
+                        }
                     }, {
-                        hideLoading()
+                        if (isThere()) {
+                            hideLoading()
+                        }
                     })
                 }
             }
@@ -100,10 +105,14 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         recyclerView.addOnScrollListener(listener)
 
         Api.items(id, type, false, {
-            updateAdapterAndHideLoading(it)
-            updateFab()
+            if (isThere()) {
+                updateAdapterAndHideLoading(it)
+                updateFab()
+            }
         }, {
-            hideLoading()
+            if (isThere()) {
+                hideLoading()
+            }
         })
     }
 
@@ -127,10 +136,14 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
 
     override fun onRefresh() {
         Api.items(id, type, false, {
-            updateAdapterAndHideLoading(it)
-            updateFab()
+            if (isThere()) {
+                updateAdapterAndHideLoading(it)
+                updateFab()
+            }
         }, {
-            hideLoading()
+            if (isThere()) {
+                hideLoading()
+            }
         })
     }
 
@@ -138,13 +151,19 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         showLoading()
         Api.createFeed(url, id, {
             Api.items(id, type, false, {
-                updateAdapterAndHideLoading(it)
-                updateFab()
+                if (isThere()) {
+                    updateAdapterAndHideLoading(it)
+                    updateFab()
+                }
             }, {
-                hideLoading()
+                if (isThere()) {
+                    hideLoading()
+                }
             })
         }, {
-            hideLoading()
+            if (isThere()) {
+                hideLoading()
+            }
         })
     }
 
