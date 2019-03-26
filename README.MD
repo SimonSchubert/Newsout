@@ -4,12 +4,15 @@
 
 # News-Out
 
-Android and iOS mobile client for Nextcloud news App. This project shares the business logic code of the Api/Serialization and Database storing. Only interaction with the views happens separately for iOS and Android.
+Android and iOS mobile client for Nextcloud news App. 
 
-The Android client is ready to use already but the iOS client needs some work to be done first.
+The Android client is already available to download in the Play Store. F-Droid and Apple App Store will hopefully come soon.
+
+## Project structure
+
+This project shares the Database, Api, Models and Serialization code. Only the interaction with the UI is done separately for iOS and Android.
 
 <img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/project_structure.png" width="400">
-
 
 ## Android
 
