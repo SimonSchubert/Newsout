@@ -1,21 +1,25 @@
 package com.inspiredandroid.newsout
 
+import com.soywiz.klock.DateTime
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class UnitTest {
+open class UnitTest {
 
     @Test
-    fun testDatabaseClear() {
+    fun testClearDatabase() {
+        Database.setup()
+        Database.clear()
+
         val feedId = 1L
-        val isFolder = 0L
+        val isFolder = false.toLong()
 
         Database.getFeedQueries()?.insert(feedId, "", "", 0, 0, isFolder)
         Database.getItemQueries()?.insert(0, feedId, "Test", "", "", 0, isFolder)
 
-        assertEquals(Database.getFeeds().size, 1)
-        assertEquals(Database.getItems(feedId, isFolder).size, 1)
+        assertEquals(1, Database.getFeeds().size)
+        assertEquals(1, Database.getItems(feedId, isFolder).size)
 
         Database.clear()
 
@@ -24,45 +28,99 @@ class UnitTest {
     }
 
     @Test
-    fun testDatabaseMarkAsRead() {
-        val firstFeedId = 1L
-        val isFolder = 0L
+    fun testMarkItemAsRead() {
+        Database.clear()
 
-        // Increase feed counter
+        val feedId = 1L
+        val isFolder = false.toLong()
+
+        val itemQueries = Database.getItemQueries()
+        itemQueries?.insert(10, feedId, "News #1", "", "", 1, isFolder)
+
+        assertTrue { itemQueries?.selectAllByFeedIdAndType(feedId, isFolder)?.executeAsOne()?.isUnread == 1L }
+
+        itemQueries?.markItemAsRead(10)
+
+        assertTrue { itemQueries?.selectAllByFeedIdAndType(feedId, isFolder)?.executeAsOne()?.isUnread == 0L }
+    }
+
+    @Test
+    fun testMarkFeedAsRead() {
+        Database.clear()
+
+        val feedId = 1L
+        val isFolder = false.toLong()
+
+        val itemQueries = Database.getItemQueries()
+        itemQueries?.insert(11, feedId, "News #2", "", "", 1, isFolder)
+        itemQueries?.markAsRead(feedId, isFolder)
+
+        assertEquals(itemQueries?.selectAllByFeedIdAndType(feedId, isFolder)?.executeAsOne()?.isUnread, 0L)
+    }
+
+    @Test
+    fun testMarkAllItemsAsRead() {
+        Database.clear()
+
+        val feedId = 1L
+        val isFolder = false.toLong()
+
+        val itemQueries = Database.getItemQueries()
+        itemQueries?.insert(12, feedId, "News #3", "", "", 1, isFolder)
+        itemQueries?.markAllAsRead()
+
+        assertEquals(itemQueries?.selectAllByFeedIdAndType(feedId, isFolder)?.executeAsOne()?.isUnread, 0L)
+    }
+
+    @Test
+    fun testDecreaseUnreadCountAsRead() {
+        Database.clear()
+
+        val firstFeedId = 1L
+        val isFolder = false.toLong()
+
         val feedQueries = Database.getFeedQueries()
         feedQueries?.insert(firstFeedId, "Kotlin", "", 4, 0, isFolder)
         feedQueries?.decreaseUnreadCount(firstFeedId, isFolder)
 
-        assertTrue {
-            feedQueries?.selectAllByTitle()?.executeAsOne()?.unreadCount == 3L
-        }
+        assertEquals(feedQueries?.selectAllByTitle()?.executeAsOne()?.unreadCount, 3L)
+    }
 
+    @Test
+    fun testFeedSortingSettings() {
+        Database.clear()
 
-        // Mark complete feed as read
-        val itemQueries = Database.getItemQueries()
-        itemQueries?.insert(10, firstFeedId, "News #1", "", "", 1, isFolder)
+        val feedQueries = Database.getFeedQueries()
+        feedQueries?.insert(1, "Feed", "", 4, 0, 0)
+        feedQueries?.insert(2, "AwesomeFolder", "", 0, 0, 1)
 
-        assertTrue { itemQueries?.selectAllByFeedIdAndType(firstFeedId, isFolder)?.executeAsOne()?.isUnread == 1L }
-        itemQueries?.markItemAsRead(10)
+        Database.getUserQueries()?.updateFolderTop(0L)
+        Database.getUserQueries()?.updateSorting(Database.SORT_TITLE)
 
-        assertTrue { itemQueries?.selectAllByFeedIdAndType(firstFeedId, isFolder)?.executeAsOne()?.isUnread == 0L }
+        assertEquals("AwesomeFolder", Database.getFeeds()[0].title)
 
+        Database.getUserQueries()?.updateSorting(Database.SORT_UNREADCOUNT)
 
-        // Mark complete feed as read
-        val secondFeedId = 2L
+        assertEquals("Feed", Database.getFeeds()[0].title)
 
-        itemQueries?.insert(11, secondFeedId, "News #2", "", "", 1, isFolder)
-        itemQueries?.markAsRead(secondFeedId, isFolder)
+        Database.getUserQueries()?.updateSorting(Database.SORT_UNREADCOUNT)
+        Database.getUserQueries()?.updateFolderTop(1L)
 
-        assertTrue { itemQueries?.selectAllByFeedIdAndType(secondFeedId, isFolder)?.executeAsOne()?.isUnread == 0L }
+        assertEquals("AwesomeFolder", Database.getFeeds()[0].title)
+    }
 
+    @Test
+    fun testFeedUpdateCache() {
+        Database.clear()
 
-        // mark every item as read
-        val thirdFeedId = 3L
+        val userQueries = Database.getUserQueries()
 
-        itemQueries?.insert(12, thirdFeedId, "News #3", "", "", 1, isFolder)
-        itemQueries?.markAllAsRead()
+        userQueries?.updateFeedCache(DateTime.now().unixMillisLong)
 
-        assertTrue { itemQueries?.selectAllByFeedIdAndType(thirdFeedId, isFolder)?.executeAsOne()?.isUnread == 0L }
+        assertTrue { Database.getUser()?.isCacheOutdated() == false }
+
+        userQueries?.updateFeedCache(DateTime.now().unixMillisLong - 6.minutes())
+
+        assertTrue { Database.getUser()?.isCacheOutdated() == true }
     }
 }
