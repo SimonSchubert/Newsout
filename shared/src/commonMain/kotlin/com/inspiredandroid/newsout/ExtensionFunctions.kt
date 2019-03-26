@@ -52,7 +52,14 @@ fun Long.toBoolean(): Boolean {
  * Is the last fetch > 5 minutes ago
  */
 fun User.isCacheOutdated(): Boolean {
-    return DateTime.now().unixMillisLong - lastFeedFetch > 1000 * 60 * 5
+    return DateTime.now().unixMillisLong - lastFeedFetch > 5.minutes()
+}
+
+/**
+ * Get minutes in milliseconds
+ */
+fun Int.minutes(): Int {
+    return this * 60 * 1000
 }
 
 /**
