@@ -16,13 +16,15 @@ This project shares the Database, Api, Models and Serialization code. Only the i
 
 ## Android
 
-<img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/screen_android_01.png" width="200"> <img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/screen_android_02.png" width="200"> <img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/screen_android_03.png" width="200"> <img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/screen_android_04.png" width="200">
+<img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/android_screen_phone_01.png" width="200"> <img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/android_screen_phone_02.png" width="200"> <img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/android_screen_phone_03.png" width="200"> <img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/android_screen_phone_04.png" width="200">
+
+<img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/android_screen_tablet_01.png" width="300"> <img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/android_screen_tablet_02.png" width="300">
 
 [![Download](https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/store_android_badge.png)](https://play.google.com/store/apps/details?id=com.inspiredandroid.newsout)
 
 ## iOS
 
-<img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/screen_ios_01.png" width="200"> <img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/screen_ios_02.png" width="200"> <img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/screen_ios_03.png" width="200">
+<img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/ios_screen_phone_01.png" width="200"> <img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/ios_screen_phone_02.png" width="200"> <img src="https://raw.githubusercontent.com/SimonSchubert/NewsOut/master/art/ios_screen_phone_03.png" width="200">
 
 ## Features
 
