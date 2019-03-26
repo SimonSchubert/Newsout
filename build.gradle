@@ -26,7 +26,6 @@ allprojects {
         maven { url "https://dl.bintray.com/kotlin/kotlinx" }
         maven { url "https://dl.bintray.com/kotlin/ktor" }
         maven { url "https://dl.bintray.com/soywiz/soywiz" }
-        maven { url "https://kotlin.bintray.com/kotlinx" }
         google()
         jcenter()
     }
