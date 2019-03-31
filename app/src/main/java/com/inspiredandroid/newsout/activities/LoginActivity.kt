@@ -3,6 +3,7 @@ package com.inspiredandroid.newsout.activities
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -51,6 +52,11 @@ class LoginActivity : AppCompatActivity() {
             val dialog = InfoDialog.getInstance()
             dialog.show(supportFragmentManager, "TAG")
         }
+        tvResetPassword.setOnClickListener {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://nx3217.your-next.cloud"))
+            startActivity(browserIntent)
+        }
+
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
             mode = if (checkedId == R.id.nextcloudBtn) {
                 MODE_CUSTOM
