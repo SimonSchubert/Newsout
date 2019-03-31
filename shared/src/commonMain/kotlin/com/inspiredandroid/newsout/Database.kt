@@ -1,5 +1,7 @@
 package com.inspiredandroid.newsout
 
+import com.squareup.sqldelight.Query
+
 /*
  * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
  * that can be found in the LICENSE file.
@@ -79,7 +81,11 @@ object Database {
     fun getItems(feedId: Long, type: Long): MutableList<Item> {
         val itemQueries = getItemQueries()
         itemQueries?.let {
-            return it.selectAllByFeedIdAndType(feedId, type).executeAsList().toMutableList()
+            return when (type) {
+                -2L -> it.selectUnread().executeAsList().toMutableList()
+                -1L -> it.selectStarred().executeAsList().toMutableList()
+                else -> it.selectAllByFeedIdAndType(feedId, type).executeAsList().toMutableList()
+            }
         }
         return arrayListOf()
     }
@@ -93,6 +99,28 @@ object Database {
             return it.selectAll().executeAsOne()
         }
         return null
+    }
+
+    /**
+     * Get number of unread articles
+     */
+    fun getTotalUnreadCount(): Long {
+        val feedQueries = getFeedQueries()
+        feedQueries?.let {
+            return it.countUnread().executeAsOne()
+        }
+        return 0L
+    }
+
+    /**
+     * Get number of starred articles
+     */
+    fun getTotalStarredCount(): Long {
+        val itemQueries = getItemQueries()
+        itemQueries?.let {
+            return it.countStarred().executeAsOne()
+        }
+        return 0L
     }
 
     /**

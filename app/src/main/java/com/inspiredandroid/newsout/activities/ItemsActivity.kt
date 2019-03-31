@@ -51,7 +51,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
                     adapter.updateItems(it)
                     updateFab()
                 }
-            } else {
+            } else if (type == 1L) {
                 Api.markFolderAsRead(id) {
                     adapter.updateItems(it)
                     updateFab()
@@ -89,31 +89,13 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
 
                 if (!recyclerView.canScrollVertically(1)) {
                     showLoading()
-                    Api.items(id, type, true, {
-                        if (isThere()) {
-                            updateAdapterAndHideLoading(it)
-                            updateFab()
-                        }
-                    }, {
-                        if (isThere()) {
-                            hideLoading()
-                        }
-                    })
+                    fetchItems(true)
                 }
             }
         }
         recyclerView.addOnScrollListener(listener)
 
-        Api.items(id, type, false, {
-            if (isThere()) {
-                updateAdapterAndHideLoading(it)
-                updateFab()
-            }
-        }, {
-            if (isThere()) {
-                hideLoading()
-            }
-        })
+        fetchItems(false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -135,11 +117,13 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     }
 
     override fun onRefresh() {
-        Api.items(id, type, false, {
-            if (isThere()) {
-                updateAdapterAndHideLoading(it)
-                updateFab()
-            }
+        fetchItems(false)
+    }
+
+    override fun onAddFeed(url: String) {
+        showLoading()
+        Api.createFeed(url, id, {
+            fetchItems(false)
         }, {
             if (isThere()) {
                 hideLoading()
@@ -147,10 +131,14 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         })
     }
 
-    override fun onAddFeed(url: String) {
-        showLoading()
-        Api.createFeed(url, id, {
-            Api.items(id, type, false, {
+    override fun onClickItem(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
+    }
+
+    private fun fetchItems(offset: Boolean) {
+        if(type == 1L || type == 0L) {
+            Api.items(id, type, offset, {
                 if (isThere()) {
                     updateAdapterAndHideLoading(it)
                     updateFab()
@@ -160,11 +148,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
                     hideLoading()
                 }
             })
-        }, {
-            if (isThere()) {
-                hideLoading()
-            }
-        })
+        }
     }
 
     private fun updateFab() {
@@ -173,11 +157,6 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         } else {
             fab?.hide()
         }
-    }
-
-    override fun onClickItem(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        startActivity(intent)
     }
 
     private fun updateAdapterAndHideLoading(items: List<Item>) {

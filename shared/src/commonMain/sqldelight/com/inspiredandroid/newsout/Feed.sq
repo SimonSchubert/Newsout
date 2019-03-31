@@ -64,5 +64,9 @@ decreaseUnreadCount:
 UPDATE feed SET unreadCount = unreadCount - 1
 WHERE id=? AND isFolder=?;
 
+countUnread:
+SELECT SUM(unreadCount)
+FROM feed;
+
 clear:
 DELETE FROM feed;

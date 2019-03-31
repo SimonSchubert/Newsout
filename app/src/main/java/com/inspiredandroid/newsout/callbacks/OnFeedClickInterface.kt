@@ -7,4 +7,6 @@ package com.inspiredandroid.newsout.callbacks
 interface OnFeedClickInterface {
     fun onClickFeed(id: Long, title: String, type: Long)
     fun onLongClickFeed(id: Long, title: String, isFolder: Boolean)
+    fun onClickUnread()
+    fun onClickStarred()
 }

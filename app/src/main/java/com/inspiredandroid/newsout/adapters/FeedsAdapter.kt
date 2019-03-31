@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.inspiredandroid.newsout.Database
 import com.inspiredandroid.newsout.Feed
 import com.inspiredandroid.newsout.R
 import com.inspiredandroid.newsout.callbacks.OnFeedClickInterface
@@ -22,34 +23,43 @@ class FeedsAdapter(internal var feeds: MutableList<Feed>, private val listener: 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            TYPE_NORMAL -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.row_feed, parent, false)
-                ViewHolder(view)
-            }
-            else -> {
+            TYPE_HEADER -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.row_feed_header, parent, false)
                 HeaderViewHolder(view)
+            }
+            else -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.row_feed, parent, false)
+                FeedViewHolder(view)
             }
         }
     }
 
     override fun getItemCount(): Int {
         return if (feeds.count() > 0) {
-            feeds.count()
+            feeds.count() + 2
         } else {
             1
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (feeds.count() > 0) {
-            (holder as? ViewHolder)?.bind(feeds[position])
+        when (getItemViewType(position)) {
+            TYPE_FEED ->
+                (holder as? FeedViewHolder)?.bindFeed(feeds[position - 2])
+            TYPE_STARRED ->
+                (holder as? FeedViewHolder)?.bindStarred()
+            TYPE_UNREAD ->
+                (holder as? FeedViewHolder)?.bindUnread()
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         return if (feeds.count() > 0) {
-            TYPE_NORMAL
+            when (position) {
+                0 -> TYPE_STARRED
+                1 -> TYPE_UNREAD
+                else -> TYPE_FEED
+            }
         } else {
             TYPE_HEADER
         }
@@ -60,9 +70,10 @@ class FeedsAdapter(internal var feeds: MutableList<Feed>, private val listener: 
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    inner class FeedViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
+        LayoutContainer {
 
-        internal fun bind(feed: Feed) {
+        internal fun bindFeed(feed: Feed) {
             feedTitle.text = feed.title
 
             if (feed.isFolder.toBoolean()) {
@@ -74,14 +85,7 @@ class FeedsAdapter(internal var feeds: MutableList<Feed>, private val listener: 
                     .into(feedIcon)
             }
 
-            if (feed.unreadCount > 0L) {
-                feedTitle.setTypeface(null, Typeface.BOLD)
-                feedUnreadCount.text = feed.unreadCount.toString()
-                feedUnreadCount.visibility = View.VISIBLE
-            } else {
-                feedTitle.setTypeface(null, Typeface.NORMAL)
-                feedUnreadCount.visibility = View.GONE
-            }
+            updateCounter(feed.unreadCount)
 
             containerView.setOnClickListener {
                 listener.onClickFeed(feed.id, feed.title, feed.isFolder)
@@ -91,13 +95,56 @@ class FeedsAdapter(internal var feeds: MutableList<Feed>, private val listener: 
                 true
             }
         }
+
+        internal fun bindStarred() {
+            feedTitle.text = "Starred"
+
+            Glide.with(containerView.context).load(R.drawable.ic_icons8_star)
+                .placeholder(R.drawable.ic_icons8_star)
+                .into(feedIcon)
+
+            updateCounter(Database.getTotalStarredCount())
+
+            containerView.setOnClickListener {
+                listener.onClickStarred()
+            }
+            containerView.setOnLongClickListener(null)
+        }
+
+        internal fun bindUnread() {
+            feedTitle.text = "Unread"
+
+            Glide.with(containerView.context).load(R.drawable.ic_icons8_visible)
+                .placeholder(R.drawable.ic_icons8_visible)
+                .into(feedIcon)
+
+            updateCounter(Database.getTotalUnreadCount())
+
+            containerView.setOnClickListener {
+                listener.onClickUnread()
+            }
+            containerView.setOnLongClickListener(null)
+        }
+
+        private fun updateCounter(counter: Long) {
+            if (counter > 0L) {
+                feedTitle.setTypeface(null, Typeface.BOLD)
+                feedUnreadCount.text = counter.toString()
+                feedUnreadCount.visibility = View.VISIBLE
+            } else {
+                feedTitle.setTypeface(null, Typeface.NORMAL)
+                feedUnreadCount.visibility = View.GONE
+            }
+        }
     }
 
     inner class HeaderViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
         LayoutContainer
 
     companion object {
-        const val TYPE_NORMAL = 0
+        const val TYPE_FEED = 0
         const val TYPE_HEADER = 1
+        const val TYPE_STARRED = 2
+        const val TYPE_UNREAD = 3
     }
 }

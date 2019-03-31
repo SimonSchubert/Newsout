@@ -49,9 +49,9 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return when (adapter.getItemViewType(position)) {
-                    FeedsAdapter.TYPE_NORMAL -> 1
+                    FeedsAdapter.TYPE_FEED -> 1
                     FeedsAdapter.TYPE_HEADER -> calculateNumberOfColumns()
-                    else -> -1
+                    else -> 1
                 }
             }
         }
@@ -145,6 +145,20 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
     override fun onLongClickFeed(id: Long, title: String, isFolder: Boolean) {
         val dialog = EditFeedDialog.getInstance(id, title, isFolder)
         dialog.show(supportFragmentManager, "TAG")
+    }
+
+    override fun onClickUnread() {
+        val intent = Intent(this, ItemsActivity::class.java)
+        intent.putExtra(ItemsActivity.KEY_TITLE, "Unread")
+        intent.putExtra(ItemsActivity.KEY_TYPE, -2)
+        startActivity(intent)
+    }
+
+    override fun onClickStarred() {
+        val intent = Intent(this, ItemsActivity::class.java)
+        intent.putExtra(ItemsActivity.KEY_TITLE, "Starred")
+        intent.putExtra(ItemsActivity.KEY_TYPE, -1)
+        startActivity(intent)
     }
 
     override fun onAddFeed(url: String) {

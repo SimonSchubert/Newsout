@@ -56,4 +56,19 @@ DELETE FROM item;
 tidy:
 SELECT *
 FROM item
-WHERE creationDate <= datetime('now', '-7 days');
+WHERE creationDate <= datetime('now', '-7 days') AND isStarred=0;
+
+countStarred:
+SELECT count(*)
+FROM item
+WHERE isStarred=1;
+
+selectStarred:
+SELECT *
+FROM item
+WHERE isStarred=1;
+
+selectUnread:
+SELECT *
+FROM item
+WHERE isUnread=1;
