@@ -26,10 +26,10 @@ class EditFeedDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_feed, null)
 
-        var title = arguments?.getString("title", "") ?: ""
-        val id = arguments?.getLong("id", 0L) ?: 0L
-        val error = arguments?.getBoolean("id", false) ?: false
-        val isFolder = arguments?.getBoolean("isFolder", false) ?: false
+        var title = arguments?.getString(KEY_TITLE, "") ?: ""
+        val id = arguments?.getLong(KEY_ID, 0L) ?: 0L
+        val error = arguments?.getBoolean(KEY_ERROR, false) ?: false
+        val isFolder = arguments?.getBoolean(KEY_ISFOLDER, false) ?: false
         if (error) {
             view.findViewById<EditText>(R.id.editText).error = "Something went wrong"
         }
@@ -59,12 +59,17 @@ class EditFeedDialog : DialogFragment() {
         internal fun getInstance(id: Long, url: String, isFolder: Boolean, error: Boolean = false): EditFeedDialog {
             val dialog = EditFeedDialog()
             val bundle = Bundle()
-            bundle.putString("title", url)
-            bundle.putLong("id", id)
-            bundle.putBoolean("error", error)
-            bundle.putBoolean("isFolder", isFolder)
+            bundle.putString(KEY_TITLE, url)
+            bundle.putLong(KEY_ID, id)
+            bundle.putBoolean(KEY_ERROR, error)
+            bundle.putBoolean(KEY_ISFOLDER, isFolder)
             dialog.arguments = bundle
             return dialog
         }
+
+        const val KEY_TITLE = "KEY_TITLE"
+        const val KEY_ID = "KEY_ID"
+        const val KEY_ERROR = "KEY_ERROR"
+        const val KEY_ISFOLDER = "KEY_ISFOLDER"
     }
 }

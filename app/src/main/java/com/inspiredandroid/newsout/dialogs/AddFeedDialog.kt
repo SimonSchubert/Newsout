@@ -26,7 +26,7 @@ class AddFeedDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_feed, null)
 
-        var url = arguments?.getString("url", "") ?: ""
+        var url = arguments?.getString(KEY_URL, "") ?: ""
         if (url.isNotEmpty()) {
             view.findViewById<EditText>(R.id.editText).setText(url)
             view.findViewById<EditText>(R.id.editText).error = "Something went wrong"
@@ -54,9 +54,11 @@ class AddFeedDialog : DialogFragment() {
         internal fun getInstance(url: String = ""): AddFeedDialog {
             val dialog = AddFeedDialog()
             val bundle = Bundle()
-            bundle.putString("url", url)
+            bundle.putString(KEY_URL, url)
             dialog.arguments = bundle
             return dialog
         }
+
+        const val KEY_URL = "KEY_URL"
     }
 }
