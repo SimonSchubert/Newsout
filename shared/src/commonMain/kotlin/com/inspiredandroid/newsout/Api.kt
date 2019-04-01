@@ -428,6 +428,10 @@ object Api {
         }, error, {})
     }
 
+    /**
+     * Get starred items
+     * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#initial-sync">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#initial-sync</a>
+     */
     fun getStarredItems(callback: (List<Item>) -> Unit, error: () -> Unit) {
         async {
             val result: String = client.get {
@@ -465,6 +469,10 @@ object Api {
         }
     }
 
+    /**
+     * Get unread items
+     * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#initial-sync">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#initial-sync</a>
+     */
     fun getUnreadItems(callback: (List<Item>) -> Unit, error: () -> Unit) {
         async {
             val result: String = client.get {
