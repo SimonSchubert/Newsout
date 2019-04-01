@@ -87,7 +87,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
 
-                if (!recyclerView.canScrollVertically(1)) {
+                if (!recyclerView.canScrollVertically(1) && (type == 1L || type == 0L)) {
                     showLoading()
                     fetchItems(true)
                 }
@@ -138,12 +138,34 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
 
     private fun fetchItems(offset: Boolean) {
         if(type == 1L || type == 0L) {
-            Api.items(id, type, offset, {
+            Api.getItems(id, type, offset, {
                 if (isThere()) {
                     updateAdapterAndHideLoading(it)
                     updateFab()
                 }
             }, {
+                if (isThere()) {
+                    hideLoading()
+                }
+            })
+        } else if(type == -2L) {
+            Api.getUnreadItems({
+                if (isThere()) {
+                    updateAdapterAndHideLoading(it)
+                    updateFab()
+                }
+            },{
+                if (isThere()) {
+                    hideLoading()
+                }
+            })
+        } else if(type == -1L) {
+            Api.getStarredItems({
+                if (isThere()) {
+                    updateAdapterAndHideLoading(it)
+                    updateFab()
+                }
+            },{
                 if (isThere()) {
                     hideLoading()
                 }

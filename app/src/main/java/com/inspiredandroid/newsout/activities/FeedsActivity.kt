@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.content_feeds.*
 class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLayout.OnRefreshListener,
     OnSortingChangeInterface, OnAddFeedInterface, OnEditFeedInterface {
 
-    private val adapter = FeedsAdapter(Database.getFeeds(), this)
+    private val adapter = FeedsAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,30 +74,12 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
         }
 
         adapter.updateFeeds(Database.getFeeds())
-        if (Database.getUser()?.isCacheOutdated() ?: false) {
+        if (Database.getUser()?.isStarredCacheOutdated() ?: false) {
+            Api.getStarredItems({},{})
+        }
+        if (Database.getUser()?.isFeedCacheOutdated() ?: false) {
             showLoading()
-            Api.feeds({
-                if (isThere()) {
-                    updateAdapterAndHideLoading(it)
-                    updateFab()
-                }
-            }, {
-                if (isThere()) {
-                    hideLoading()
-                }
-            }, {
-                if (isThere()) {
-                    val accountManager = AccountManager.get(this)
-                    accountManager.getAccountsByType("com.inspiredandroid.newsout").forEach {
-                        accountManager.removeAccountExplicitly(it)
-                    }
-
-                    Database.clear()
-
-                    startActivity(Intent(this, LoginActivity::class.java))
-                    finish()
-                }
-            })
+            fetchFeeds()
         }
     }
 
@@ -122,16 +104,7 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
     }
 
     override fun onRefresh() {
-        Api.feeds({
-            if (isThere()) {
-                updateAdapterAndHideLoading(it)
-                updateFab()
-            }
-        }, {
-            if (isThere()) {
-                hideLoading()
-            }
-        }, {})
+        fetchFeeds()
     }
 
     override fun onClickFeed(id: Long, title: String, type: Long) {
@@ -150,14 +123,14 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
     override fun onClickUnread() {
         val intent = Intent(this, ItemsActivity::class.java)
         intent.putExtra(ItemsActivity.KEY_TITLE, "Unread")
-        intent.putExtra(ItemsActivity.KEY_TYPE, -2)
+        intent.putExtra(ItemsActivity.KEY_TYPE, -2L)
         startActivity(intent)
     }
 
     override fun onClickStarred() {
         val intent = Intent(this, ItemsActivity::class.java)
         intent.putExtra(ItemsActivity.KEY_TITLE, "Starred")
-        intent.putExtra(ItemsActivity.KEY_TYPE, -1)
+        intent.putExtra(ItemsActivity.KEY_TYPE, -1L)
         startActivity(intent)
     }
 
@@ -180,56 +153,18 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
     override fun onEditFeed(id: Long, title: String, isFolder: Boolean) {
         showLoading()
         if (isFolder) {
-            Api.renameFolder(id, title, {
-                if (isThere()) {
-                    updateAdapterAndHideLoading(Database.getFeeds())
-                }
-            }, {
-                if (isThere()) {
-                    hideLoading()
-                    val dialog = EditFeedDialog.getInstance(id, title, isFolder, true)
-                    dialog.show(supportFragmentManager, "TAG")
-                }
-            })
+            renameFolder(id, title)
         } else {
-            Api.renameFeed(id, title, {
-                if (isThere()) {
-                    updateAdapterAndHideLoading(Database.getFeeds())
-                }
-            }, {
-                if (isThere()) {
-                    hideLoading()
-                    val dialog = EditFeedDialog.getInstance(id, title, isFolder, true)
-                    dialog.show(supportFragmentManager, "TAG")
-                }
-            })
+            renameFeed(id, title)
         }
     }
 
     override fun onDeleteFeed(id: Long, title: String, isFolder: Boolean) {
         showLoading()
         if (isFolder) {
-            Api.deleteFolder(id, {
-                if (isThere()) {
-                    updateAdapterAndHideLoading(Database.getFeeds())
-                    updateFab()
-                }
-            }, {
-                if (isThere()) {
-                    hideLoading()
-                }
-            })
+            deleteFolder(id)
         } else {
-            Api.deleteFeed(id, {
-                if (isThere()) {
-                    updateAdapterAndHideLoading(Database.getFeeds())
-                    updateFab()
-                }
-            }, {
-                if (isThere()) {
-                    hideLoading()
-                }
-            })
+            deleteFeed(id)
         }
     }
 
@@ -237,9 +172,88 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
         adapter.updateFeeds(Database.getFeeds())
     }
 
+    private fun fetchFeeds() {
+        Api.getFeeds({
+            if (isThere()) {
+                updateAdapterAndHideLoading(it)
+                updateFab()
+            }
+        }, {
+            if (isThere()) {
+                hideLoading()
+            }
+        }, {
+            if (isThere()) {
+                val accountManager = AccountManager.get(this)
+                accountManager.getAccountsByType("com.inspiredandroid.newsout").forEach {
+                    accountManager.removeAccountExplicitly(it)
+                }
+
+                Database.clear()
+
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            }
+        })
+    }
+
     private fun updateAdapterAndHideLoading(feeds: List<Feed>) {
         adapter.updateFeeds(feeds)
         swiperefresh?.isRefreshing = false
+    }
+
+    private fun renameFeed(id: Long, title: String) {
+        Api.renameFeed(id, title, {
+            if (isThere()) {
+                updateAdapterAndHideLoading(Database.getFeeds())
+            }
+        }, {
+            if (isThere()) {
+                hideLoading()
+                val dialog = EditFeedDialog.getInstance(id, title, false, true)
+                dialog.show(supportFragmentManager, "TAG")
+            }
+        })
+    }
+
+    private fun renameFolder(id: Long, title: String) {
+        Api.renameFolder(id, title, {
+            if (isThere()) {
+                updateAdapterAndHideLoading(Database.getFeeds())
+            }
+        }, {
+            if (isThere()) {
+                hideLoading()
+                val dialog = EditFeedDialog.getInstance(id, title, true, true)
+                dialog.show(supportFragmentManager, "TAG")
+            }
+        })
+    }
+
+    private fun deleteFolder(id: Long) {
+        Api.deleteFolder(id, {
+            if (isThere()) {
+                updateAdapterAndHideLoading(Database.getFeeds())
+                updateFab()
+            }
+        }, {
+            if (isThere()) {
+                hideLoading()
+            }
+        })
+    }
+
+    private fun deleteFeed(id: Long) {
+        Api.deleteFeed(id, {
+            if (isThere()) {
+                updateAdapterAndHideLoading(Database.getFeeds())
+                updateFab()
+            }
+        }, {
+            if (isThere()) {
+                hideLoading()
+            }
+        })
     }
 
     private fun hideLoading() {

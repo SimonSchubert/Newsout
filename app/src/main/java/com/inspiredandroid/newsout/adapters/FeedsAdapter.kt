@@ -18,8 +18,19 @@ import kotlinx.android.synthetic.main.row_feed.*
  * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
  * that can be found in the LICENSE file.
  */
-class FeedsAdapter(internal var feeds: MutableList<Feed>, private val listener: OnFeedClickInterface) :
+class FeedsAdapter(private val listener: OnFeedClickInterface) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    internal var feeds: MutableList<Feed>
+    private var unreadCount: Long
+    private var starredCount: Long
+    private var specialRows: ArrayList<Int> = arrayListOf()
+
+    init {
+        feeds = Database.getFeeds()
+        unreadCount = Database.getTotalUnreadCount()
+        starredCount = Database.getTotalStarredCount()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -36,7 +47,7 @@ class FeedsAdapter(internal var feeds: MutableList<Feed>, private val listener: 
 
     override fun getItemCount(): Int {
         return if (feeds.count() > 0) {
-            feeds.count() + 2
+            feeds.count() + specialRows.size
         } else {
             1
         }
@@ -45,7 +56,7 @@ class FeedsAdapter(internal var feeds: MutableList<Feed>, private val listener: 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             TYPE_FEED ->
-                (holder as? FeedViewHolder)?.bindFeed(feeds[position - 2])
+                (holder as? FeedViewHolder)?.bindFeed(feeds[position - specialRows.size])
             TYPE_STARRED ->
                 (holder as? FeedViewHolder)?.bindStarred()
             TYPE_UNREAD ->
@@ -55,18 +66,23 @@ class FeedsAdapter(internal var feeds: MutableList<Feed>, private val listener: 
 
     override fun getItemViewType(position: Int): Int {
         return if (feeds.count() > 0) {
-            when (position) {
-                0 -> TYPE_STARRED
-                1 -> TYPE_UNREAD
-                else -> TYPE_FEED
-            }
+            specialRows.getOrNull(position) ?: TYPE_FEED
         } else {
             TYPE_HEADER
         }
     }
 
-    internal fun updateFeeds(nextcloudNewsFeed: List<Feed>) {
-        feeds = nextcloudNewsFeed.toMutableList()
+    internal fun updateFeeds(feeds: List<Feed>) {
+        this.feeds = feeds.toMutableList()
+        unreadCount = Database.getTotalUnreadCount()
+        starredCount = Database.getTotalStarredCount()
+        specialRows.clear()
+        if(starredCount > 0) {
+            specialRows.add(TYPE_STARRED)
+        }
+        if(unreadCount > 0) {
+            specialRows.add(TYPE_UNREAD)
+        }
         notifyDataSetChanged()
     }
 
@@ -103,7 +119,7 @@ class FeedsAdapter(internal var feeds: MutableList<Feed>, private val listener: 
                 .placeholder(R.drawable.ic_icons8_star)
                 .into(feedIcon)
 
-            updateCounter(Database.getTotalStarredCount())
+            updateCounter(starredCount)
 
             containerView.setOnClickListener {
                 listener.onClickStarred()
@@ -118,7 +134,7 @@ class FeedsAdapter(internal var feeds: MutableList<Feed>, private val listener: 
                 .placeholder(R.drawable.ic_icons8_visible)
                 .into(feedIcon)
 
-            updateCounter(Database.getTotalUnreadCount())
+            updateCounter(unreadCount)
 
             containerView.setOnClickListener {
                 listener.onClickUnread()

@@ -49,10 +49,17 @@ fun Long.toBoolean(): Boolean {
 }
 
 /**
- * Is the last fetch > 5 minutes ago
+ * Is the last feed fetch > 5 minutes ago
  */
-fun User.isCacheOutdated(): Boolean {
+fun User.isFeedCacheOutdated(): Boolean {
     return DateTime.now().unixMillisLong - lastFeedFetch > 5.minutes()
+}
+
+/**
+ * Is the last starred fetch > 1 day
+ */
+fun User.isStarredCacheOutdated(): Boolean {
+    return DateTime.now().unixMillisLong - lastStarredFetch > 60.minutes() * 24
 }
 
 /**

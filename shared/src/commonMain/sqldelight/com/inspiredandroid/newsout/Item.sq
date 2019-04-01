@@ -1,5 +1,6 @@
 CREATE TABLE item (
   id INTEGER PRIMARY KEY,
+  guidHash TEXT NOT NULL,
   feedId INTEGER NOT NULL,
   title TEXT NOT NULL,
   imageUrl TEXT NOT NULL,
@@ -12,15 +13,59 @@ CREATE TABLE item (
 
 CREATE INDEX item_id ON item(id);
 
+insert:
+INSERT OR REPLACE INTO item(id, guidHash, feedId,  title, imageUrl, url, isUnread, isFolder, isStarred, creationDate)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'));
+
 selectAllByFeedIdAndType:
 SELECT *
 FROM item
 WHERE feedId=? AND isFolder=?
 ORDER BY id DESC;
 
-insert:
-INSERT OR REPLACE INTO item(id, feedId, title, imageUrl, url, isUnread, isFolder, isStarred, creationDate)
-VALUES (?, ?, ?, ?, ?, ?, ?, 0, datetime('now'));
+selectUnread:
+SELECT *
+FROM item
+WHERE isUnread=1;
+
+selectStarred:
+SELECT *
+FROM item
+WHERE isStarred=1;
+
+markAllAsRead:
+UPDATE item
+SET isUnread = 0;
+
+markItemAsRead:
+UPDATE item
+SET isUnread = 0
+WHERE id=?;
+
+markItemAsStarred:
+UPDATE item
+SET isStarred = 1
+WHERE id=?;
+
+markItemAsUnstarred:
+UPDATE item
+SET isStarred = 0
+WHERE id=?;
+
+markAsRead:
+UPDATE item
+SET isUnread = 0
+WHERE feedId=? AND isFolder=?;
+
+countStarred:
+SELECT count(*)
+FROM item
+WHERE isStarred=1;
+
+countUnstarred:
+SELECT count(*)
+FROM item
+WHERE isStarred=0;
 
 maxIdAll:
 SELECT MAX(id)
@@ -36,39 +81,10 @@ SELECT MIN(id)
 FROM item
 WHERE feedId=? AND isFolder=?;
 
-markAllAsRead:
-UPDATE item
-SET isUnread = 0;
-
-markItemAsRead:
-UPDATE item
-SET isUnread = 0
-WHERE id=?;
-
-markAsRead:
-UPDATE item
-SET isUnread = 0
-WHERE feedId=? AND isFolder=?;
-
 clear:
 DELETE FROM item;
 
-tidy:
-SELECT *
+clearOld:
+DELETE
 FROM item
 WHERE creationDate <= datetime('now', '-7 days') AND isStarred=0;
-
-countStarred:
-SELECT count(*)
-FROM item
-WHERE isStarred=1;
-
-selectStarred:
-SELECT *
-FROM item
-WHERE isStarred=1;
-
-selectUnread:
-SELECT *
-FROM item
-WHERE isUnread=1;

@@ -18,13 +18,14 @@ import kotlinx.android.synthetic.main.row_item.*
  * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
  * that can be found in the LICENSE file.
  */
-class ItemsAdapter(private var feeds: List<Item>, private val listener: OnItemClickInterface) :
+class ItemsAdapter(private var items: List<Item>, private val listener: OnItemClickInterface) :
     RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
 
     internal val unreadMap: MutableMap<Long, Boolean> = mutableMapOf()
+    internal val starredMap: MutableMap<Long, Boolean> = mutableMapOf()
 
     init {
-        updateItems(feeds)
+        updateItems(items)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -33,20 +34,21 @@ class ItemsAdapter(private var feeds: List<Item>, private val listener: OnItemCl
     }
 
     override fun getItemCount(): Int {
-        return feeds.count()
+        return items.count()
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.bind(feeds[position])
+        holder.bind(items[position])
     }
 
     /**
      * Update adapter data and notify change
      */
     fun updateItems(items: List<Item>) {
-        feeds = items
-        feeds.forEach {
+        this.items = items
+        this.items.forEach {
             unreadMap[it.id] = it.isUnread.toBoolean()
+            starredMap[it.id] = it.isStarred.toBoolean()
         }
         notifyDataSetChanged()
     }
@@ -55,46 +57,63 @@ class ItemsAdapter(private var feeds: List<Item>, private val listener: OnItemCl
         LayoutContainer {
 
         internal var id = 0L
+        private var guidHash = ""
         private var feedId = 0L
         internal var isUndread = false
+        private var isStarred = false
         private var isFolder = false
 
-        internal fun bind(feed: Item) {
+        internal fun bind(item: Item) {
+            id = item.id
+            feedId = item.feedId
+            guidHash = item.guidHash
+            isFolder = item.isFolder.toBoolean()
+            isUndread = unreadMap[item.id] ?: false
+            isStarred = starredMap[item.id] ?: false
 
-            id = feed.id
-            feedId = feed.feedId
-            isFolder = feed.isFolder.toBoolean()
-            isUndread = unreadMap[feed.id] ?: false
-
-            if (isUndread) {
-                val span = SpannableString("  " + feed.title)
-                val drawable = ContextCompat.getDrawable(
-                    containerView.context, R.drawable.ic_icons8_appointment_reminders
-                )
-                drawable?.let {
-                    drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-                    span.setSpan(ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-                }
-                title.text = span
+            if (isStarred) {
+                title.text = getTitleWithIcon(item, R.drawable.ic_icons8_star)
+            } else if (isUndread) {
+                title.text = getTitleWithIcon(item, R.drawable.ic_icons8_appointment_reminders)
             } else {
-                title.text = feed.title
+                title.text = item.title
             }
 
-            if (feed.imageUrl.isNotEmpty()) {
+            if (item.imageUrl.isNotEmpty()) {
                 Glide
                     .with(containerView.context)
-                    .load(feed.imageUrl)
+                    .load(item.imageUrl)
                     .into(imageView)
-                imageView.init(feed.imageUrl)
+                imageView.init(item.imageUrl)
                 imageView.visibility = View.VISIBLE
             } else {
                 imageView.visibility = View.GONE
             }
 
             containerView.setOnClickListener {
-                listener.onClickItem(feed.url)
+                listener.onClickItem(item.url)
                 markAsRead()
             }
+            containerView.setOnLongClickListener {
+                if(isStarred) {
+                    markAsUnstarred()
+                } else {
+                    markAsStarred()
+                }
+                true
+            }
+        }
+
+        private fun getTitleWithIcon(item: Item, resId: Int): SpannableString {
+            val span = SpannableString("  " + item.title)
+            val drawable = ContextCompat.getDrawable(
+                containerView.context, resId
+            )
+            drawable?.let {
+                drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+                span.setSpan(ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM), 0, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            }
+            return span
         }
 
         internal fun markAsRead() {
@@ -105,6 +124,26 @@ class ItemsAdapter(private var feeds: List<Item>, private val listener: OnItemCl
                     ?.decreaseUnreadCount(feedId, isFolder.toLong())
                 Api.markItemAsRead(id)
                 unreadMap[id] = false
+                notifyItemChanged(position)
+            }
+        }
+
+        private fun markAsStarred() {
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                Database.getItemQueries()?.markItemAsStarred(id)
+                Api.markItemAsStarred(feedId, guidHash)
+                starredMap[id] = true
+                notifyItemChanged(position)
+            }
+        }
+
+        private fun markAsUnstarred() {
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                Database.getItemQueries()?.markItemAsUnstarred(id)
+                Api.markItemAsUnstarred(feedId, guidHash)
+                starredMap[id] = false
                 notifyItemChanged(position)
             }
         }

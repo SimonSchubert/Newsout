@@ -226,11 +226,43 @@ object Api {
     }
 
     /**
+     * Marks item as starred
+     * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-an-item-as-starred">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-an-item-as-starred</a>
+     */
+    fun markItemAsStarred(feedId: Long, guidHash: String) {
+        async {
+            try {
+                client.put {
+                    url("$baseUrl/items/$feedId/$guidHash/star")
+                    header("Authorization", "Basic $credentials")
+                }
+            } catch (ignore: Throwable) {
+            }
+        }
+    }
+
+    /**
+     * Marks item as unstarred
+     * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-an-item-as-unstarred">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-an-item-as-unstarred</a>
+     */
+    fun markItemAsUnstarred(feedId: Long, guidHash: String) {
+        async {
+            try {
+                client.put {
+                    url("$baseUrl/items/$feedId/$guidHash/unstar")
+                    header("Authorization", "Basic $credentials")
+                }
+            } catch (ignore: Throwable) {
+            }
+        }
+    }
+
+    /**
      * Gets feeds
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#get-all-feeds">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#get-all-feeds</a>
      */
-    fun feeds(callback: (List<Feed>) -> Unit, error: () -> Unit, unauthorized: () -> Unit) {
-        folders({ folders ->
+    fun getFeeds(callback: (List<Feed>) -> Unit, error: () -> Unit, unauthorized: () -> Unit) {
+        getFolders({ folders ->
             async {
                 try {
                     val response = client.get<HttpResponse> {
@@ -255,7 +287,7 @@ object Api {
         }, error, unauthorized)
     }
 
-    private fun folders(callback: (List<NextcloudNewsFolder>) -> Unit, error: () -> Unit, unauthorized: () -> Unit) {
+    private fun getFolders(callback: (List<NextcloudNewsFolder>) -> Unit, error: () -> Unit, unauthorized: () -> Unit) {
         async {
             try {
                 val result: String = client.get {
@@ -374,7 +406,7 @@ object Api {
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#create-a-feed">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#create-a-feed</a>
      */
     fun createFeed(url: String, folderId: Long, callback: () -> Unit, error: () -> Unit) {
-        folders({ folders ->
+        getFolders({ folders ->
             async {
                 try {
                     val result: String = client.post {
@@ -396,11 +428,85 @@ object Api {
         }, error, {})
     }
 
+    fun getStarredItems(callback: (List<Item>) -> Unit, error: () -> Unit) {
+        async {
+            val result: String = client.get {
+                url("$baseUrl/items?type=2&getRead=true&batchSize=-1")
+                header("Authorization", "Basic $credentials")
+            }
+
+            val array = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("items")
+            if (array != null) {
+                val list = Json.nonstrict.parse(NextcloudNewsItem.serializer().list, array.jsonArray.toString())
+
+                val itemQueries = Database.getItemQueries()
+                itemQueries?.let {
+                    list.forEach {
+                        itemQueries.insert(
+                            it.id,
+                            it.guidHash,
+                            it.feedId,
+                            it.title.trim(),
+                            it.body.firstImageUrl(),
+                            it.url,
+                            it.unread.toLong(),
+                            0L,
+                            it.starred.toLong()
+                        )
+                    }
+
+                    done {
+                        callback(itemQueries.selectStarred().executeAsList())
+                    }
+                }
+            } else {
+                done { error() }
+            }
+        }
+    }
+
+    fun getUnreadItems(callback: (List<Item>) -> Unit, error: () -> Unit) {
+        async {
+            val result: String = client.get {
+                url("$baseUrl/items?type=3&getRead=false&batchSize=-1")
+                header("Authorization", "Basic $credentials")
+            }
+
+            val array = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("items")
+            if (array != null) {
+                val list = Json.nonstrict.parse(NextcloudNewsItem.serializer().list, array.jsonArray.toString())
+
+                val itemQueries = Database.getItemQueries()
+                itemQueries?.let {
+                    list.forEach {
+                        itemQueries.insert(
+                            it.id,
+                            it.guidHash,
+                            it.feedId,
+                            it.title.trim(),
+                            it.body.firstImageUrl(),
+                            it.url,
+                            it.unread.toLong(),
+                            0L,
+                            it.starred.toLong()
+                        )
+                    }
+
+                    done {
+                        callback(itemQueries.selectUnread().executeAsList())
+                    }
+                }
+            } else {
+                done { error() }
+            }
+        }
+    }
+
     /**
      * Get items
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#get-items">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#get-items</a>
      */
-    fun items(id: Long, type: Long, offset: Boolean, callback: (List<Item>) -> Unit, error: () -> Unit) {
+    fun getItems(id: Long, type: Long, offset: Boolean, callback: (List<Item>) -> Unit, error: () -> Unit) {
         async {
             try {
                 var offsetString = ""
@@ -422,12 +528,14 @@ object Api {
                         list.forEach {
                             itemQueries.insert(
                                 it.id,
+                                it.guidHash,
                                 id,
                                 it.title.trim(),
                                 it.body.firstImageUrl(),
                                 it.url,
                                 it.unread.toLong(),
-                                type
+                                type,
+                                it.starred.toLong()
                             )
                         }
 
