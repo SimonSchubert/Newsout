@@ -105,11 +105,14 @@ object Database {
      * Get number of unread articles
      */
     fun getTotalUnreadCount(): Long {
-        val feedQueries = getFeedQueries()
-        feedQueries?.let {
-            return it.countUnread().executeAsOne()
-        }
-        return 0L
+        var result = 0L
+        try {
+            val feedQueries = getFeedQueries()
+            feedQueries?.let {
+                result = it.countUnread().executeAsOne()
+            }
+        } catch (ignore: Throwable) {}
+        return result
     }
 
     /**
