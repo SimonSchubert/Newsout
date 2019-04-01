@@ -137,7 +137,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     }
 
     private fun fetchItems(offset: Boolean) {
-        if(type == 1L || type == 0L) {
+        if (type == 1L || type == 0L) {
             Api.getItems(id, type, offset, {
                 if (isThere()) {
                     updateAdapterAndHideLoading(it)
@@ -148,24 +148,24 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
                     hideLoading()
                 }
             })
-        } else if(type == -2L) {
+        } else if (type == -2L) {
             Api.getUnreadItems({
                 if (isThere()) {
                     updateAdapterAndHideLoading(it)
                     updateFab()
                 }
-            },{
+            }, {
                 if (isThere()) {
                     hideLoading()
                 }
             })
-        } else if(type == -1L) {
+        } else if (type == -1L) {
             Api.getStarredItems({
                 if (isThere()) {
                     updateAdapterAndHideLoading(it)
                     updateFab()
                 }
-            },{
+            }, {
                 if (isThere()) {
                     hideLoading()
                 }

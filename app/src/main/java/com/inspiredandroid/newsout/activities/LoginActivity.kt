@@ -177,7 +177,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun showLoading() {
         progressBar.visibility = View.VISIBLE
-        ivLogo.visibility = View.GONE
+        ivLogo.visibility = View.INVISIBLE
     }
 
     companion object {

@@ -35,10 +35,6 @@ object Api {
     private val baseUrl
         get() = "$nextcloudUrl/index.php/apps/news/api/v1-2"
 
-    init {
-
-    }
-
     @InternalAPI
     fun setCredentials(url: String, email: String, password: String) {
         credentials = "$email:$password".encodeBase64()

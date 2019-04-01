@@ -95,7 +95,7 @@ class ItemsAdapter(private var items: List<Item>, private val listener: OnItemCl
                 markAsRead()
             }
             containerView.setOnLongClickListener {
-                if(isStarred) {
+                if (isStarred) {
                     markAsUnstarred()
                 } else {
                     markAsStarred()

@@ -77,10 +77,10 @@ class FeedsAdapter(private val listener: OnFeedClickInterface) :
         unreadCount = Database.getTotalUnreadCount()
         starredCount = Database.getTotalStarredCount()
         specialRows.clear()
-        if(starredCount > 0) {
+        if (starredCount > 0) {
             specialRows.add(TYPE_STARRED)
         }
-        if(unreadCount > 0) {
+        if (unreadCount > 0) {
             specialRows.add(TYPE_UNREAD)
         }
         notifyDataSetChanged()

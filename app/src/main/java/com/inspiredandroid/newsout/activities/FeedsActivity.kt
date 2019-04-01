@@ -74,10 +74,10 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
         }
 
         adapter.updateFeeds(Database.getFeeds())
-        if (Database.getUser()?.isStarredCacheOutdated() ?: false) {
-            Api.getStarredItems({},{})
+        if (Database.getUser()?.isStarredCacheOutdated() == true) {
+            Api.getStarredItems({}, {})
         }
-        if (Database.getUser()?.isFeedCacheOutdated() ?: false) {
+        if (Database.getUser()?.isFeedCacheOutdated() == true) {
             showLoading()
             fetchFeeds()
         }

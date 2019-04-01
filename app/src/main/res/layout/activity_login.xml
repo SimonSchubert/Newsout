@@ -29,9 +29,10 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/progressBar"
                 android:visibility="gone"
-                app:layout_constraintTop_toTopOf="@+id/infoBtn" app:layout_constraintStart_toStartOf="@+id/infoBtn"
-                app:layout_constraintEnd_toStartOf="@+id/infoBtn" app:layout_constraintBottom_toTopOf="@+id/infoBtn"
-                app:layout_constraintVertical_chainStyle="packed"/>
+                app:layout_constraintTop_toTopOf="@+id/ivLogo"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="@+id/ivLogo"
+                app:layout_constraintBottom_toBottomOf="@+id/ivLogo" app:layout_constraintEnd_toEndOf="@+id/ivLogo"/>
 
         <RadioGroup android:id="@+id/radioGroup" android:layout_width="0dp"
                     android:layout_height="wrap_content"

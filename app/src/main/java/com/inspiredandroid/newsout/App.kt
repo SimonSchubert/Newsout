@@ -16,6 +16,6 @@ class App : Application() {
 
         sqlDriver = AndroidSqliteDriver(SqlDelightDatabase.Schema, applicationContext, "1.db")
 
-        Database.getItemQueries()?.tidy()
+        Database.getItemQueries()?.clearOld()
     }
 }
