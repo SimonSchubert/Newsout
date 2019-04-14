@@ -10,21 +10,24 @@ open class UnitTest {
     @Test
     fun testClearDatabase() {
         Database.setup()
+
         Database.clear()
+        Database.getUserQueries()?.insert()
 
         val feedId = 1L
         val isFolder = false.toLong()
 
         Database.getFeedQueries()?.insert(feedId, "", "", 0, 0, isFolder)
-        Database.getItemQueries()?.insert(0, feedId, "Test", "", "", 0, isFolder)
+        Database.getItemQueries()?.insert(0, "", feedId, "Test", "", "", 0, isFolder, 0)
 
         assertEquals(1, Database.getFeeds().size)
         assertEquals(1, Database.getItems(feedId, isFolder).size)
 
         Database.clear()
+        Database.getUserQueries()?.insert()
 
         assertTrue(Database.getFeeds().isEmpty())
-        assertTrue(Database.getItems(0, 0).isEmpty())
+        assertTrue(Database.getItems(feedId, isFolder).isEmpty())
     }
 
     @Test
@@ -32,14 +35,15 @@ open class UnitTest {
         Database.clear()
 
         val feedId = 1L
+        val itemId = 10L
         val isFolder = false.toLong()
 
         val itemQueries = Database.getItemQueries()
-        itemQueries?.insert(10, feedId, "News #1", "", "", 1, isFolder)
+        itemQueries?.insert(itemId, "", feedId, "News #1", "", "", 1, isFolder, 0)
 
         assertTrue { itemQueries?.selectAllByFeedIdAndType(feedId, isFolder)?.executeAsOne()?.isUnread == 1L }
 
-        itemQueries?.markItemAsRead(10)
+        itemQueries?.markItemAsRead(itemId)
 
         assertTrue { itemQueries?.selectAllByFeedIdAndType(feedId, isFolder)?.executeAsOne()?.isUnread == 0L }
     }
@@ -52,7 +56,7 @@ open class UnitTest {
         val isFolder = false.toLong()
 
         val itemQueries = Database.getItemQueries()
-        itemQueries?.insert(11, feedId, "News #2", "", "", 1, isFolder)
+        itemQueries?.insert(11, "", feedId, "News #2", "", "", 1, isFolder, 0)
         itemQueries?.markAsRead(feedId, isFolder)
 
         assertEquals(itemQueries?.selectAllByFeedIdAndType(feedId, isFolder)?.executeAsOne()?.isUnread, 0L)
@@ -66,7 +70,7 @@ open class UnitTest {
         val isFolder = false.toLong()
 
         val itemQueries = Database.getItemQueries()
-        itemQueries?.insert(12, feedId, "News #3", "", "", 1, isFolder)
+        itemQueries?.insert(12, "", feedId, "News #3", "", "", 1, isFolder, 0)
         itemQueries?.markAllAsRead()
 
         assertEquals(itemQueries?.selectAllByFeedIdAndType(feedId, isFolder)?.executeAsOne()?.isUnread, 0L)
@@ -117,10 +121,10 @@ open class UnitTest {
 
         userQueries?.updateFeedCache(DateTime.now().unixMillisLong)
 
-        assertTrue { Database.getUser()?.isCacheOutdated() == false }
+        assertTrue { Database.getUser()?.isFeedCacheOutdated() == false }
 
         userQueries?.updateFeedCache(DateTime.now().unixMillisLong - 6.minutes())
 
-        assertTrue { Database.getUser()?.isCacheOutdated() == true }
+        assertTrue { Database.getUser()?.isFeedCacheOutdated() == true }
     }
 }

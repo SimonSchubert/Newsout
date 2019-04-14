@@ -286,18 +286,24 @@ object Api {
     private fun getFolders(callback: (List<NextcloudNewsFolder>) -> Unit, error: () -> Unit, unauthorized: () -> Unit) {
         async {
             try {
-                val result: String = client.get {
+                val response = client.get<HttpResponse> {
                     url("$baseUrl/folders")
                     header("Authorization", "Basic $credentials")
                 }
 
-                val array = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("folders")
+                when {
+                    response.status == HttpStatusCode.OK -> {
+                        val array = Json.nonstrict.parseJson(response.readText()).jsonObject.getArrayOrNull("folders")
 
-                if (array != null) {
-                    val list = Json.nonstrict.parse(NextcloudNewsFolder.serializer().list, array.jsonArray.toString())
-                    done { callback(list) }
-                } else {
-                    done { error() }
+                        if (array != null) {
+                            val list = Json.nonstrict.parse(NextcloudNewsFolder.serializer().list, array.jsonArray.toString())
+                            done { callback(list) }
+                        } else {
+                            done { error() }
+                        }
+                    }
+                    response.status == HttpStatusCode.Unauthorized -> done { unauthorized() }
+                    else -> done { error() }
                 }
             } catch (ignore: Throwable) {
                 done { error() }

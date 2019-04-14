@@ -68,7 +68,7 @@ object Database {
                         } else {
                             it.selectAllByTitle().executeAsList().toMutableList()
                         }
-                    else -> return arrayListOf()
+                    else -> arrayListOf()
                 }
             }
         }

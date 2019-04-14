@@ -8,6 +8,10 @@ CREATE TABLE user (
 INSERT INTO user (sorting, isFolderTop, lastFeedFetch, lastStarredFetch)
 VALUES (1, 0, 0, 0);
 
+insert:
+INSERT OR REPLACE INTO user(sorting, isFolderTop, lastFeedFetch, lastStarredFetch)
+VALUES (1, 0, 0, 0);
+
 selectAll:
 SELECT *
 FROM user;
