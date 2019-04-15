@@ -436,36 +436,40 @@ object Api {
      */
     fun getStarredItems(callback: (List<Item>) -> Unit, error: () -> Unit) {
         async {
-            val result: String = client.get {
-                url("$baseUrl/items?type=2&getRead=true&batchSize=-1")
-                header("Authorization", "Basic $credentials")
-            }
-
-            val array = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("items")
-            if (array != null) {
-                val list = Json.nonstrict.parse(NextcloudNewsItem.serializer().list, array.jsonArray.toString())
-
-                val itemQueries = Database.getItemQueries()
-                itemQueries?.let {
-                    list.forEach {
-                        itemQueries.insert(
-                            it.id,
-                            it.guidHash,
-                            it.feedId,
-                            it.title.trim(),
-                            it.body.firstImageUrl(),
-                            it.url,
-                            it.unread.toLong(),
-                            0L,
-                            it.starred.toLong()
-                        )
-                    }
-
-                    done {
-                        callback(itemQueries.selectStarred().executeAsList())
-                    }
+            try {
+                val result: String = client.get {
+                    url("$baseUrl/items?type=2&getRead=true&batchSize=-1")
+                    header("Authorization", "Basic $credentials")
                 }
-            } else {
+
+                val array = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("items")
+                if (array != null) {
+                    val list = Json.nonstrict.parse(NextcloudNewsItem.serializer().list, array.jsonArray.toString())
+
+                    val itemQueries = Database.getItemQueries()
+                    itemQueries?.let {
+                        list.forEach {
+                            itemQueries.insert(
+                                it.id,
+                                it.guidHash,
+                                it.feedId,
+                                it.title.trim(),
+                                it.body.firstImageUrl(),
+                                it.url,
+                                it.unread.toLong(),
+                                0L,
+                                it.starred.toLong()
+                            )
+                        }
+
+                        done {
+                            callback(itemQueries.selectStarred().executeAsList())
+                        }
+                    }
+                } else {
+                    done { error() }
+                }
+            } catch (ignore: Throwable) {
                 done { error() }
             }
         }
