@@ -34,7 +34,7 @@ class FeedsViewController: UITableViewController {
         tableView.tableFooterView = UIView()
 
         let database = Database()
-        self.data = database.getFeedQueries()?.selectAllByTitle().executeAsList() as! [Feed]
+        self.data = database.getFeeds() as! [Feed]
         self.tableView?.reloadData()
 
         self.tableView.refreshManually()
@@ -87,15 +87,11 @@ class FeedsViewController: UITableViewController {
         didTapAddFeedButton(url: "")
     }
 
-    @objc func didTapSettingsButton(sender: AnyObject) {
-        logout()
-    }
-    
     private func logout() {
         KeychainWrapper.standard.set("", forKey: "SERVER")
         KeychainWrapper.standard.set("", forKey: "EMAIL")
         KeychainWrapper.standard.set("", forKey: "PASSWORD")
-        
+
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nav = storyboard.instantiateViewController(withIdentifier: "login")
@@ -158,6 +154,120 @@ class FeedsViewController: UITableViewController {
             self.logout()
             return KotlinUnit()
         }
+    }
+
+    @objc func didTapSettingsButton(sender: AnyObject) {
+        let alert = UIAlertController(title: "Settings", message: "", preferredStyle: UIAlertControllerStyle.alert)
+
+        alert.addAction(UIAlertAction(title: "Logout", style: UIAlertActionStyle.default, handler: { (action) in
+            self.logout()
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: {
+            (alertAction: UIAlertAction!) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+
+        let database = Database()
+        let user = database.getUser()
+
+        let folderSwitch = createFolderSwitch(user: user)
+        alert.view.addSubview(folderSwitch)
+
+        alert.view.layoutIfNeeded()
+
+        folderSwitch.centerXAnchor.constraint(equalTo: alert.view.centerXAnchor).isActive = true
+        folderSwitch.topAnchor.constraint(equalTo: alert.view.topAnchor, constant: alert.view.bounds.height + 10).isActive = true
+
+        let sortingSegment = createSortingSegment(user: user)
+        alert.view.addSubview(sortingSegment)
+
+        alert.view.layoutIfNeeded()
+
+        sortingSegment.centerXAnchor.constraint(equalTo: alert.view.centerXAnchor).isActive = true
+        sortingSegment.topAnchor.constraint(equalTo: alert.view.topAnchor, constant: alert.view.bounds.height + folderSwitch.bounds.height + 20).isActive = true
+
+        alert.view.layoutIfNeeded()
+
+        let height: CGFloat = alert.view.bounds.height + CGFloat(52) + folderSwitch.bounds.size.height +
+            sortingSegment.bounds.size.height + 30
+        alert.view.heightAnchor.constraint(equalToConstant: height).isActive = true
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    func createSortingSegment (user: User?) -> UIStackView {
+        let label = UILabel()
+        label.text = "Sorting"
+        label.sizeToFit()
+
+        let database = Database()
+        let items = ["Unread count", "Alphabetically"]
+        let sortingSegment = UISegmentedControl(items: items)
+        sortingSegment.frame = CGRect.init(x: 0, y: 0, width: 200, height: 30)
+        sortingSegment.selectedSegmentIndex = user?.sorting == database.SORT_UNREADCOUNT ? 0 : 1
+        sortingSegment.tintColor = UIColor.black
+        sortingSegment.addTarget(self, action: #selector(self.sortingApply), for: UIControlEvents.valueChanged)
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 8
+
+        stackView.addArrangedSubview(label)
+        stackView.addArrangedSubview(sortingSegment)
+
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.layoutIfNeeded()
+
+        return stackView
+    }
+
+    func createFolderSwitch (user: User?) -> UIStackView {
+        let label = UILabel()
+        label.text = "Folders always top"
+        label.sizeToFit()
+
+        let folderSwitch = UISwitch()
+        folderSwitch.setOn(user?.isFolderTop == 1 ? true : false, animated: true)
+
+        folderSwitch.addTarget(self, action: #selector(self.setFolderFirst(_:)), for: .valueChanged)
+
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+
+        stackView.addArrangedSubview(label)
+        stackView.addArrangedSubview(folderSwitch)
+
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.layoutIfNeeded()
+
+        return stackView
+    }
+
+    @objc private func sortingApply(segment: UISegmentedControl) -> Void {
+        let database = Database()
+        switch segment.selectedSegmentIndex {
+        case 0:
+            database.getUserQueries()?.updateSorting(sorting: database.SORT_UNREADCOUNT)
+        case 1:
+            database.getUserQueries()?.updateSorting(sorting: database.SORT_TITLE)
+        default:
+            break
+        }
+
+        self.data = database.getFeeds() as! [Feed]
+        self.tableView?.reloadData()
+    }
+
+    @objc func setFolderFirst(_ folderSwitch: UISwitch?) {
+        let database = Database()
+        database.getUserQueries()?.updateFolderTop(isFolderTop: folderSwitch?.isOn ?? true ? 1 : 0)
+        self.data = database.getFeeds() as! [Feed]
+        self.tableView?.reloadData()
+    }
+
+    @objc func dismissAlertController() {
+        self.dismiss(animated: true, completion: nil)
     }
 }
 
