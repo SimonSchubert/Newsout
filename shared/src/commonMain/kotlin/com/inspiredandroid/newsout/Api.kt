@@ -4,7 +4,7 @@ import com.inspiredandroid.newsout.models.NextcloudNewsFeed
 import com.inspiredandroid.newsout.models.NextcloudNewsFolder
 import com.inspiredandroid.newsout.models.NextcloudNewsItem
 import com.inspiredandroid.newsout.models.NextcloudNewsVersion
-import com.soywiz.klock.DateTime
+// import com.soywiz.klock.DateTime
 import io.ktor.client.HttpClient
 import io.ktor.client.request.*
 import io.ktor.client.response.HttpResponse
@@ -269,7 +269,7 @@ object Api {
                         response.status == HttpStatusCode.OK -> {
                             mergeFeedsAndFolders(folders, response.readText(), true)
 
-                            Database.getUserQueries()?.updateFeedCache(DateTime.now().unixMillisLong)
+                            // Database.getUserQueries()?.updateFeedCache(DateTime.now().unixMillisLong)
 
                             done { callback(Database.getFeeds()) }
                         }

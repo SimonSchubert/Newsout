@@ -1,6 +1,6 @@
 package com.inspiredandroid.newsout
 
-import com.soywiz.klock.DateTime
+//import com.soywiz.klock.DateTime
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -119,11 +119,11 @@ open class UnitTest {
 
         val userQueries = Database.getUserQueries()
 
-        userQueries?.updateFeedCache(DateTime.now().unixMillisLong)
+        //userQueries?.updateFeedCache(DateTime.now().unixMillisLong)
 
         assertTrue { Database.getUser()?.isFeedCacheOutdated() == false }
 
-        userQueries?.updateFeedCache(DateTime.now().unixMillisLong - 6.minutes())
+        //userQueries?.updateFeedCache(DateTime.now().unixMillisLong - 6.minutes())
 
         assertTrue { Database.getUser()?.isFeedCacheOutdated() == true }
     }

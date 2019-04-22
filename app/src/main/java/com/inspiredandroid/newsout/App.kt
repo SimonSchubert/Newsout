@@ -17,5 +17,8 @@ class App : Application() {
         sqlDriver = AndroidSqliteDriver(SqlDelightDatabase.Schema, applicationContext, "1.db")
 
         Database.getItemQueries()?.clearOld()
+
+
+        // DateTime.fromUnix(0)
     }
 }

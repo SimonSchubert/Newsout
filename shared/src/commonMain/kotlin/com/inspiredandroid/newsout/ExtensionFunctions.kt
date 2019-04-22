@@ -1,6 +1,6 @@
 package com.inspiredandroid.newsout
 
-import com.soywiz.klock.DateTime
+// import com.soywiz.klock.DateTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -52,14 +52,14 @@ fun Long.toBoolean(): Boolean {
  * Is the last feed fetch > 5 minutes ago
  */
 fun User.isFeedCacheOutdated(): Boolean {
-    return DateTime.now().unixMillisLong - lastFeedFetch > 5.minutes()
+    return true // DateTime.now().unixMillisLong - lastFeedFetch > 5.minutes()
 }
 
 /**
  * Is the last starred fetch > 1 day
  */
 fun User.isStarredCacheOutdated(): Boolean {
-    return DateTime.now().unixMillisLong - lastStarredFetch > 60.minutes() * 24
+    return true // DateTime.now().unixMillisLong - lastStarredFetch > 60.minutes() * 24
 }
 
 /**
