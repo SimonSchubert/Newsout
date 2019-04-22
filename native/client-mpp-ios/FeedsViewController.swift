@@ -88,10 +88,14 @@ class FeedsViewController: UITableViewController {
     }
 
     @objc func didTapSettingsButton(sender: AnyObject) {
+        logout()
+    }
+    
+    private func logout() {
         KeychainWrapper.standard.set("", forKey: "SERVER")
         KeychainWrapper.standard.set("", forKey: "EMAIL")
         KeychainWrapper.standard.set("", forKey: "PASSWORD")
-
+        
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nav = storyboard.instantiateViewController(withIdentifier: "login")
@@ -142,12 +146,16 @@ class FeedsViewController: UITableViewController {
     }
 
     private func fetchFeedData() {
-        api.feeds(callback: { (feeds) in
+        api.getFeeds(callback: { (feeds) in
             self.data = feeds
             self.tableView?.reloadData()
             self.refreshControl?.endRefreshing()
             return KotlinUnit()
-        }) { () in
+        }, error: { () -> KotlinUnit in
+            self.refreshControl?.endRefreshing()
+            return KotlinUnit()
+        }) { () -> KotlinUnit in
+            self.logout()
             return KotlinUnit()
         }
     }

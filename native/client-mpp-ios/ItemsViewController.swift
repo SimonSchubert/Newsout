@@ -62,15 +62,16 @@ class ItemsViewController: UITableViewController {
     }
 
     private func fetchItemData() {
-        api.items(id: id
-                  , type: type
-                  , offset: false
-                  , callback: { (items) in
-                      self.data = items
-                      self.tableView?.reloadData()
-                      self.refreshControl?.endRefreshing()
-                      return KotlinUnit()
-                  }) { () in
+        api.getItems(id: id
+            , type: type
+            , offset: false
+            , callback: { (items) in
+                self.data = items
+                self.tableView?.reloadData()
+                self.refreshControl?.endRefreshing()
+                return KotlinUnit()
+        }) { () in
+            self.refreshControl?.endRefreshing()
             return KotlinUnit()
         }
     }

@@ -14,8 +14,8 @@
 		2C9BE46E21183DE600670E90 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C9BE46C21183DE600670E90 /* LaunchScreen.storyboard */; };
 		A605AB3AE76AF34763DA12A7 /* Pods_client_mpp_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0FE276788F82DA88EBF86 /* Pods_client_mpp_ios.framework */; };
 		F41A3F5C2243DFCC0075AB70 /* ItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41A3F5B2243DFCC0075AB70 /* ItemsViewController.swift */; };
-		F4B24ADF2243A0C600D5FA1E /* main.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4B24ADE2243A0C600D5FA1E /* main.framework */; };
-		F4B24AE12243A0D000D5FA1E /* main.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4B24ADE2243A0C600D5FA1E /* main.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F4550421226DC375001C08BD /* main.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4550420226DC375001C08BD /* main.framework */; };
+		F4550423226DC37B001C08BD /* main.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4550420226DC375001C08BD /* main.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F4E63F002225DEA20055879B /* FeedsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E63EFF2225DEA20055879B /* FeedsViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -26,7 +26,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				F4B24AE12243A0D000D5FA1E /* main.framework in Embed Frameworks */,
+				F4550423226DC37B001C08BD /* main.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -45,7 +45,7 @@
 		7AA8658B95419F44900A353B /* Pods-client-mpp-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-client-mpp-ios.debug.xcconfig"; path = "Target Support Files/Pods-client-mpp-ios/Pods-client-mpp-ios.debug.xcconfig"; sourceTree = "<group>"; };
 		85A0FE276788F82DA88EBF86 /* Pods_client_mpp_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_client_mpp_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F41A3F5B2243DFCC0075AB70 /* ItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsViewController.swift; sourceTree = "<group>"; };
-		F4B24ADE2243A0C600D5FA1E /* main.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = main.framework; path = "../shared/build/xcode-frameworks/main.framework"; sourceTree = "<group>"; };
+		F4550420226DC375001C08BD /* main.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = main.framework; path = ../shared/build/bin/ios/mainDebugFramework/main.framework; sourceTree = "<group>"; };
 		F4E63EFF2225DEA20055879B /* FeedsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -54,8 +54,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4B24ADF2243A0C600D5FA1E /* main.framework in Frameworks */,
 				A605AB3AE76AF34763DA12A7 /* Pods_client_mpp_ios.framework in Frameworks */,
+				F4550421226DC375001C08BD /* main.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,9 +74,9 @@
 		2C9BE45721183DE400670E90 = {
 			isa = PBXGroup;
 			children = (
+				F4550420226DC375001C08BD /* main.framework */,
 				2C9BE46221183DE400670E90 /* client-mpp-ios */,
 				2C9BE46121183DE400670E90 /* Products */,
-				F4B24ADE2243A0C600D5FA1E /* main.framework */,
 				0BF43523631A3F996C7774D4 /* Pods */,
 				3EAD6CCAF9747651A3FE70AE /* Frameworks */,
 			);

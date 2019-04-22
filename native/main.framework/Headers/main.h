@@ -2,7 +2,7 @@
 
 @class MainFeedImpl, MainSqldelight_runtimeQuery, MainKotlinUnit, MainSqldelight_runtimeTransacterTransaction, MainItemImpl, MainMaxIdImpl, MainMaxIdAllImpl, MainMinIdImpl, MainSqlDelightDatabaseCompanion, MainUserImpl, MainApi, MainNextcloudNewsVersion, MainDatabase, MainExploreFeed, MainExploreFeedCompanion, MainExploreFeed$serializer, MainKotlinArray, MainNextcloudNewsFeed, MainNextcloudNewsFeedCompanion, MainNextcloudNewsFeed$serializer, MainNextcloudNewsFolder, MainNextcloudNewsFolderCompanion, MainNextcloudNewsFolder$serializer, MainNextcloudNewsItem, MainNextcloudNewsItemCompanion, MainNextcloudNewsItem$serializer, MainNextcloudNewsVersionCompanion, MainNextcloudNewsVersion$serializer, MainKotlinx_serialization_runtime_nativeEnumDescriptor, MainKotlinx_serialization_runtime_nativeSerialKind, MainKotlinNothing, MainKotlinx_serialization_runtime_nativeUpdateMode, MainKotlinByteArray, MainKotlinx_serialization_runtime_nativeSerialClassDescImpl, MainKotlinEnum, MainKotlinByteIterator;
 
-@protocol MainFeed, MainFeedQueries, MainSqldelight_runtimeTransacter, MainItem, MainItemQueries, MainMaxId, MainMaxIdAll, MainMinId, MainSqlDelightDatabase, MainUserQueries, MainSqldelight_runtimeSqlDriver, MainSqldelight_runtimeSqlDriverSchema, MainUser, MainKotlinx_serialization_runtime_nativeKSerializer, MainKotlinx_serialization_runtime_nativeGeneratedSerializer, MainKotlinx_serialization_runtime_nativeSerializationStrategy, MainKotlinx_serialization_runtime_nativeEncoder, MainKotlinx_serialization_runtime_nativeSerialDescriptor, MainKotlinx_serialization_runtime_nativeDeserializationStrategy, MainKotlinx_serialization_runtime_nativeDecoder, MainKotlinSuspendFunction1, MainSqldelight_runtimeSqlCursor, MainSqldelight_runtimeQueryListener, MainSqldelight_runtimeSqlPreparedStatement, MainSqldelight_runtimeCloseable, MainKotlinIterator, MainKotlinx_serialization_runtime_nativeCompositeEncoder, MainKotlinx_serialization_runtime_nativeSerialContext, MainKotlinAnnotation, MainKotlinx_serialization_runtime_nativeCompositeDecoder, MainKotlinSuspendFunction, MainKotlinKClass, MainKotlinComparable, MainKotlinKDeclarationContainer, MainKotlinKAnnotatedElement, MainKotlinKClassifier;
+@protocol MainFeed, MainFeedQueries, MainSqldelight_runtimeTransacter, MainItem, MainItemQueries, MainMaxId, MainMaxIdAll, MainMinId, MainSqlDelightDatabase, MainUserQueries, MainSqldelight_runtimeSqlDriver, MainSqldelight_runtimeSqlDriverSchema, MainUser, MainKotlinx_serialization_runtime_nativeKSerializer, MainKotlinx_serialization_runtime_nativeGeneratedSerializer, MainKotlinx_serialization_runtime_nativeSerializationStrategy, MainKotlinx_serialization_runtime_nativeEncoder, MainKotlinx_serialization_runtime_nativeSerialDescriptor, MainKotlinx_serialization_runtime_nativeDeserializationStrategy, MainKotlinx_serialization_runtime_nativeDecoder, MainKotlinSuspendFunction1, MainSqldelight_runtimeSqlCursor, MainSqldelight_runtimeQueryListener, MainSqldelight_runtimeSqlPreparedStatement, MainSqldelight_runtimeCloseable, MainKotlinIterator, MainKotlinx_serialization_runtime_nativeCompositeEncoder, MainKotlinx_serialization_runtime_nativeSerialModule, MainKotlinAnnotation, MainKotlinx_serialization_runtime_nativeCompositeDecoder, MainKotlinSuspendFunction, MainKotlinx_serialization_runtime_nativeSerialModuleCollector, MainKotlinKClass, MainKotlinComparable, MainKotlinKDeclarationContainer, MainKotlinKAnnotatedElement, MainKotlinKClassifier;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -144,12 +144,12 @@ __attribute__((swift_name("KotlinBoolean")))
 __attribute__((swift_name("Feed")))
 @protocol MainFeed
 @required
-@property (readonly) int64_t id;
-@property (readonly) NSString *title;
-@property (readonly) NSString *faviconUrl;
-@property (readonly) int64_t unreadCount;
-@property (readonly) int64_t ordering;
-@property (readonly) int64_t isFolder;
+@property (readonly) int64_t id __attribute__((swift_name("id")));
+@property (readonly) NSString *title __attribute__((swift_name("title")));
+@property (readonly) NSString *faviconUrl __attribute__((swift_name("faviconUrl")));
+@property (readonly) int64_t unreadCount __attribute__((swift_name("unreadCount")));
+@property (readonly) int64_t ordering __attribute__((swift_name("ordering")));
+@property (readonly) int64_t isFolder __attribute__((swift_name("isFolder")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -184,72 +184,82 @@ __attribute__((swift_name("FeedQueries")))
 - (MainSqldelight_runtimeQuery *)selectAllByTitleAndFolder __attribute__((swift_name("selectAllByTitleAndFolder()")));
 - (MainSqldelight_runtimeQuery *)selectFolderFeedByIdId:(int64_t)id mapper:(id (^)(MainLong *, NSString *, NSString *, MainLong *, MainLong *, MainLong *))mapper __attribute__((swift_name("selectFolderFeedById(id:mapper:)")));
 - (MainSqldelight_runtimeQuery *)selectFolderFeedByIdId:(int64_t)id __attribute__((swift_name("selectFolderFeedById(id:)")));
+- (MainSqldelight_runtimeQuery *)countUnread __attribute__((swift_name("countUnread()")));
 - (void)renameFolderFeedTitle:(NSString *)title id:(int64_t)id __attribute__((swift_name("renameFolderFeed(title:id:)")));
 - (void)renameFeedTitle:(NSString *)title id:(int64_t)id __attribute__((swift_name("renameFeed(title:id:)")));
-- (void)deleteFolderFeedId:(int64_t)id __attribute__((swift_name("deleteFolderFeed(id:)")));
-- (void)deleteFeedId:(int64_t)id __attribute__((swift_name("deleteFeed(id:)")));
 - (void)insertId:(int64_t)id title:(NSString *)title faviconUrl:(NSString *)faviconUrl unreadCount:(int64_t)unreadCount ordering:(int64_t)ordering isFolder:(int64_t)isFolder __attribute__((swift_name("insert(id:title:faviconUrl:unreadCount:ordering:isFolder:)")));
 - (void)increaseUnreadCountForFolderFeedUnreadCount:(int64_t)unreadCount id:(int64_t)id __attribute__((swift_name("increaseUnreadCountForFolderFeed(unreadCount:id:)")));
 - (void)markAllAsRead __attribute__((swift_name("markAllAsRead()")));
 - (void)markAsReadId:(int64_t)id isFolder:(int64_t)isFolder __attribute__((swift_name("markAsRead(id:isFolder:)")));
 - (void)decreaseUnreadCountId:(int64_t)id isFolder:(int64_t)isFolder __attribute__((swift_name("decreaseUnreadCount(id:isFolder:)")));
+- (void)deleteFolderFeedId:(int64_t)id __attribute__((swift_name("deleteFolderFeed(id:)")));
+- (void)deleteFeedId:(int64_t)id __attribute__((swift_name("deleteFeed(id:)")));
 - (void)clear __attribute__((swift_name("clear()")));
 @end;
 
 __attribute__((swift_name("Item")))
 @protocol MainItem
 @required
-@property (readonly) int64_t id;
-@property (readonly) int64_t feedId;
-@property (readonly) NSString *title;
-@property (readonly) NSString *imageUrl;
-@property (readonly) NSString *url;
-@property (readonly) int64_t isUnread;
-@property (readonly) int64_t isFolder;
-@property (readonly) int64_t isStarred;
-@property (readonly) int64_t creationDate;
+@property (readonly) int64_t id __attribute__((swift_name("id")));
+@property (readonly) NSString *guidHash __attribute__((swift_name("guidHash")));
+@property (readonly) int64_t feedId __attribute__((swift_name("feedId")));
+@property (readonly) NSString *title __attribute__((swift_name("title")));
+@property (readonly) NSString *imageUrl __attribute__((swift_name("imageUrl")));
+@property (readonly) NSString *url __attribute__((swift_name("url")));
+@property (readonly) int64_t isUnread __attribute__((swift_name("isUnread")));
+@property (readonly) int64_t isFolder __attribute__((swift_name("isFolder")));
+@property (readonly) int64_t isStarred __attribute__((swift_name("isStarred")));
+@property (readonly) int64_t creationDate __attribute__((swift_name("creationDate")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
 __attribute__((swift_name("ItemImpl")))
 @interface MainItemImpl : KotlinBase <MainItem>
-- (instancetype)initWithId:(int64_t)id feedId:(int64_t)feedId title:(NSString *)title imageUrl:(NSString *)imageUrl url:(NSString *)url isUnread:(int64_t)isUnread isFolder:(int64_t)isFolder isStarred:(int64_t)isStarred creationDate:(int64_t)creationDate __attribute__((swift_name("init(id:feedId:title:imageUrl:url:isUnread:isFolder:isStarred:creationDate:)"))) __attribute__((objc_designated_initializer));
+- (instancetype)initWithId:(int64_t)id guidHash:(NSString *)guidHash feedId:(int64_t)feedId title:(NSString *)title imageUrl:(NSString *)imageUrl url:(NSString *)url isUnread:(int64_t)isUnread isFolder:(int64_t)isFolder isStarred:(int64_t)isStarred creationDate:(int64_t)creationDate __attribute__((swift_name("init(id:guidHash:feedId:title:imageUrl:url:isUnread:isFolder:isStarred:creationDate:)"))) __attribute__((objc_designated_initializer));
 - (int64_t)component1 __attribute__((swift_name("component1()")));
-- (int64_t)component2 __attribute__((swift_name("component2()")));
-- (NSString *)component3 __attribute__((swift_name("component3()")));
+- (NSString *)component2 __attribute__((swift_name("component2()")));
+- (int64_t)component3 __attribute__((swift_name("component3()")));
 - (NSString *)component4 __attribute__((swift_name("component4()")));
 - (NSString *)component5 __attribute__((swift_name("component5()")));
-- (int64_t)component6 __attribute__((swift_name("component6()")));
+- (NSString *)component6 __attribute__((swift_name("component6()")));
 - (int64_t)component7 __attribute__((swift_name("component7()")));
 - (int64_t)component8 __attribute__((swift_name("component8()")));
 - (int64_t)component9 __attribute__((swift_name("component9()")));
-- (MainItemImpl *)doCopyId:(int64_t)id feedId:(int64_t)feedId title:(NSString *)title imageUrl:(NSString *)imageUrl url:(NSString *)url isUnread:(int64_t)isUnread isFolder:(int64_t)isFolder isStarred:(int64_t)isStarred creationDate:(int64_t)creationDate __attribute__((swift_name("doCopy(id:feedId:title:imageUrl:url:isUnread:isFolder:isStarred:creationDate:)")));
+- (int64_t)component10 __attribute__((swift_name("component10()")));
+- (MainItemImpl *)doCopyId:(int64_t)id guidHash:(NSString *)guidHash feedId:(int64_t)feedId title:(NSString *)title imageUrl:(NSString *)imageUrl url:(NSString *)url isUnread:(int64_t)isUnread isFolder:(int64_t)isFolder isStarred:(int64_t)isStarred creationDate:(int64_t)creationDate __attribute__((swift_name("doCopy(id:guidHash:feedId:title:imageUrl:url:isUnread:isFolder:isStarred:creationDate:)")));
 @end;
 
 __attribute__((swift_name("ItemQueries")))
 @protocol MainItemQueries <MainSqldelight_runtimeTransacter>
 @required
-- (MainSqldelight_runtimeQuery *)selectAllByFeedIdAndTypeFeedId:(int64_t)feedId isFolder:(int64_t)isFolder mapper:(id (^)(MainLong *, MainLong *, NSString *, NSString *, NSString *, MainLong *, MainLong *, MainLong *, MainLong *))mapper __attribute__((swift_name("selectAllByFeedIdAndType(feedId:isFolder:mapper:)")));
+- (MainSqldelight_runtimeQuery *)selectAllByFeedIdAndTypeFeedId:(int64_t)feedId isFolder:(int64_t)isFolder mapper:(id (^)(MainLong *, NSString *, MainLong *, NSString *, NSString *, NSString *, MainLong *, MainLong *, MainLong *, MainLong *))mapper __attribute__((swift_name("selectAllByFeedIdAndType(feedId:isFolder:mapper:)")));
 - (MainSqldelight_runtimeQuery *)selectAllByFeedIdAndTypeFeedId:(int64_t)feedId isFolder:(int64_t)isFolder __attribute__((swift_name("selectAllByFeedIdAndType(feedId:isFolder:)")));
+- (MainSqldelight_runtimeQuery *)selectUnreadMapper:(id (^)(MainLong *, NSString *, MainLong *, NSString *, NSString *, NSString *, MainLong *, MainLong *, MainLong *, MainLong *))mapper __attribute__((swift_name("selectUnread(mapper:)")));
+- (MainSqldelight_runtimeQuery *)selectUnread __attribute__((swift_name("selectUnread()")));
+- (MainSqldelight_runtimeQuery *)selectStarredMapper:(id (^)(MainLong *, NSString *, MainLong *, NSString *, NSString *, NSString *, MainLong *, MainLong *, MainLong *, MainLong *))mapper __attribute__((swift_name("selectStarred(mapper:)")));
+- (MainSqldelight_runtimeQuery *)selectStarred __attribute__((swift_name("selectStarred()")));
+- (MainSqldelight_runtimeQuery *)countStarred __attribute__((swift_name("countStarred()")));
+- (MainSqldelight_runtimeQuery *)countUnstarred __attribute__((swift_name("countUnstarred()")));
 - (MainSqldelight_runtimeQuery *)maxIdAllMapper:(id (^)(MainLong * _Nullable))mapper __attribute__((swift_name("maxIdAll(mapper:)")));
 - (MainSqldelight_runtimeQuery *)maxIdAll __attribute__((swift_name("maxIdAll()")));
 - (MainSqldelight_runtimeQuery *)maxIdFeedId:(int64_t)feedId isFolder:(int64_t)isFolder mapper:(id (^)(MainLong * _Nullable))mapper __attribute__((swift_name("maxId(feedId:isFolder:mapper:)")));
 - (MainSqldelight_runtimeQuery *)maxIdFeedId:(int64_t)feedId isFolder:(int64_t)isFolder __attribute__((swift_name("maxId(feedId:isFolder:)")));
 - (MainSqldelight_runtimeQuery *)minIdFeedId:(int64_t)feedId isFolder:(int64_t)isFolder mapper:(id (^)(MainLong * _Nullable))mapper __attribute__((swift_name("minId(feedId:isFolder:mapper:)")));
 - (MainSqldelight_runtimeQuery *)minIdFeedId:(int64_t)feedId isFolder:(int64_t)isFolder __attribute__((swift_name("minId(feedId:isFolder:)")));
-- (MainSqldelight_runtimeQuery *)tidyMapper:(id (^)(MainLong *, MainLong *, NSString *, NSString *, NSString *, MainLong *, MainLong *, MainLong *, MainLong *))mapper __attribute__((swift_name("tidy(mapper:)")));
-- (MainSqldelight_runtimeQuery *)tidy __attribute__((swift_name("tidy()")));
-- (void)insertId:(MainLong * _Nullable)id feedId:(int64_t)feedId title:(NSString *)title imageUrl:(NSString *)imageUrl url:(NSString *)url isUnread:(int64_t)isUnread isFolder:(int64_t)isFolder __attribute__((swift_name("insert(id:feedId:title:imageUrl:url:isUnread:isFolder:)")));
+- (void)insertId:(MainLong * _Nullable)id guidHash:(NSString *)guidHash feedId:(int64_t)feedId title:(NSString *)title imageUrl:(NSString *)imageUrl url:(NSString *)url isUnread:(int64_t)isUnread isFolder:(int64_t)isFolder isStarred:(int64_t)isStarred __attribute__((swift_name("insert(id:guidHash:feedId:title:imageUrl:url:isUnread:isFolder:isStarred:)")));
 - (void)markAllAsRead __attribute__((swift_name("markAllAsRead()")));
 - (void)markItemAsReadId:(int64_t)id __attribute__((swift_name("markItemAsRead(id:)")));
+- (void)markItemAsStarredId:(int64_t)id __attribute__((swift_name("markItemAsStarred(id:)")));
+- (void)markItemAsUnstarredId:(int64_t)id __attribute__((swift_name("markItemAsUnstarred(id:)")));
 - (void)markAsReadFeedId:(int64_t)feedId isFolder:(int64_t)isFolder __attribute__((swift_name("markAsRead(feedId:isFolder:)")));
 - (void)clear __attribute__((swift_name("clear()")));
+- (void)clearOld __attribute__((swift_name("clearOld()")));
 @end;
 
 __attribute__((swift_name("MaxId")))
 @protocol MainMaxId
 @required
-@property (readonly) MainLong * _Nullable MAX;
+@property (readonly) MainLong * _Nullable MAX __attribute__((swift_name("MAX")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -263,7 +273,7 @@ __attribute__((swift_name("MaxIdImpl")))
 __attribute__((swift_name("MaxIdAll")))
 @protocol MainMaxIdAll
 @required
-@property (readonly) MainLong * _Nullable MAX;
+@property (readonly) MainLong * _Nullable MAX __attribute__((swift_name("MAX")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -277,7 +287,7 @@ __attribute__((swift_name("MaxIdAllImpl")))
 __attribute__((swift_name("MinId")))
 @protocol MainMinId
 @required
-@property (readonly) MainLong * _Nullable MIN;
+@property (readonly) MainLong * _Nullable MIN __attribute__((swift_name("MIN")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -291,9 +301,9 @@ __attribute__((swift_name("MinIdImpl")))
 __attribute__((swift_name("SqlDelightDatabase")))
 @protocol MainSqlDelightDatabase <MainSqldelight_runtimeTransacter>
 @required
-@property (readonly) id<MainFeedQueries> feedQueries;
-@property (readonly) id<MainItemQueries> itemQueries;
-@property (readonly) id<MainUserQueries> userQueries;
+@property (readonly) id<MainFeedQueries> feedQueries __attribute__((swift_name("feedQueries")));
+@property (readonly) id<MainItemQueries> itemQueries __attribute__((swift_name("itemQueries")));
+@property (readonly) id<MainUserQueries> userQueries __attribute__((swift_name("userQueries")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -303,35 +313,39 @@ __attribute__((swift_name("SqlDelightDatabaseCompanion")))
 + (instancetype)allocWithZone:(struct _NSZone *)zone __attribute__((unavailable));
 + (instancetype)companion __attribute__((swift_name("init()")));
 - (id<MainSqlDelightDatabase>)invokeDriver:(id<MainSqldelight_runtimeSqlDriver>)driver __attribute__((swift_name("invoke(driver:)")));
-@property (readonly) id<MainSqldelight_runtimeSqlDriverSchema> Schema;
+@property (readonly) id<MainSqldelight_runtimeSqlDriverSchema> Schema __attribute__((swift_name("Schema")));
 @end;
 
 __attribute__((swift_name("User")))
 @protocol MainUser
 @required
-@property (readonly) int64_t sorting;
-@property (readonly) int64_t isFolderTop;
-@property (readonly) int64_t lastFeedFetch;
+@property (readonly) int64_t sorting __attribute__((swift_name("sorting")));
+@property (readonly) int64_t isFolderTop __attribute__((swift_name("isFolderTop")));
+@property (readonly) int64_t lastFeedFetch __attribute__((swift_name("lastFeedFetch")));
+@property (readonly) int64_t lastStarredFetch __attribute__((swift_name("lastStarredFetch")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
 __attribute__((swift_name("UserImpl")))
 @interface MainUserImpl : KotlinBase <MainUser>
-- (instancetype)initWithSorting:(int64_t)sorting isFolderTop:(int64_t)isFolderTop lastFeedFetch:(int64_t)lastFeedFetch __attribute__((swift_name("init(sorting:isFolderTop:lastFeedFetch:)"))) __attribute__((objc_designated_initializer));
+- (instancetype)initWithSorting:(int64_t)sorting isFolderTop:(int64_t)isFolderTop lastFeedFetch:(int64_t)lastFeedFetch lastStarredFetch:(int64_t)lastStarredFetch __attribute__((swift_name("init(sorting:isFolderTop:lastFeedFetch:lastStarredFetch:)"))) __attribute__((objc_designated_initializer));
 - (int64_t)component1 __attribute__((swift_name("component1()")));
 - (int64_t)component2 __attribute__((swift_name("component2()")));
 - (int64_t)component3 __attribute__((swift_name("component3()")));
-- (MainUserImpl *)doCopySorting:(int64_t)sorting isFolderTop:(int64_t)isFolderTop lastFeedFetch:(int64_t)lastFeedFetch __attribute__((swift_name("doCopy(sorting:isFolderTop:lastFeedFetch:)")));
+- (int64_t)component4 __attribute__((swift_name("component4()")));
+- (MainUserImpl *)doCopySorting:(int64_t)sorting isFolderTop:(int64_t)isFolderTop lastFeedFetch:(int64_t)lastFeedFetch lastStarredFetch:(int64_t)lastStarredFetch __attribute__((swift_name("doCopy(sorting:isFolderTop:lastFeedFetch:lastStarredFetch:)")));
 @end;
 
 __attribute__((swift_name("UserQueries")))
 @protocol MainUserQueries <MainSqldelight_runtimeTransacter>
 @required
-- (MainSqldelight_runtimeQuery *)selectAllMapper:(id (^)(MainLong *, MainLong *, MainLong *))mapper __attribute__((swift_name("selectAll(mapper:)")));
+- (MainSqldelight_runtimeQuery *)selectAllMapper:(id (^)(MainLong *, MainLong *, MainLong *, MainLong *))mapper __attribute__((swift_name("selectAll(mapper:)")));
 - (MainSqldelight_runtimeQuery *)selectAll __attribute__((swift_name("selectAll()")));
+- (void)insert __attribute__((swift_name("insert()")));
 - (void)updateSortingSorting:(int64_t)sorting __attribute__((swift_name("updateSorting(sorting:)")));
 - (void)updateFolderTopIsFolderTop:(int64_t)isFolderTop __attribute__((swift_name("updateFolderTop(isFolderTop:)")));
 - (void)updateFeedCacheLastFeedFetch:(int64_t)lastFeedFetch __attribute__((swift_name("updateFeedCache(lastFeedFetch:)")));
+- (void)updateStarredCacheLastStarredFetch:(int64_t)lastStarredFetch __attribute__((swift_name("updateStarredCache(lastStarredFetch:)")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -341,19 +355,24 @@ __attribute__((swift_name("Api")))
 + (instancetype)allocWithZone:(struct _NSZone *)zone __attribute__((unavailable));
 + (instancetype)api __attribute__((swift_name("init()")));
 - (void)setCredentialsUrl:(NSString *)url email:(NSString *)email password:(NSString *)password __attribute__((swift_name("setCredentials(url:email:password:)")));
+- (BOOL)isCredentialsAvailable __attribute__((swift_name("isCredentialsAvailable()")));
 - (void)loginUrl:(NSString *)url email:(NSString *)email password:(NSString *)password callback:(MainKotlinUnit *(^)(MainNextcloudNewsVersion *))callback unauthorized:(MainKotlinUnit *(^)(void))unauthorized error:(MainKotlinUnit *(^)(void))error __attribute__((swift_name("login(url:email:password:callback:unauthorized:error:)")));
 - (void)createAccountUrl:(NSString *)url email:(NSString *)email password:(NSString *)password success:(MainKotlinUnit *(^)(void))success userExists:(MainKotlinUnit *(^)(void))userExists error:(MainKotlinUnit *(^)(void))error __attribute__((swift_name("createAccount(url:email:password:success:userExists:error:)")));
 - (void)markFeedAsReadFeedId:(int64_t)feedId callback:(MainKotlinUnit *(^)(NSArray<id<MainItem>> *))callback __attribute__((swift_name("markFeedAsRead(feedId:callback:)")));
 - (void)markFolderAsReadFolderId:(int64_t)folderId callback:(MainKotlinUnit *(^)(NSArray<id<MainItem>> *))callback __attribute__((swift_name("markFolderAsRead(folderId:callback:)")));
 - (void)markAllAsReadCallback:(MainKotlinUnit *(^)(NSArray<id<MainFeed>> *))callback __attribute__((swift_name("markAllAsRead(callback:)")));
 - (void)markItemAsReadItemId:(int64_t)itemId __attribute__((swift_name("markItemAsRead(itemId:)")));
-- (void)feedsCallback:(MainKotlinUnit *(^)(NSArray<id<MainFeed>> *))callback error:(MainKotlinUnit *(^)(void))error __attribute__((swift_name("feeds(callback:error:)")));
+- (void)markItemAsStarredFeedId:(int64_t)feedId guidHash:(NSString *)guidHash __attribute__((swift_name("markItemAsStarred(feedId:guidHash:)")));
+- (void)markItemAsUnstarredFeedId:(int64_t)feedId guidHash:(NSString *)guidHash __attribute__((swift_name("markItemAsUnstarred(feedId:guidHash:)")));
+- (void)getFeedsCallback:(MainKotlinUnit *(^)(NSArray<id<MainFeed>> *))callback error:(MainKotlinUnit *(^)(void))error unauthorized:(MainKotlinUnit *(^)(void))unauthorized __attribute__((swift_name("getFeeds(callback:error:unauthorized:)")));
 - (void)renameFolderId:(int64_t)id title:(NSString *)title callback:(MainKotlinUnit *(^)(void))callback error:(MainKotlinUnit *(^)(void))error __attribute__((swift_name("renameFolder(id:title:callback:error:)")));
 - (void)renameFeedId:(int64_t)id title:(NSString *)title callback:(MainKotlinUnit *(^)(void))callback error:(MainKotlinUnit *(^)(void))error __attribute__((swift_name("renameFeed(id:title:callback:error:)")));
 - (void)deleteFeedId:(int64_t)id callback:(MainKotlinUnit *(^)(void))callback error:(MainKotlinUnit *(^)(void))error __attribute__((swift_name("deleteFeed(id:callback:error:)")));
 - (void)deleteFolderId:(int64_t)id callback:(MainKotlinUnit *(^)(void))callback error:(MainKotlinUnit *(^)(void))error __attribute__((swift_name("deleteFolder(id:callback:error:)")));
 - (void)createFeedUrl:(NSString *)url folderId:(int64_t)folderId callback:(MainKotlinUnit *(^)(void))callback error:(MainKotlinUnit *(^)(void))error __attribute__((swift_name("createFeed(url:folderId:callback:error:)")));
-- (void)itemsId:(int64_t)id type:(int64_t)type offset:(BOOL)offset callback:(MainKotlinUnit *(^)(NSArray<id<MainItem>> *))callback error:(MainKotlinUnit *(^)(void))error __attribute__((swift_name("items(id:type:offset:callback:error:)")));
+- (void)getStarredItemsCallback:(MainKotlinUnit *(^)(NSArray<id<MainItem>> *))callback error:(MainKotlinUnit *(^)(void))error __attribute__((swift_name("getStarredItems(callback:error:)")));
+- (void)getUnreadItemsCallback:(MainKotlinUnit *(^)(NSArray<id<MainItem>> *))callback error:(MainKotlinUnit *(^)(void))error __attribute__((swift_name("getUnreadItems(callback:error:)")));
+- (void)getItemsId:(int64_t)id type:(int64_t)type offset:(BOOL)offset callback:(MainKotlinUnit *(^)(NSArray<id<MainItem>> *))callback error:(MainKotlinUnit *(^)(void))error __attribute__((swift_name("getItems(id:type:offset:callback:error:)")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -369,9 +388,11 @@ __attribute__((swift_name("Database")))
 - (NSMutableArray<id<MainFeed>> *)getFeeds __attribute__((swift_name("getFeeds()")));
 - (NSMutableArray<id<MainItem>> *)getItemsFeedId:(int64_t)feedId type:(int64_t)type __attribute__((swift_name("getItems(feedId:type:)")));
 - (id<MainUser> _Nullable)getUser __attribute__((swift_name("getUser()")));
+- (int64_t)getTotalUnreadCount __attribute__((swift_name("getTotalUnreadCount()")));
+- (int64_t)getTotalStarredCount __attribute__((swift_name("getTotalStarredCount()")));
 - (void)clear __attribute__((swift_name("clear()")));
-@property (readonly) int64_t SORT_UNREADCOUNT;
-@property (readonly) int64_t SORT_TITLE;
+@property (readonly) int64_t SORT_UNREADCOUNT __attribute__((swift_name("SORT_UNREADCOUNT")));
+@property (readonly) int64_t SORT_TITLE __attribute__((swift_name("SORT_TITLE")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -381,8 +402,8 @@ __attribute__((swift_name("ExploreFeed")))
 - (NSString *)component1 __attribute__((swift_name("component1()")));
 - (NSString *)component2 __attribute__((swift_name("component2()")));
 - (MainExploreFeed *)doCopyTitle:(NSString *)title url:(NSString *)url __attribute__((swift_name("doCopy(title:url:)")));
-@property NSString *title;
-@property NSString *url;
+@property NSString *title __attribute__((swift_name("title")));
+@property NSString *url __attribute__((swift_name("url")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -392,14 +413,14 @@ __attribute__((swift_name("ExploreFeed.Companion")))
 + (instancetype)allocWithZone:(struct _NSZone *)zone __attribute__((unavailable));
 + (instancetype)companion __attribute__((swift_name("init()")));
 - (id<MainKotlinx_serialization_runtime_nativeKSerializer>)serializer __attribute__((swift_name("serializer()")));
-@property (readonly) NSArray<MainExploreFeed *> *exploreFeeds;
+@property (readonly) NSArray<MainExploreFeed *> *exploreFeeds __attribute__((swift_name("exploreFeeds")));
 @end;
 
 __attribute__((swift_name("Kotlinx_serialization_runtime_nativeSerializationStrategy")))
 @protocol MainKotlinx_serialization_runtime_nativeSerializationStrategy
 @required
 - (void)serializeEncoder:(id<MainKotlinx_serialization_runtime_nativeEncoder>)encoder obj:(id _Nullable)obj __attribute__((swift_name("serialize(encoder:obj:)")));
-@property (readonly) id<MainKotlinx_serialization_runtime_nativeSerialDescriptor> descriptor;
+@property (readonly) id<MainKotlinx_serialization_runtime_nativeSerialDescriptor> descriptor __attribute__((swift_name("descriptor")));
 @end;
 
 __attribute__((swift_name("Kotlinx_serialization_runtime_nativeDeserializationStrategy")))
@@ -407,7 +428,7 @@ __attribute__((swift_name("Kotlinx_serialization_runtime_nativeDeserializationSt
 @required
 - (id _Nullable)deserializeDecoder:(id<MainKotlinx_serialization_runtime_nativeDecoder>)decoder __attribute__((swift_name("deserialize(decoder:)")));
 - (id _Nullable)patchDecoder:(id<MainKotlinx_serialization_runtime_nativeDecoder>)decoder old:(id _Nullable)old __attribute__((swift_name("patch(decoder:old:)")));
-@property (readonly) id<MainKotlinx_serialization_runtime_nativeSerialDescriptor> descriptor;
+@property (readonly) id<MainKotlinx_serialization_runtime_nativeSerialDescriptor> descriptor __attribute__((swift_name("descriptor")));
 @end;
 
 __attribute__((swift_name("Kotlinx_serialization_runtime_nativeKSerializer")))
@@ -444,13 +465,13 @@ __attribute__((swift_name("NextcloudNewsFeed")))
 - (int64_t)component6 __attribute__((swift_name("component6()")));
 - (int64_t)component7 __attribute__((swift_name("component7()")));
 - (MainNextcloudNewsFeed *)doCopyId:(int64_t)id url:(NSString *)url title:(NSString *)title folderId:(int64_t)folderId faviconLink:(NSString *)faviconLink unreadCount:(int64_t)unreadCount ordering:(int64_t)ordering __attribute__((swift_name("doCopy(id:url:title:folderId:faviconLink:unreadCount:ordering:)")));
-@property (readonly) int64_t id;
-@property (readonly) NSString *url;
-@property (readonly) NSString *title;
-@property (readonly) int64_t folderId;
-@property (readonly) NSString *faviconLink;
-@property (readonly) int64_t unreadCount;
-@property (readonly) int64_t ordering;
+@property (readonly) int64_t id __attribute__((swift_name("id")));
+@property (readonly) NSString *url __attribute__((swift_name("url")));
+@property (readonly) NSString *title __attribute__((swift_name("title")));
+@property (readonly) int64_t folderId __attribute__((swift_name("folderId")));
+@property (readonly) NSString *faviconLink __attribute__((swift_name("faviconLink")));
+@property (readonly) int64_t unreadCount __attribute__((swift_name("unreadCount")));
+@property (readonly) int64_t ordering __attribute__((swift_name("ordering")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -478,8 +499,8 @@ __attribute__((swift_name("NextcloudNewsFolder")))
 @interface MainNextcloudNewsFolder : KotlinBase
 - (instancetype)init __attribute__((swift_name("init()"))) __attribute__((objc_designated_initializer));
 + (instancetype)new __attribute__((availability(swift, unavailable, message="use object initializers instead")));
-@property (readonly) int64_t id;
-@property (readonly) NSString *name;
+@property (readonly) int64_t id __attribute__((swift_name("id")));
+@property (readonly) NSString *name __attribute__((swift_name("name")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -507,11 +528,14 @@ __attribute__((swift_name("NextcloudNewsItem")))
 @interface MainNextcloudNewsItem : KotlinBase
 - (instancetype)init __attribute__((swift_name("init()"))) __attribute__((objc_designated_initializer));
 + (instancetype)new __attribute__((availability(swift, unavailable, message="use object initializers instead")));
-@property (readonly) int64_t id;
-@property (readonly) NSString *url;
-@property (readonly) NSString *title;
-@property (readonly) NSString *body;
-@property BOOL unread;
+@property (readonly) int64_t id __attribute__((swift_name("id")));
+@property (readonly) NSString *guidHash __attribute__((swift_name("guidHash")));
+@property (readonly) NSString *url __attribute__((swift_name("url")));
+@property (readonly) NSString *title __attribute__((swift_name("title")));
+@property (readonly) NSString *body __attribute__((swift_name("body")));
+@property BOOL unread __attribute__((swift_name("unread")));
+@property BOOL starred __attribute__((swift_name("starred")));
+@property int64_t feedId __attribute__((swift_name("feedId")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -540,7 +564,7 @@ __attribute__((swift_name("NextcloudNewsVersion")))
 - (instancetype)initWithVersion:(NSString * _Nullable)version __attribute__((swift_name("init(version:)"))) __attribute__((objc_designated_initializer));
 - (NSString * _Nullable)component1 __attribute__((swift_name("component1()")));
 - (MainNextcloudNewsVersion *)doCopyVersion:(NSString * _Nullable)version __attribute__((swift_name("doCopy(version:)")));
-@property NSString * _Nullable version;
+@property NSString * _Nullable version __attribute__((swift_name("version")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -567,7 +591,7 @@ __attribute__((objc_subclassing_restricted))
 __attribute__((swift_name("ActualKt")))
 @interface MainActualKt : KotlinBase
 + (void)setupDatabase __attribute__((swift_name("setupDatabase()")));
-@property (class) id<MainSqldelight_runtimeSqlDriver> _Nullable sqlDriver;
+@property (class) id<MainSqldelight_runtimeSqlDriver> _Nullable sqlDriver __attribute__((swift_name("sqlDriver")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -577,7 +601,9 @@ __attribute__((swift_name("ExtensionFunctionsKt")))
 + (NSString *)firstImageUrl:(NSString *)receiver __attribute__((swift_name("firstImageUrl(_:)")));
 + (int64_t)toLong:(BOOL)receiver __attribute__((swift_name("toLong(_:)")));
 + (BOOL)toBoolean:(int64_t)receiver __attribute__((swift_name("toBoolean(_:)")));
-+ (BOOL)isCacheOutdated:(id<MainUser>)receiver __attribute__((swift_name("isCacheOutdated(_:)")));
++ (BOOL)isFeedCacheOutdated:(id<MainUser>)receiver __attribute__((swift_name("isFeedCacheOutdated(_:)")));
++ (BOOL)isStarredCacheOutdated:(id<MainUser>)receiver __attribute__((swift_name("isStarredCacheOutdated(_:)")));
++ (int32_t)minutes:(int32_t)receiver __attribute__((swift_name("minutes(_:)")));
 + (NSString *)snipped:(NSString *)receiver __attribute__((swift_name("snipped(_:)")));
 + (BOOL)isEmailValid:(NSString *)receiver __attribute__((swift_name("isEmailValid(_:)")));
 @end;
@@ -592,7 +618,7 @@ __attribute__((swift_name("Sqldelight_runtimeQuery")))
 - (id _Nullable)executeAsOneOrNull __attribute__((swift_name("executeAsOneOrNull()")));
 - (void)notifyDataChanged __attribute__((swift_name("notifyDataChanged()")));
 - (void)removeListenerListener:(id<MainSqldelight_runtimeQueryListener>)listener __attribute__((swift_name("removeListener(listener:)")));
-@property (readonly) id (^mapper)(id<MainSqldelight_runtimeSqlCursor>);
+@property (readonly) id (^mapper)(id<MainSqldelight_runtimeSqlCursor>) __attribute__((swift_name("mapper")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -612,7 +638,7 @@ __attribute__((swift_name("Sqldelight_runtimeTransacterTransaction")))
 - (void)endTransactionSuccessful:(BOOL)successful __attribute__((swift_name("endTransaction(successful:)")));
 - (void)rollback __attribute__((swift_name("rollback()")));
 - (void)transactionBody:(MainKotlinUnit *(^)(MainSqldelight_runtimeTransacterTransaction *))body __attribute__((swift_name("transaction(body:)")));
-@property (readonly) MainSqldelight_runtimeTransacterTransaction * _Nullable enclosingTransaction;
+@property (readonly) MainSqldelight_runtimeTransacterTransaction * _Nullable enclosingTransaction __attribute__((swift_name("enclosingTransaction")));
 @end;
 
 __attribute__((swift_name("Sqldelight_runtimeCloseable")))
@@ -635,7 +661,7 @@ __attribute__((swift_name("Sqldelight_runtimeSqlDriverSchema")))
 @required
 - (void)createDriver:(id<MainSqldelight_runtimeSqlDriver>)driver __attribute__((swift_name("create(driver:)")));
 - (void)migrateDriver:(id<MainSqldelight_runtimeSqlDriver>)driver oldVersion:(int32_t)oldVersion newVersion:(int32_t)newVersion __attribute__((swift_name("migrate(driver:oldVersion:newVersion:)")));
-@property (readonly) int32_t version;
+@property (readonly) int32_t version __attribute__((swift_name("version")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -647,7 +673,7 @@ __attribute__((swift_name("KotlinArray")))
 - (id _Nullable)getIndex:(int32_t)index __attribute__((swift_name("get(index:)")));
 - (id<MainKotlinIterator>)iterator __attribute__((swift_name("iterator()")));
 - (void)setIndex:(int32_t)index value:(id _Nullable)value __attribute__((swift_name("set(index:value:)")));
-@property (readonly) int32_t size;
+@property (readonly) int32_t size __attribute__((swift_name("size")));
 @end;
 
 __attribute__((swift_name("Kotlinx_serialization_runtime_nativeEncoder")))
@@ -670,7 +696,7 @@ __attribute__((swift_name("Kotlinx_serialization_runtime_nativeEncoder")))
 - (void)encodeShortValue:(int16_t)value __attribute__((swift_name("encodeShort(value:)")));
 - (void)encodeStringValue:(NSString *)value __attribute__((swift_name("encodeString(value:)")));
 - (void)encodeUnit __attribute__((swift_name("encodeUnit()")));
-@property (readonly) id<MainKotlinx_serialization_runtime_nativeSerialContext> context;
+@property (readonly) id<MainKotlinx_serialization_runtime_nativeSerialModule> context __attribute__((swift_name("context")));
 @end;
 
 __attribute__((swift_name("Kotlinx_serialization_runtime_nativeSerialDescriptor")))
@@ -682,10 +708,10 @@ __attribute__((swift_name("Kotlinx_serialization_runtime_nativeSerialDescriptor"
 - (NSString *)getElementNameIndex:(int32_t)index __attribute__((swift_name("getElementName(index:)")));
 - (NSArray<id<MainKotlinAnnotation>> *)getEntityAnnotations __attribute__((swift_name("getEntityAnnotations()")));
 - (BOOL)isElementOptionalIndex:(int32_t)index __attribute__((swift_name("isElementOptional(index:)")));
-@property (readonly) int32_t elementsCount;
-@property (readonly) BOOL isNullable;
-@property (readonly) MainKotlinx_serialization_runtime_nativeSerialKind *kind;
-@property (readonly) NSString *name;
+@property (readonly) int32_t elementsCount __attribute__((swift_name("elementsCount")));
+@property (readonly) BOOL isNullable __attribute__((swift_name("isNullable")));
+@property (readonly) MainKotlinx_serialization_runtime_nativeSerialKind *kind __attribute__((swift_name("kind")));
+@property (readonly) NSString *name __attribute__((swift_name("name")));
 @end;
 
 __attribute__((swift_name("Kotlinx_serialization_runtime_nativeDecoder")))
@@ -709,8 +735,8 @@ __attribute__((swift_name("Kotlinx_serialization_runtime_nativeDecoder")))
 - (void)decodeUnit __attribute__((swift_name("decodeUnit()")));
 - (id _Nullable)updateNullableSerializableValueDeserializer:(id<MainKotlinx_serialization_runtime_nativeDeserializationStrategy>)deserializer old:(id _Nullable)old __attribute__((swift_name("updateNullableSerializableValue(deserializer:old:)")));
 - (id _Nullable)updateSerializableValueDeserializer:(id<MainKotlinx_serialization_runtime_nativeDeserializationStrategy>)deserializer old:(id _Nullable)old __attribute__((swift_name("updateSerializableValue(deserializer:old:)")));
-@property (readonly) id<MainKotlinx_serialization_runtime_nativeSerialContext> context;
-@property (readonly) MainKotlinx_serialization_runtime_nativeUpdateMode *updateMode;
+@property (readonly) id<MainKotlinx_serialization_runtime_nativeSerialModule> context __attribute__((swift_name("context")));
+@property (readonly) MainKotlinx_serialization_runtime_nativeUpdateMode *updateMode __attribute__((swift_name("updateMode")));
 @end;
 
 __attribute__((swift_name("KotlinSuspendFunction")))
@@ -773,7 +799,7 @@ __attribute__((swift_name("Kotlinx_serialization_runtime_nativeCompositeEncoder"
 - (void)encodeUnitElementDesc:(id<MainKotlinx_serialization_runtime_nativeSerialDescriptor>)desc index:(int32_t)index __attribute__((swift_name("encodeUnitElement(desc:index:)")));
 - (void)endStructureDesc:(id<MainKotlinx_serialization_runtime_nativeSerialDescriptor>)desc __attribute__((swift_name("endStructure(desc:)")));
 - (BOOL)shouldEncodeElementDefaultDesc:(id<MainKotlinx_serialization_runtime_nativeSerialDescriptor>)desc index:(int32_t)index __attribute__((swift_name("shouldEncodeElementDefault(desc:index:)")));
-@property (readonly) id<MainKotlinx_serialization_runtime_nativeSerialContext> context;
+@property (readonly) id<MainKotlinx_serialization_runtime_nativeSerialModule> context __attribute__((swift_name("context")));
 @end;
 
 __attribute__((swift_name("Kotlinx_serialization_runtime_nativeSerialClassDescImpl")))
@@ -785,17 +811,20 @@ __attribute__((swift_name("Kotlinx_serialization_runtime_nativeSerialClassDescIm
 - (void)pushDescriptorDesc:(id<MainKotlinx_serialization_runtime_nativeSerialDescriptor>)desc __attribute__((swift_name("pushDescriptor(desc:)")));
 @end;
 
+__attribute__((objc_subclassing_restricted))
 __attribute__((swift_name("Kotlinx_serialization_runtime_nativeEnumDescriptor")))
 @interface MainKotlinx_serialization_runtime_nativeEnumDescriptor : MainKotlinx_serialization_runtime_nativeSerialClassDescImpl
 - (instancetype)initWithName:(NSString *)name choices:(MainKotlinArray *)choices __attribute__((swift_name("init(name:choices:)"))) __attribute__((objc_designated_initializer));
 - (instancetype)initWithName:(NSString *)name generatedSerializer:(id<MainKotlinx_serialization_runtime_nativeGeneratedSerializer> _Nullable)generatedSerializer __attribute__((swift_name("init(name:generatedSerializer:)"))) __attribute__((objc_designated_initializer)) __attribute__((unavailable));
 @end;
 
-__attribute__((swift_name("Kotlinx_serialization_runtime_nativeSerialContext")))
-@protocol MainKotlinx_serialization_runtime_nativeSerialContext
+__attribute__((swift_name("Kotlinx_serialization_runtime_nativeSerialModule")))
+@protocol MainKotlinx_serialization_runtime_nativeSerialModule
 @required
-- (id<MainKotlinx_serialization_runtime_nativeKSerializer> _Nullable)getKclass:(id<MainKotlinKClass>)kclass __attribute__((swift_name("get(kclass:)")));
-- (id<MainKotlinx_serialization_runtime_nativeKSerializer> _Nullable)getByValueValue:(id)value __attribute__((swift_name("getByValue(value:)")));
+- (void)dumpToCollector:(id<MainKotlinx_serialization_runtime_nativeSerialModuleCollector>)collector __attribute__((swift_name("dumpTo(collector:)")));
+- (id<MainKotlinx_serialization_runtime_nativeKSerializer> _Nullable)getContextualKclass:(id<MainKotlinKClass>)kclass __attribute__((swift_name("getContextual(kclass:)")));
+- (id<MainKotlinx_serialization_runtime_nativeKSerializer> _Nullable)getPolymorphicBaseClass:(id<MainKotlinKClass>)baseClass value:(id)value __attribute__((swift_name("getPolymorphic(baseClass:value:)")));
+- (id<MainKotlinx_serialization_runtime_nativeKSerializer> _Nullable)getPolymorphicBaseClass:(id<MainKotlinKClass>)baseClass serializedClassName:(NSString *)serializedClassName __attribute__((swift_name("getPolymorphic(baseClass:serializedClassName:)")));
 @end;
 
 __attribute__((swift_name("KotlinAnnotation")))
@@ -827,8 +856,8 @@ __attribute__((swift_name("Kotlinx_serialization_runtime_nativeCompositeDecoder"
 - (void)endStructureDesc:(id<MainKotlinx_serialization_runtime_nativeSerialDescriptor>)desc __attribute__((swift_name("endStructure(desc:)")));
 - (id _Nullable)updateNullableSerializableElementDesc:(id<MainKotlinx_serialization_runtime_nativeSerialDescriptor>)desc index:(int32_t)index deserializer:(id<MainKotlinx_serialization_runtime_nativeDeserializationStrategy>)deserializer old:(id _Nullable)old __attribute__((swift_name("updateNullableSerializableElement(desc:index:deserializer:old:)")));
 - (id _Nullable)updateSerializableElementDesc:(id<MainKotlinx_serialization_runtime_nativeSerialDescriptor>)desc index:(int32_t)index deserializer:(id<MainKotlinx_serialization_runtime_nativeDeserializationStrategy>)deserializer old:(id _Nullable)old __attribute__((swift_name("updateSerializableElement(desc:index:deserializer:old:)")));
-@property (readonly) id<MainKotlinx_serialization_runtime_nativeSerialContext> context;
-@property (readonly) MainKotlinx_serialization_runtime_nativeUpdateMode *updateMode;
+@property (readonly) id<MainKotlinx_serialization_runtime_nativeSerialModule> context __attribute__((swift_name("context")));
+@property (readonly) MainKotlinx_serialization_runtime_nativeUpdateMode *updateMode __attribute__((swift_name("updateMode")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -846,8 +875,8 @@ __attribute__((swift_name("KotlinEnum")))
 @interface MainKotlinEnum : KotlinBase <MainKotlinComparable>
 - (instancetype)initWithName:(NSString *)name ordinal:(int32_t)ordinal __attribute__((swift_name("init(name:ordinal:)"))) __attribute__((objc_designated_initializer));
 - (int32_t)compareToOther:(MainKotlinEnum *)other __attribute__((swift_name("compareTo(other:)")));
-@property (readonly) NSString *name;
-@property (readonly) int32_t ordinal;
+@property (readonly) NSString *name __attribute__((swift_name("name")));
+@property (readonly) int32_t ordinal __attribute__((swift_name("ordinal")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -855,9 +884,9 @@ __attribute__((swift_name("Kotlinx_serialization_runtime_nativeUpdateMode")))
 @interface MainKotlinx_serialization_runtime_nativeUpdateMode : MainKotlinEnum
 + (instancetype)alloc __attribute__((unavailable));
 + (instancetype)allocWithZone:(struct _NSZone *)zone __attribute__((unavailable));
-@property (class, readonly) MainKotlinx_serialization_runtime_nativeUpdateMode *banned;
-@property (class, readonly) MainKotlinx_serialization_runtime_nativeUpdateMode *overwrite;
-@property (class, readonly) MainKotlinx_serialization_runtime_nativeUpdateMode *update;
+@property (class, readonly) MainKotlinx_serialization_runtime_nativeUpdateMode *banned __attribute__((swift_name("banned")));
+@property (class, readonly) MainKotlinx_serialization_runtime_nativeUpdateMode *overwrite __attribute__((swift_name("overwrite")));
+@property (class, readonly) MainKotlinx_serialization_runtime_nativeUpdateMode *update __attribute__((swift_name("update")));
 - (instancetype)initWithName:(NSString *)name ordinal:(int32_t)ordinal __attribute__((swift_name("init(name:ordinal:)"))) __attribute__((objc_designated_initializer)) __attribute__((unavailable));
 - (int32_t)compareToOther:(MainKotlinx_serialization_runtime_nativeUpdateMode *)other __attribute__((swift_name("compareTo(other:)")));
 @end;
@@ -872,7 +901,14 @@ __attribute__((swift_name("KotlinByteArray")))
 - (int8_t)getIndex:(int32_t)index __attribute__((swift_name("get(index:)")));
 - (MainKotlinByteIterator *)iterator __attribute__((swift_name("iterator()")));
 - (void)setIndex:(int32_t)index value:(int8_t)value __attribute__((swift_name("set(index:value:)")));
-@property (readonly) int32_t size;
+@property (readonly) int32_t size __attribute__((swift_name("size")));
+@end;
+
+__attribute__((swift_name("Kotlinx_serialization_runtime_nativeSerialModuleCollector")))
+@protocol MainKotlinx_serialization_runtime_nativeSerialModuleCollector
+@required
+- (void)contextualKClass:(id<MainKotlinKClass>)kClass serializer:(id<MainKotlinx_serialization_runtime_nativeKSerializer>)serializer __attribute__((swift_name("contextual(kClass:serializer:)")));
+- (void)polymorphicBaseClass:(id<MainKotlinKClass>)baseClass actualClass:(id<MainKotlinKClass>)actualClass actualSerializer:(id<MainKotlinx_serialization_runtime_nativeKSerializer>)actualSerializer __attribute__((swift_name("polymorphic(baseClass:actualClass:actualSerializer:)")));
 @end;
 
 __attribute__((swift_name("KotlinKDeclarationContainer")))
@@ -894,8 +930,8 @@ __attribute__((swift_name("KotlinKClass")))
 @protocol MainKotlinKClass <MainKotlinKDeclarationContainer, MainKotlinKAnnotatedElement, MainKotlinKClassifier>
 @required
 - (BOOL)isInstanceValue:(id _Nullable)value __attribute__((swift_name("isInstance(value:)")));
-@property (readonly) NSString * _Nullable qualifiedName;
-@property (readonly) NSString * _Nullable simpleName;
+@property (readonly) NSString * _Nullable qualifiedName __attribute__((swift_name("qualifiedName")));
+@property (readonly) NSString * _Nullable simpleName __attribute__((swift_name("simpleName")));
 @end;
 
 __attribute__((swift_name("KotlinByteIterator")))
