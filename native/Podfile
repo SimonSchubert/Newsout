@@ -3,8 +3,6 @@ platform :ios, '10.0'
 use_frameworks!
 
 target 'client-mpp-ios' do
-  # your other pod
-  # ...
-  pod 'Kingfisher', '~> 5.3.0'
+  pod 'Kingfisher', '~> 5.3.1'
   pod 'SwiftKeychainWrapper'
 end

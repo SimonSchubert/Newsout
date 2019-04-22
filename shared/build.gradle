@@ -50,7 +50,6 @@ kotlin {
             implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serialization_version"
             implementation "io.ktor:ktor-client-core:$ktor_version"
             implementation "io.ktor:ktor-client-auth:$ktor_version"
-            implementation "com.soywiz:klock:1.1.1"
             implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
         }
 
@@ -85,13 +84,19 @@ kotlin {
         commonTest.dependencies {
             implementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
             implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-            api "io.ktor:ktor-client-mock:$ktor_version"
         }
 
         iosTest.dependencies {
             api "io.ktor:ktor-client-mock-native:$ktor_version"
         }
     }
+}
+
+dependencies {
+    commonMainApi "com.soywiz:klock-metadata:$klock_version" // Common
+    androidMainApi "com.soywiz:klock-android:$klock_version" // Android
+    iosX64MainApi "com.soywiz:klock-iosx64:$klock_version" // iOS Simulator
+    iosArm64MainApi "com.soywiz:klock-iosarm64:$klock_version" // Newer iOS 64-bit devices
 }
 
 configurations {
