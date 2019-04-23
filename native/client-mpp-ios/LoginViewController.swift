@@ -13,15 +13,27 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var urlText: UITextField!
     @IBOutlet weak var emailText: UITextField!
     @IBOutlet weak var passwordText: UITextField!
-
+    @IBOutlet weak var modeSegment: UISegmentedControl!
+    @IBOutlet weak var urlTextHeight: NSLayoutConstraint!
+    
+    let MODE_NEWSOUT = 0
+    let MODE_NEXTCLOUD = 1
+    var selectedMode = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.loginButton.addTarget(self, action: #selector(didButtonClick), for: .touchUpInside)
+        self.modeSegment.addTarget(self, action: #selector(self.modeApply), for: UIControl.Event.valueChanged)
+        
+        updateMode()
     }
 
     @objc func didButtonClick(_ sender: UIButton) {
-        let url = urlText.text ?? ""
+        var url = urlText.text ?? ""
+        if(selectedMode == MODE_NEWSOUT) {
+            url = "https://nx3217.your-next.cloud"
+        }
         let email = emailText.text ?? ""
         let password = passwordText.text ?? ""
 
@@ -39,5 +51,25 @@ class LoginViewController: UIViewController {
         }, error: { () in
             return KotlinUnit()
         })
+    }
+    
+    @objc private func modeApply(segment: UISegmentedControl) -> Void {
+        selectedMode = segment.selectedSegmentIndex
+        updateMode()
+    }
+    
+    private func updateMode() {
+        switch selectedMode {
+            case MODE_NEWSOUT:
+                urlTextHeight.constant = 0
+                loginButton.setTitle("Login/Create", for: .normal)
+                urlText.layoutIfNeeded()
+            case MODE_NEXTCLOUD:
+                urlTextHeight.constant = 44
+                loginButton.setTitle("Login", for: .normal)
+                urlText.layoutIfNeeded()
+            default:
+                break
+        }
     }
 }
