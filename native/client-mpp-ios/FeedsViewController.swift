@@ -99,13 +99,13 @@ class FeedsViewController: UITableViewController {
     }
 
     private func didTapAddFeedButton(url: String) {
-        let alert = UIAlertController(title: "Add feed", message: "", preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "Save", style: UIAlertActionStyle.default, handler: { (action) in
+        let alert = UIAlertController(title: "Add feed", message: "", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "Save", style: UIAlertAction.Style.default, handler: { (action) in
             let urlTextField = alert.textFields![0] as UITextField
             self.createFeed(url: urlTextField.text ?? "")
         }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: nil))
-        alert.addAction(UIAlertAction(title: "Explore", style: UIAlertActionStyle.default, handler: { (action) in
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Explore", style: UIAlertAction.Style.default, handler: { (action) in
             self.didTapExploreButton()
         }))
         alert.addTextField(configurationHandler: { (textField: UITextField!) in
@@ -121,7 +121,7 @@ class FeedsViewController: UITableViewController {
     }
 
     private func didTapExploreButton() {
-        let alert = UIAlertController(title: "Explore", message: "", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "Explore", message: "", preferredStyle: UIAlertController.Style.alert)
 
         ExploreFeed.Companion.init().exploreFeeds.forEach { (exploreFeed) in
             alert.addAction(UIAlertAction(title: exploreFeed.title, style: .default) { (_) in
@@ -157,12 +157,12 @@ class FeedsViewController: UITableViewController {
     }
 
     @objc func didTapSettingsButton(sender: AnyObject) {
-        let alert = UIAlertController(title: "Settings", message: "", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "Settings", message: "", preferredStyle: UIAlertController.Style.alert)
 
-        alert.addAction(UIAlertAction(title: "Logout", style: UIAlertActionStyle.default, handler: { (action) in
+        alert.addAction(UIAlertAction(title: "Logout", style: UIAlertAction.Style.default, handler: { (action) in
             self.logout()
         }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: {
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: {
             (alertAction: UIAlertAction!) in
             alert.dismiss(animated: true, completion: nil)
         }))
@@ -206,7 +206,7 @@ class FeedsViewController: UITableViewController {
         sortingSegment.frame = CGRect.init(x: 0, y: 0, width: 200, height: 30)
         sortingSegment.selectedSegmentIndex = user?.sorting == database.SORT_UNREADCOUNT ? 0 : 1
         sortingSegment.tintColor = UIColor.black
-        sortingSegment.addTarget(self, action: #selector(self.sortingApply), for: UIControlEvents.valueChanged)
+        sortingSegment.addTarget(self, action: #selector(self.sortingApply), for: UIControl.Event.valueChanged)
 
         let stackView = UIStackView()
         stackView.axis = .vertical
