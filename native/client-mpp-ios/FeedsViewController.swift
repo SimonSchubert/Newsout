@@ -104,10 +104,10 @@ class FeedsViewController: UITableViewController {
             let urlTextField = alert.textFields![0] as UITextField
             self.createFeed(url: urlTextField.text ?? "")
         }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
         alert.addAction(UIAlertAction(title: "Explore", style: UIAlertAction.Style.default, handler: { (action) in
             self.didTapExploreButton()
         }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
         alert.addTextField(configurationHandler: { (textField: UITextField!) in
             textField.placeholder = "Url"
             textField.text = url
@@ -128,6 +128,8 @@ class FeedsViewController: UITableViewController {
                 self.createFeed(url: exploreFeed.url)
             })
         }
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
+        
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -159,7 +161,7 @@ class FeedsViewController: UITableViewController {
     @objc func didTapSettingsButton(sender: AnyObject) {
         let alert = UIAlertController(title: "Settings", message: "", preferredStyle: UIAlertController.Style.alert)
 
-        alert.addAction(UIAlertAction(title: "Logout", style: UIAlertAction.Style.default, handler: { (action) in
+        alert.addAction(UIAlertAction(title: "Logout", style: UIAlertAction.Style.destructive, handler: { (action) in
             self.logout()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: {
@@ -223,7 +225,7 @@ class FeedsViewController: UITableViewController {
 
     func createFolderSwitch (user: User?) -> UIStackView {
         let label = UILabel()
-        label.text = "Folders always top"
+        label.text = "Folders always at top"
         label.sizeToFit()
 
         let folderSwitch = UISwitch()
