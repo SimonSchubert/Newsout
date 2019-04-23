@@ -10,6 +10,7 @@ import SwiftKeychainWrapper
  */
 class FeedsViewController: UITableViewController {
     let api = Api()
+    let database = Database()
     var data = ([Feed])()
 
     override func viewDidLoad() {
@@ -33,7 +34,6 @@ class FeedsViewController: UITableViewController {
 
         tableView.tableFooterView = UIView()
 
-        let database = Database()
         self.data = database.getFeeds() as! [Feed]
         self.tableView?.reloadData()
 
@@ -92,6 +92,8 @@ class FeedsViewController: UITableViewController {
         KeychainWrapper.standard.set("", forKey: "EMAIL")
         KeychainWrapper.standard.set("", forKey: "PASSWORD")
 
+        database.clear()
+        
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nav = storyboard.instantiateViewController(withIdentifier: "login")
@@ -169,7 +171,7 @@ class FeedsViewController: UITableViewController {
             alert.dismiss(animated: true, completion: nil)
         }))
 
-        let database = Database()
+        
         let user = database.getUser()
 
         let folderSwitch = createFolderSwitch(user: user)
@@ -202,7 +204,6 @@ class FeedsViewController: UITableViewController {
         label.text = "Sorting"
         label.sizeToFit()
 
-        let database = Database()
         let items = ["Unread count", "Alphabetically"]
         let sortingSegment = UISegmentedControl(items: items)
         sortingSegment.frame = CGRect.init(x: 0, y: 0, width: 200, height: 30)
@@ -247,7 +248,6 @@ class FeedsViewController: UITableViewController {
     }
 
     @objc private func sortingApply(segment: UISegmentedControl) -> Void {
-        let database = Database()
         switch segment.selectedSegmentIndex {
         case 0:
             database.getUserQueries()?.updateSorting(sorting: database.SORT_UNREADCOUNT)
@@ -262,7 +262,6 @@ class FeedsViewController: UITableViewController {
     }
 
     @objc func setFolderFirst(_ folderSwitch: UISwitch?) {
-        let database = Database()
         database.getUserQueries()?.updateFolderTop(isFolderTop: folderSwitch?.isOn ?? true ? 1 : 0)
         self.data = database.getFeeds() as! [Feed]
         self.tableView?.reloadData()
