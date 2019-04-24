@@ -15,6 +15,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var passwordText: UITextField!
     @IBOutlet weak var modeSegment: UISegmentedControl!
     @IBOutlet weak var urlTextHeight: NSLayoutConstraint!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
     let modeNewsout = 0
     let modeNextcloud = 1
@@ -37,8 +38,24 @@ class LoginViewController: UIViewController {
         let email = emailText.text ?? ""
         let password = passwordText.text ?? ""
 
-        let api = Api()
+        if(!ExtensionFunctionsKt.isEmailValid(email)) {
+            let alert = UIAlertController(title: "Please enter a correct email address", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true)
+            return;
+        }
 
+        if (password.count < 6) {
+            let alert = UIAlertController(title: "Password is too short", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true)
+            return
+        }
+
+        activityIndicator.isHidden = false
+        loginButton.isHidden = true
+
+        let api = Api()
         api.login(url: url, email: email, password: password, callback: { (_) in
             KeychainWrapper.standard.set(url, forKey: "SERVER")
             KeychainWrapper.standard.set(email, forKey: "EMAIL")
@@ -47,8 +64,18 @@ class LoginViewController: UIViewController {
             self.present(navigationVc!, animated: true, completion: nil)
             return KotlinUnit()
         }, unauthorized: { () in
+            self.activityIndicator.isHidden = true
+            self.loginButton.isHidden = false
+            let alert = UIAlertController(title: "Password or email might be wrong", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true)
             return KotlinUnit()
         }, error: { () in
+            self.activityIndicator.isHidden = true
+            self.loginButton.isHidden = false
+            let alert = UIAlertController(title: "Could not connect", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true)
             return KotlinUnit()
         })
     }
@@ -62,7 +89,7 @@ class LoginViewController: UIViewController {
         switch selectedMode {
         case modeNewsout:
             urlTextHeight.constant = 0
-            loginButton.setTitle("Login/Create", for: .normal)
+            loginButton.setTitle("Login/Signup", for: .normal)
             urlText.layoutIfNeeded()
         case modeNextcloud:
             urlTextHeight.constant = 44

@@ -27,7 +27,7 @@
                                     <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                             </button>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="test@test.test" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bkj-qS-3GH">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username/email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bkj-qS-3GH">
                                 <rect key="frame" x="87.5" y="393.5" width="200" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="WjQ-Th-XoQ"/>
@@ -38,7 +38,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" textContentType="username"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="testtest" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="j2u-1W-5X2">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="j2u-1W-5X2">
                                 <rect key="frame" x="87.5" y="445.5" width="200" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="Fbh-a1-NA9"/>
@@ -48,7 +48,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="https://nx3217.your-next.cloud" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FGo-dL-Cp1">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Nextcloud url" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FGo-dL-Cp1">
                                 <rect key="frame" x="87.5" y="341.5" width="200" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="FoB-mb-TZJ"/>
@@ -75,17 +75,22 @@
                                 </segments>
                                 <color key="tintColor" red="0.14022815229999999" green="0.1376029849" blue="0.12869930269999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </segmentedControl>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="UBs-w2-qSL">
+                                <rect key="frame" x="177.5" y="522" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="bkj-qS-3GH" firstAttribute="top" secondItem="FGo-dL-Cp1" secondAttribute="bottom" constant="8" id="2VS-fw-8Kt"/>
                             <constraint firstItem="n5u-P1-gZL" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="2yJ-hS-Mk4"/>
                             <constraint firstItem="57R-35-wem" firstAttribute="top" secondItem="n5u-P1-gZL" secondAttribute="bottom" constant="16" id="732-qg-blz"/>
+                            <constraint firstItem="UBs-w2-qSL" firstAttribute="top" secondItem="j2u-1W-5X2" secondAttribute="bottom" constant="32.5" id="7Dh-nL-L7f"/>
                             <constraint firstItem="57R-35-wem" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-30" id="Eet-E8-wxN"/>
                             <constraint firstItem="tUy-Sk-MsT" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="FV0-Et-ULP"/>
                             <constraint firstItem="57R-35-wem" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="HQa-Vu-KWu"/>
                             <constraint firstItem="j2u-1W-5X2" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Kyy-4o-uo6"/>
                             <constraint firstItem="FGo-dL-Cp1" firstAttribute="top" secondItem="57R-35-wem" secondAttribute="bottom" constant="24" id="NMh-aI-GQ6"/>
+                            <constraint firstItem="UBs-w2-qSL" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ahP-3N-QNo"/>
                             <constraint firstItem="FGo-dL-Cp1" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="bv8-xz-q6w"/>
                             <constraint firstItem="tUy-Sk-MsT" firstAttribute="top" secondItem="j2u-1W-5X2" secondAttribute="bottom" constant="24" id="fxI-UO-mOc"/>
                             <constraint firstItem="j2u-1W-5X2" firstAttribute="top" secondItem="bkj-qS-3GH" secondAttribute="bottom" constant="8" id="jYG-3H-s6g"/>
@@ -94,6 +99,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="UBs-w2-qSL" id="Ngl-JY-iUJ"/>
                         <outlet property="emailText" destination="bkj-qS-3GH" id="nwX-Tu-DtP"/>
                         <outlet property="loginButton" destination="tUy-Sk-MsT" id="GcA-w7-IoU"/>
                         <outlet property="modeSegment" destination="57R-35-wem" id="frw-Wg-rCI"/>
