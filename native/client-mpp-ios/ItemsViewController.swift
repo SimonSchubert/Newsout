@@ -10,7 +10,7 @@ import main
 class ItemsViewController: UITableViewController {
     let api = Api()
     var data = ([Item])()
-    var id: Int64 = 0
+    var itemId: Int64 = 0
     var type: Int64 = 0
 
     override func viewDidLoad() {
@@ -27,7 +27,7 @@ class ItemsViewController: UITableViewController {
         tableView.tableFooterView = UIView()
 
         let database = Database()
-        self.data = database.getItems(feedId: id, type: type) as! [Item]
+        self.data = database.getItems(feedId: itemId, type: type) as! [Item]
         self.tableView?.reloadData()
 
         self.tableView.refreshManually()
@@ -62,15 +62,15 @@ class ItemsViewController: UITableViewController {
     }
 
     private func fetchItemData() {
-        api.getItems(id: id
-            , type: type
-            , offset: false
-            , callback: { (items) in
-                self.data = items
-                self.tableView?.reloadData()
-                self.refreshControl?.endRefreshing()
-                return KotlinUnit()
-        }) { () in
+        api.getItems(id: itemId
+                     , type: type
+                     , offset: false
+                     , callback: { (items) in
+                         self.data = items
+                         self.tableView?.reloadData()
+                         self.refreshControl?.endRefreshing()
+                         return KotlinUnit()
+                     }) { () in
             self.refreshControl?.endRefreshing()
             return KotlinUnit()
         }

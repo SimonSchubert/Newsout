@@ -15,23 +15,23 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var passwordText: UITextField!
     @IBOutlet weak var modeSegment: UISegmentedControl!
     @IBOutlet weak var urlTextHeight: NSLayoutConstraint!
-    
-    let MODE_NEWSOUT = 0
-    let MODE_NEXTCLOUD = 1
+
+    let modeNewsout = 0
+    let modeNextcloud = 1
     var selectedMode = 0
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.loginButton.addTarget(self, action: #selector(didButtonClick), for: .touchUpInside)
         self.modeSegment.addTarget(self, action: #selector(self.modeApply), for: UIControl.Event.valueChanged)
-        
+
         updateMode()
     }
 
     @objc func didButtonClick(_ sender: UIButton) {
         var url = urlText.text ?? ""
-        if(selectedMode == MODE_NEWSOUT) {
+        if(selectedMode == modeNewsout) {
             url = "https://nx3217.your-next.cloud"
         }
         let email = emailText.text ?? ""
@@ -39,7 +39,7 @@ class LoginViewController: UIViewController {
 
         let api = Api()
 
-        api.login(url: url, email: email, password: password, callback: { (version) in
+        api.login(url: url, email: email, password: password, callback: { (_) in
             KeychainWrapper.standard.set(url, forKey: "SERVER")
             KeychainWrapper.standard.set(email, forKey: "EMAIL")
             KeychainWrapper.standard.set(password, forKey: "PASSWORD")
@@ -52,24 +52,24 @@ class LoginViewController: UIViewController {
             return KotlinUnit()
         })
     }
-    
-    @objc private func modeApply(segment: UISegmentedControl) -> Void {
+
+    @objc private func modeApply(segment: UISegmentedControl) {
         selectedMode = segment.selectedSegmentIndex
         updateMode()
     }
-    
+
     private func updateMode() {
         switch selectedMode {
-            case MODE_NEWSOUT:
-                urlTextHeight.constant = 0
-                loginButton.setTitle("Login/Create", for: .normal)
-                urlText.layoutIfNeeded()
-            case MODE_NEXTCLOUD:
-                urlTextHeight.constant = 44
-                loginButton.setTitle("Login", for: .normal)
-                urlText.layoutIfNeeded()
-            default:
-                break
+        case modeNewsout:
+            urlTextHeight.constant = 0
+            loginButton.setTitle("Login/Create", for: .normal)
+            urlText.layoutIfNeeded()
+        case modeNextcloud:
+            urlTextHeight.constant = 44
+            loginButton.setTitle("Login", for: .normal)
+            urlText.layoutIfNeeded()
+        default:
+            break
         }
     }
 }

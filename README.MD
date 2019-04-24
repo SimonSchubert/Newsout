@@ -27,15 +27,15 @@ This project shares the Database, Api, Models and Serialization code. Only the i
 
 ## Features
 
-  - Sync of feeds and unread marker
-  - List all starred/unread items
-  - Change sorting order
-  - Add new feeds
-  - Rename feeds/folders
-  - Delete feeds/folders
-  - Star/unstar items
-  - Mark all feeds or a single feed as read
-  - Explore popular feeds
+* Sync of feeds and unread marker
+* List all starred/unread items
+* Change sorting order
+* Add new feeds
+* Rename feeds/folders
+* Delete feeds/folders
+* Star/unstar items
+* Mark all feeds or a single feed as read
+* Explore popular feeds
 
 Android strings are hardcoded until I find a nice multiplatform solution.
 

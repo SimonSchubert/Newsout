@@ -16,19 +16,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         database.setup()
 
         let url: String = KeychainWrapper.standard.string(forKey: "SERVER") ?? ""
-        if(!url.isEmpty) {
-            let email: String = KeychainWrapper.standard.string(forKey: "EMAIL") ?? ""
-            let password: String = KeychainWrapper.standard.string(forKey: "PASSWORD") ?? ""
-
-            let api = Api()
-            api.setCredentials(url: url, email: email, password: password)
-
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let initialViewController = storyboard.instantiateViewController(withIdentifier: "navigation")
-            self.window = UIWindow(frame: UIScreen.main.bounds)
-            self.window?.rootViewController = initialViewController
-            self.window?.makeKeyAndVisible()
+        if(url.isEmpty) {
+            return true
         }
+
+        let email: String = KeychainWrapper.standard.string(forKey: "EMAIL") ?? ""
+        let password: String = KeychainWrapper.standard.string(forKey: "PASSWORD") ?? ""
+
+        let api = Api()
+        api.setCredentials(url: url, email: email, password: password)
+
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let initialViewController = storyboard.instantiateViewController(withIdentifier: "navigation")
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        self.window?.rootViewController = initialViewController
+        self.window?.makeKeyAndVisible()
 
         return true
     }

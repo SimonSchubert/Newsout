@@ -72,7 +72,7 @@ class FeedsViewController: UITableViewController {
             let vc = segue.destination as? ItemsViewController
             if sender is Feed {
                 let feed = (sender as? Feed)
-                vc?.id = feed?.id ?? 0
+                vc?.itemId = feed?.id ?? 0
                 vc?.type = feed?.isFolder ?? 0
                 vc?.title = feed?.title ?? ""
             }
@@ -93,7 +93,7 @@ class FeedsViewController: UITableViewController {
         KeychainWrapper.standard.set("", forKey: "PASSWORD")
 
         database.clear()
-        
+
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nav = storyboard.instantiateViewController(withIdentifier: "login")
@@ -102,11 +102,11 @@ class FeedsViewController: UITableViewController {
 
     private func didTapAddFeedButton(url: String) {
         let alert = UIAlertController(title: "Add feed", message: "", preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "Save", style: UIAlertAction.Style.default, handler: { (action) in
+        alert.addAction(UIAlertAction(title: "Save", style: UIAlertAction.Style.default, handler: { (_) in
             let urlTextField = alert.textFields![0] as UITextField
             self.createFeed(url: urlTextField.text ?? "")
         }))
-        alert.addAction(UIAlertAction(title: "Explore", style: UIAlertAction.Style.default, handler: { (action) in
+        alert.addAction(UIAlertAction(title: "Explore", style: UIAlertAction.Style.default, handler: { (_) in
             self.didTapExploreButton()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
@@ -131,7 +131,7 @@ class FeedsViewController: UITableViewController {
             })
         }
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
-        
+
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -163,7 +163,7 @@ class FeedsViewController: UITableViewController {
     @objc func didTapSettingsButton(sender: AnyObject) {
         let alert = UIAlertController(title: "Settings", message: "", preferredStyle: UIAlertController.Style.alert)
 
-        alert.addAction(UIAlertAction(title: "Logout", style: UIAlertAction.Style.destructive, handler: { (action) in
+        alert.addAction(UIAlertAction(title: "Logout", style: UIAlertAction.Style.destructive, handler: { (_) in
             self.logout()
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: {
@@ -171,7 +171,7 @@ class FeedsViewController: UITableViewController {
             alert.dismiss(animated: true, completion: nil)
         }))
 
-        
+
         let user = database.getUser()
 
         let folderSwitch = createFolderSwitch(user: user)
