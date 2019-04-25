@@ -21,6 +21,8 @@ class LoginViewController: UIViewController {
     let modeNextcloud = 1
     var selectedMode = 0
 
+    let api = Api()
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -31,10 +33,45 @@ class LoginViewController: UIViewController {
     }
 
     @objc func didButtonClick(_ sender: UIButton) {
+        if (selectedMode == modeNewsout) {
+            attemptSignup()
+        } else {
+            attemptLogin()
+        }
+    }
+
+    private func attemptLogin() {
         var url = urlText.text ?? ""
         if(selectedMode == modeNewsout) {
             url = "https://nx3217.your-next.cloud"
         }
+        let email = emailText.text ?? ""
+        let password = passwordText.text ?? ""
+
+        showLoading()
+
+        api.login(url: url, email: email, password: password, callback: { (_) in
+            self.saveLogin(url: url, email: email, password: password)
+            let navigationVc = self.storyboard?.instantiateViewController(withIdentifier: "navigation")
+            self.present(navigationVc!, animated: true, completion: nil)
+            return KotlinUnit()
+        }, unauthorized: { () in
+            self.hideLoading()
+            let alert = UIAlertController(title: "Password or email might be wrong", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true)
+            return KotlinUnit()
+        }, error: { () in
+            self.hideLoading()
+            let alert = UIAlertController(title: "Could not connect", message: "", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true)
+            return KotlinUnit()
+        })
+    }
+
+    private func attemptSignup() {
+        let url = "https://nx3217.your-next.cloud"
         let email = emailText.text ?? ""
         let password = passwordText.text ?? ""
 
@@ -52,32 +89,38 @@ class LoginViewController: UIViewController {
             return
         }
 
-        activityIndicator.isHidden = false
-        loginButton.isHidden = true
+        showLoading()
 
-        let api = Api()
-        api.login(url: url, email: email, password: password, callback: { (_) in
-            KeychainWrapper.standard.set(url, forKey: "SERVER")
-            KeychainWrapper.standard.set(email, forKey: "EMAIL")
-            KeychainWrapper.standard.set(password, forKey: "PASSWORD")
+        api.createAccount(url: url, email: email, password: password, success: { () -> KotlinUnit in
+            self.saveLogin(url: url, email: email, password: password)
             let navigationVc = self.storyboard?.instantiateViewController(withIdentifier: "navigation")
             self.present(navigationVc!, animated: true, completion: nil)
             return KotlinUnit()
-        }, unauthorized: { () in
-            self.activityIndicator.isHidden = true
-            self.loginButton.isHidden = false
-            let alert = UIAlertController(title: "Password or email might be wrong", message: "", preferredStyle: .alert)
+        }, userExists: { () -> KotlinUnit in
+            self.attemptLogin()
+            return KotlinUnit()
+        }) { () -> KotlinUnit in
+            let alert = UIAlertController(title: "Try again with a different password", message: "", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
             self.present(alert, animated: true)
             return KotlinUnit()
-        }, error: { () in
-            self.activityIndicator.isHidden = true
-            self.loginButton.isHidden = false
-            let alert = UIAlertController(title: "Could not connect", message: "", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-            self.present(alert, animated: true)
-            return KotlinUnit()
-        })
+        }
+    }
+
+    private func hideLoading() {
+        self.activityIndicator.isHidden = true
+        self.loginButton.isHidden = false
+    }
+
+    private func showLoading() {
+        activityIndicator.isHidden = false
+        loginButton.isHidden = true
+    }
+
+    private func saveLogin(url: String, email: String, password: String) {
+        KeychainWrapper.standard.set(url, forKey: "SERVER")
+        KeychainWrapper.standard.set(email, forKey: "EMAIL")
+        KeychainWrapper.standard.set(password, forKey: "PASSWORD")
     }
 
     @objc private func modeApply(segment: UISegmentedControl) {
