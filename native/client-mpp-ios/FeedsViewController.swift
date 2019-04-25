@@ -136,11 +136,13 @@ class FeedsViewController: UITableViewController {
     }
 
     private func createFeed(url: String) {
+        self.tableView.refreshManually()
         api.createFeed(url: url, folderId: 0, callback: { () in
-            self.tableView.refreshManually()
+            self.fetchFeedData()
             return KotlinUnit()
         }, error: { () in
             self.didTapAddFeedButton(url: url)
+            self.refreshControl?.endRefreshing()
             return KotlinUnit()
         })
     }
