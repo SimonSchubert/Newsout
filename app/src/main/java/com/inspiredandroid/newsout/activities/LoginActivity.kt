@@ -98,13 +98,13 @@ class LoginActivity : AppCompatActivity() {
         val email = emailEt.text.toString()
         val password = passwordEt.text.toString()
 
-        val nextcloudUrl = serverPathEt.text.toString()
+        val url = serverPathEt.text.toString()
 
         showLoading()
 
-        Api.login(nextcloudUrl, email, password, {
+        Api.login(url, email, password, {
             if (isThere()) {
-                saveLogin(nextcloudUrl, email, password)
+                saveLogin(url, email, password)
 
                 startActivity(Intent(this@LoginActivity, FeedsActivity::class.java))
                 finish()
@@ -130,7 +130,7 @@ class LoginActivity : AppCompatActivity() {
 
         val email = emailEt.text.toString()
         val password = passwordEt.text.toString()
-        val nextcloudUrl = "https://nx3217.your-next.cloud"
+        val url = "https://nx3217.your-next.cloud"
 
         if (!email.isEmailValid()) {
             emailEt.error = "Please enter a correct email address"
@@ -143,16 +143,16 @@ class LoginActivity : AppCompatActivity() {
 
         showLoading()
 
-        Api.createAccount(nextcloudUrl, email, password, {
+        Api.createAccount(url, email, password, {
             if (isThere()) {
-                saveLogin(nextcloudUrl, email, password)
+                saveLogin(url, email, password)
 
                 startActivity(Intent(this@LoginActivity, FeedsActivity::class.java))
                 finish()
             }
         }, {
             if (isThere()) {
-                serverPathEt?.setText(nextcloudUrl)
+                serverPathEt?.setText(url)
                 attemptLogin()
             }
         }, {
