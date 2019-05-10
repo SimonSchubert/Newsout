@@ -26,6 +26,10 @@ data class ExploreFeed(
             ExploreFeed("Bitwarden", "https://blog.bitwarden.com/feed"),
             ExploreFeed("Purism", "https://puri.sm/feed/"),
             ExploreFeed("Steam", "https://store.steampowered.com/feeds/news.xml"),
+            ExploreFeed("Github", "https://github.blog/feed/atom"),
+            ExploreFeed("Kotlin language", "https://blog.jetbrains.com/kotlin/feed"),
+            ExploreFeed("Rust language", "https://blog.rust-lang.org/feed.xml"),
+            ExploreFeed("Swift language", "https://swift.org/atom.xml?format=xml"),
             ExploreFeed("Joe Rogan Podcast", "http://podcasts.joerogan.net/feed")
         )
     }
