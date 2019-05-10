@@ -3,12 +3,14 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 buildscript {
     val kotlin_version = "1.3.31"
     val sqldelight_version = "1.1.3"
+    val xcodesync_version = "0.1.3"
 
     repositories {
         google()
         maven ("https://plugins.gradle.org/m2/")
         maven ("https://dl.bintray.com/kotlin/kotlin-eap" )
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath("com.android.tools.build:gradle:3.4.0")
@@ -16,6 +18,7 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlin_version")
         classpath("gradle.plugin.com.wiredforcode:gradle-spawn-plugin:0.8.2")
         classpath("com.squareup.sqldelight:gradle-plugin:$sqldelight_version")
+        classpath("co.touchlab:kotlinxcodesync:$xcodesync_version")
     }
 }
 
