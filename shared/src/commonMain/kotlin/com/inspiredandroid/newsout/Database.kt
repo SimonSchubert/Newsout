@@ -91,6 +91,17 @@ object Database {
     }
 
     /**
+     * Get items by feed or folder and search by query
+     */
+    fun getItemsByQuery(feedId: Long, type: Long, query: String): MutableList<Item> {
+        val itemQueries = getItemQueries()
+        itemQueries?.let {
+            return it.selectAllByFeedIdAndTypeAndQuery(feedId, type, query).executeAsList().toMutableList()
+        }
+        return arrayListOf()
+    }
+
+    /**
      * Get the only and one user from the database
      */
     fun getUser(): User? {

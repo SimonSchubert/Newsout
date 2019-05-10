@@ -2,6 +2,7 @@ package com.inspiredandroid.newsout.adapters
 
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,7 @@ class ItemsAdapter(private var items: List<Item>, private val listener: OnItemCl
 
     internal val unreadMap: MutableMap<Long, Boolean> = mutableMapOf()
     internal val starredMap: MutableMap<Long, Boolean> = mutableMapOf()
+    internal var query = ""
 
     init {
         updateItems(items)
@@ -59,7 +61,7 @@ class ItemsAdapter(private var items: List<Item>, private val listener: OnItemCl
         internal var id = 0L
         private var guidHash = ""
         private var feedId = 0L
-        internal var isUndread = false
+        internal var isUnread = false
         private var isStarred = false
         private var isFolder = false
 
@@ -68,16 +70,32 @@ class ItemsAdapter(private var items: List<Item>, private val listener: OnItemCl
             feedId = item.feedId
             guidHash = item.guidHash
             isFolder = item.isFolder.toBoolean()
-            isUndread = unreadMap[item.id] ?: false
+            isUnread = unreadMap[item.id] ?: false
             isStarred = starredMap[item.id] ?: false
 
-            if (isStarred) {
-                title.text = getTitleWithIcon(item, R.drawable.ic_icons8_star)
-            } else if (isUndread) {
-                title.text = getTitleWithIcon(item, R.drawable.ic_icons8_appointment_reminders)
-            } else {
-                title.text = item.title
+            val spannable = when {
+                isStarred -> getTitleWithIcon(item, R.drawable.ic_icons8_star)
+                isUnread -> getTitleWithIcon(item, R.drawable.ic_icons8_appointment_reminders)
+                else -> SpannableString(item.title)
             }
+
+            if(query.isNotEmpty()) {
+                var start = spannable.toString().toLowerCase().indexOf(query)
+                while (start >= 0) {
+                    val spanStart = Math.min(start, spannable.length)
+                    val spanEnd = Math.min(start + query.length, spannable.length)
+
+                    if (spanStart == -1 || spanEnd == -1) {
+                        break
+                    }
+
+                    spannable.setSpan(ForegroundColorSpan(ContextCompat.getColor(containerView.context, R.color.turquoise)), spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                    start = spannable.toString().toLowerCase().indexOf(query, spanEnd)
+                }
+            }
+
+            title.text = spannable
 
             if (item.imageUrl.isNotEmpty()) {
                 Glide

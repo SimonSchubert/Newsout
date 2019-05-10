@@ -7,6 +7,7 @@ import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -34,6 +35,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     }
     var id: Long = 0
     var type: Long = 0
+    var searchMenuItem: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +76,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
                     val viewHolder =
                         recyclerView.findViewHolderForAdapterPosition(position) as? ItemsAdapter.ItemViewHolder
                     viewHolder?.let {
-                        if (it.isUndread) {
+                        if (it.isUnread) {
                             Handler().post {
                                 it.markAsRead()
                                 updateFab()
@@ -99,9 +101,32 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if (type == 1L) {
-            menuInflater.inflate(R.menu.menu_items, menu)
-        }
+        menuInflater.inflate(R.menu.menu_items, menu)
+        menu?.findItem(R.id.action_add)?.isVisible = type != 1L
+
+        searchMenuItem = menu?.findItem(R.id.action_search)
+        searchMenuItem?.isVisible = type == 1L || type == 0L
+        val searchView = searchMenuItem?.actionView as? SearchView
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                if (!searchView.isIconified) {
+                    searchView.isIconified = true
+                }
+                searchMenuItem?.collapseActionView()
+                return false
+            }
+
+            override fun onQueryTextChange(s: String): Boolean {
+                adapter.query = s.toLowerCase()
+                if(s.isEmpty()) {
+                    adapter.updateItems(Database.getItems(id, type))
+                } else {
+                    adapter.updateItems(Database.getItemsByQuery(id, type, "%$s%"))
+                }
+                return false
+            }
+        })
+
         return true
     }
 
@@ -182,6 +207,8 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     }
 
     private fun updateAdapterAndHideLoading(items: List<Item>) {
+        searchMenuItem?.collapseActionView()
+        adapter.query = ""
         adapter.updateItems(items)
         swiperefresh?.isRefreshing = false
     }

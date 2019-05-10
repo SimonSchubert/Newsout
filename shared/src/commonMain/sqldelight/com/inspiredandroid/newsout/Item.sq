@@ -23,6 +23,12 @@ FROM item
 WHERE feedId=? AND isFolder=?
 ORDER BY id DESC;
 
+selectAllByFeedIdAndTypeAndQuery:
+SELECT *
+FROM item
+WHERE feedId=? AND isFolder=? AND title LIKE ?
+ORDER BY id DESC;
+
 selectUnread:
 SELECT *
 FROM item

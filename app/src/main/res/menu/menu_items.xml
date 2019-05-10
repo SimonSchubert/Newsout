@@ -4,6 +4,13 @@
       tools:context=".activities.NavigationActivity">
 
     <item
+            android:id="@+id/action_search"
+            android:icon="@drawable/ic_search_black_24dp"
+            app:showAsAction="always|collapseActionView"
+            app:actionViewClass="androidx.appcompat.widget.SearchView"
+            android:title="Search"/>
+
+    <item
             android:id="@+id/action_add"
             android:icon="@drawable/ic_icons8_plus_math"
             android:title="Add"
