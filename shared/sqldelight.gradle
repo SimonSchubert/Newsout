@@ -1,0 +1,7 @@
+sqldelight {
+    SqlDelightDatabase {
+        packageName = "com.inspiredandroid.newsout"
+        sourceFolders = ["sqldelight"]
+        schemaOutputDirectory = file("build/dbs")
+    }
+}
