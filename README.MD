@@ -40,8 +40,12 @@ This project shares the Database, Api, Models and Serialization code. Only the i
 
 ## TODOS
 
+* Coroutines refactoring
+* Finalize iOS UI
 * System settings enabled dark mode
 * Multi platform localization
 * Empty state screen when no search results
+
+Pull requests are very welcome. Let me know before you start working on a fundamental change.
 
 Compare Dropbox/Google Drive/Nextcloud: [https://nextcloud.com/compare](https://nextcloud.com/compare) 
