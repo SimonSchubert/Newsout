@@ -31,7 +31,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         ItemsAdapter(Database.getItems(id, type), this)
     }
     private val layoutManager by lazy {
-        StaggeredGridLayoutManager(calculateNumberOfColumns(), StaggeredGridLayoutManager.VERTICAL)
+        StaggeredGridLayoutManager(recyclerView.calculateNumberOfColumns(), StaggeredGridLayoutManager.VERTICAL)
     }
     var id: Long = 0
     var type: Long = 0
@@ -48,13 +48,12 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         title = intent.getStringExtra(KEY_TITLE)
 
         fab.setOnClickListener { _ ->
-            if (type == 0L) {
-                Api.markFeedAsRead(id) {
+            when (type) {
+                Database.TYPE_FEED -> Api.markFeedAsRead(id) {
                     adapter.updateItems(it)
                     updateFab()
                 }
-            } else if (type == 1L) {
-                Api.markFolderAsRead(id) {
+                Database.TYPE_FOLDER -> Api.markFolderAsRead(id) {
                     adapter.updateItems(it)
                     updateFab()
                 }
@@ -89,7 +88,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
 
-                if (!recyclerView.canScrollVertically(1) && (type == 1L || type == 0L)) {
+                if (!recyclerView.canScrollVertically(1) && (type == Database.TYPE_FOLDER || type == Database.TYPE_FEED)) {
                     showLoading()
                     fetchItems(true)
                 }
@@ -105,7 +104,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
         menu?.findItem(R.id.action_add)?.isVisible = type != 1L
 
         searchMenuItem = menu?.findItem(R.id.action_search)
-        searchMenuItem?.isVisible = type == 1L || type == 0L
+        searchMenuItem?.isVisible = type == Database.TYPE_FOLDER || type == Database.TYPE_FEED
         val searchView = searchMenuItem?.actionView as? SearchView
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -162,7 +161,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     }
 
     private fun fetchItems(offset: Boolean) {
-        if (type == 1L || type == 0L) {
+        if (type == Database.TYPE_FOLDER || type == Database.TYPE_FEED) {
             Api.getItems(id, type, offset, {
                 if (isThere()) {
                     updateAdapterAndHideLoading(it)
@@ -173,7 +172,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
                     hideLoading()
                 }
             })
-        } else if (type == -2L) {
+        } else if (type == Database.TYPE_UNREAD) {
             Api.getUnreadItems({
                 if (isThere()) {
                     updateAdapterAndHideLoading(it)
@@ -184,7 +183,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
                     hideLoading()
                 }
             })
-        } else if (type == -1L) {
+        } else if (type == Database.TYPE_STARRED) {
             Api.getStarredItems({
                 if (isThere()) {
                     updateAdapterAndHideLoading(it)
@@ -219,16 +218,6 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
 
     private fun showLoading() {
         swiperefresh?.isRefreshing = true
-    }
-
-    private fun calculateNumberOfColumns(): Int {
-        val displayMetrics = resources.displayMetrics
-        val dpWidth = displayMetrics.widthPixels / displayMetrics.density
-        var columns = (dpWidth / 300).toInt()
-        if (columns < 1) {
-            columns = 1
-        }
-        return columns
     }
 
     companion object {

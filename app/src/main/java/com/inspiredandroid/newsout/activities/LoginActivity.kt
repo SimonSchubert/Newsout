@@ -67,9 +67,9 @@ class LoginActivity : AppCompatActivity() {
         }
 
         val accountManager = AccountManager.get(this)
-        accountManager.getAccountsByType("com.inspiredandroid.newsout").forEach {
+        accountManager.getAccountsByType(BuildConfig.APPLICATION_ID).forEach {
             val password = accountManager.getPassword(it)
-            val url = accountManager.getUserData(it, "EXTRA_BASE_URL")
+            val url = accountManager.getUserData(it, EXTRA_BASE_URL)
             Api.setCredentials(url, it.name, password)
 
             startActivity(Intent(this@LoginActivity, FeedsActivity::class.java))
@@ -165,9 +165,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun saveLogin(url: String, email: String, password: String) {
         val accountManager = AccountManager.get(this)
-        val account = Account(email, "com.inspiredandroid.newsout")
+        val account = Account(email, BuildConfig.APPLICATION_ID)
         accountManager.addAccountExplicitly(account, password, Bundle())
-        accountManager.setUserData(account, "EXTRA_BASE_URL", url)
+        accountManager.setUserData(account, EXTRA_BASE_URL, url)
     }
 
     private fun hideLoading() {
@@ -183,5 +183,6 @@ class LoginActivity : AppCompatActivity() {
     companion object {
         const val MODE_CUSTOM = 1
         const val MODE_NEWSOUT = 2
+        const val EXTRA_BASE_URL = "EXTRA_BASE_URL"
     }
 }

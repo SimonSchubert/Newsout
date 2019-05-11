@@ -45,12 +45,12 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
         }
         swiperefresh.setOnRefreshListener(this)
 
-        val layoutManager = GridLayoutManager(this, calculateNumberOfColumns())
+        val layoutManager = GridLayoutManager(this, recyclerView.calculateNumberOfColumns())
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return when (adapter.getItemViewType(position)) {
                     FeedsAdapter.TYPE_FEED -> 1
-                    FeedsAdapter.TYPE_HEADER -> calculateNumberOfColumns()
+                    FeedsAdapter.TYPE_HEADER -> recyclerView.calculateNumberOfColumns()
                     else -> 1
                 }
             }
@@ -66,9 +66,9 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
 
         if (!Api.isCredentialsAvailable()) {
             val accountManager = AccountManager.get(this)
-            accountManager.getAccountsByType("com.inspiredandroid.newsout").forEach {
+            accountManager.getAccountsByType(BuildConfig.APPLICATION_ID).forEach {
                 val password = accountManager.getPassword(it)
-                val url = accountManager.getUserData(it, "EXTRA_BASE_URL")
+                val url = accountManager.getUserData(it, LoginActivity.EXTRA_BASE_URL)
                 Api.setCredentials(url, it.name, password)
             }
         }
@@ -123,14 +123,14 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
     override fun onClickUnread() {
         val intent = Intent(this, ItemsActivity::class.java)
         intent.putExtra(ItemsActivity.KEY_TITLE, "Unread")
-        intent.putExtra(ItemsActivity.KEY_TYPE, -2L)
+        intent.putExtra(ItemsActivity.KEY_TYPE, Database.TYPE_UNREAD)
         startActivity(intent)
     }
 
     override fun onClickStarred() {
         val intent = Intent(this, ItemsActivity::class.java)
         intent.putExtra(ItemsActivity.KEY_TITLE, "Starred")
-        intent.putExtra(ItemsActivity.KEY_TYPE, -1L)
+        intent.putExtra(ItemsActivity.KEY_TYPE, Database.TYPE_STARRED)
         startActivity(intent)
     }
 
@@ -185,7 +185,7 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
         }, {
             if (isThere()) {
                 val accountManager = AccountManager.get(this)
-                accountManager.getAccountsByType("com.inspiredandroid.newsout").forEach {
+                accountManager.getAccountsByType(BuildConfig.APPLICATION_ID).forEach {
                     accountManager.removeAccountExplicitly(it)
                 }
 
@@ -270,15 +270,5 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
         } else {
             fab.hide()
         }
-    }
-
-    private fun calculateNumberOfColumns(): Int {
-        val displayMetrics = resources.displayMetrics
-        val dpWidth = displayMetrics.widthPixels / displayMetrics.density
-        var columns = (dpWidth / 300).toInt()
-        if (columns < 1) {
-            columns = 1
-        }
-        return columns
     }
 }

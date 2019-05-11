@@ -9,6 +9,10 @@ import com.squareup.sqldelight.Query
 object Database {
     const val SORT_UNREADCOUNT = 1L
     const val SORT_TITLE = 3L
+    const val TYPE_FEED = 0L
+    const val TYPE_FOLDER = 1L
+    const val TYPE_STARRED = -1L
+    const val TYPE_UNREAD = -2L
 
     fun setup() {
         setupDatabase()
@@ -82,8 +86,8 @@ object Database {
         val itemQueries = getItemQueries()
         itemQueries?.let {
             return when (type) {
-                -2L -> it.selectUnread().executeAsList().toMutableList()
-                -1L -> it.selectStarred().executeAsList().toMutableList()
+                TYPE_UNREAD -> it.selectUnread().executeAsList().toMutableList()
+                TYPE_STARRED -> it.selectStarred().executeAsList().toMutableList()
                 else -> it.selectAllByFeedIdAndType(feedId, type).executeAsList().toMutableList()
             }
         }

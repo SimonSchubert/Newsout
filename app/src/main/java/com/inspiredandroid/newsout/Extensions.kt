@@ -3,7 +3,9 @@ package com.inspiredandroid.newsout
 import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
+import android.util.DisplayMetrics
 import android.view.inputmethod.InputMethodManager
+import androidx.recyclerview.widget.RecyclerView
 
 /*
  * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
@@ -33,6 +35,22 @@ fun Activity.hideKeyboard() {
     }
 }
 
+/**
+ * Check if activity is still there
+ */
 fun Activity.isThere(): Boolean {
     return !isDestroyed && !isFinishing
+}
+
+/**
+ * Get number of columns based on 300 dp
+ */
+fun RecyclerView.calculateNumberOfColumns(): Int {
+    val displayMetrics = context.resources.displayMetrics
+    val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+    var columns = (dpWidth / 300).toInt()
+    if (columns < 1) {
+        columns = 1
+    }
+    return columns
 }
