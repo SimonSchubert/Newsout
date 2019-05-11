@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.content_feeds.*
  * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
  * that can be found in the LICENSE file.
  */
-class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener, OnAddFeedInterface,
+class ItemsActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener, OnAddFeedInterface,
     OnItemClickInterface {
 
     private val adapter by lazy {
@@ -49,13 +49,19 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
 
         fab.setOnClickListener { _ ->
             when (type) {
-                Database.TYPE_FEED -> Api.markFeedAsRead(id) {
-                    adapter.updateItems(it)
-                    updateFab()
+                Database.TYPE_FEED -> {
+                    val job = Api.markFeedAsRead(id) {
+                        adapter.updateItems(it)
+                        updateFab()
+                    }
+                    jobs.add(job)
                 }
-                Database.TYPE_FOLDER -> Api.markFolderAsRead(id) {
-                    adapter.updateItems(it)
-                    updateFab()
+                Database.TYPE_FOLDER -> {
+                    val job = Api.markFolderAsRead(id) {
+                        adapter.updateItems(it)
+                        updateFab()
+                    }
+                    jobs.add(job)
                 }
             }
         }
@@ -117,7 +123,7 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
 
             override fun onQueryTextChange(s: String): Boolean {
                 adapter.query = s.toLowerCase()
-                if(s.isEmpty()) {
+                if (s.isEmpty()) {
                     adapter.updateItems(Database.getItems(id, type))
                 } else {
                     adapter.updateItems(Database.getItemsByQuery(id, type, "%$s%"))
@@ -146,13 +152,12 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
 
     override fun onAddFeed(url: String) {
         showLoading()
-        Api.createFeed(url, id, {
+        val job = Api.createFeed(url, id, {
             fetchItems(false)
         }, {
-            if (isThere()) {
-                hideLoading()
-            }
+            hideLoading()
         })
+        jobs.add(job)
     }
 
     override fun onClickItem(url: String) {
@@ -162,38 +167,29 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
 
     private fun fetchItems(offset: Boolean) {
         if (type == Database.TYPE_FOLDER || type == Database.TYPE_FEED) {
-            Api.getItems(id, type, offset, {
-                if (isThere()) {
+            val job = Api.getItems(id, type, offset, {
                     updateAdapterAndHideLoading(it)
                     updateFab()
-                }
             }, {
-                if (isThere()) {
                     hideLoading()
-                }
             })
+            jobs.add(job)
         } else if (type == Database.TYPE_UNREAD) {
-            Api.getUnreadItems({
-                if (isThere()) {
-                    updateAdapterAndHideLoading(it)
-                    updateFab()
-                }
+            val job = Api.getUnreadItems({
+                updateAdapterAndHideLoading(it)
+                updateFab()
             }, {
-                if (isThere()) {
-                    hideLoading()
-                }
+                hideLoading()
             })
+            jobs.add(job)
         } else if (type == Database.TYPE_STARRED) {
-            Api.getStarredItems({
-                if (isThere()) {
-                    updateAdapterAndHideLoading(it)
-                    updateFab()
-                }
+            val job = Api.getStarredItems({
+                updateAdapterAndHideLoading(it)
+                updateFab()
             }, {
-                if (isThere()) {
-                    hideLoading()
-                }
+                hideLoading()
             })
+            jobs.add(job)
         }
     }
 

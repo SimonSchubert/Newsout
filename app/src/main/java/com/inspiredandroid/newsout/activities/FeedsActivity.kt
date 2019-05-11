@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.content_feeds.*
  * that can be found in the LICENSE file.
  */
 @InternalAPI
-class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLayout.OnRefreshListener,
+class FeedsActivity : BaseActivity(), OnFeedClickInterface, SwipeRefreshLayout.OnRefreshListener,
     OnSortingChangeInterface, OnAddFeedInterface, OnEditFeedInterface {
 
     private val adapter = FeedsAdapter(this)
@@ -36,12 +36,11 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
         setContentView(R.layout.activity_feeds)
 
         fab.setOnClickListener { _ ->
-            Api.markAllAsRead {
-                if (isThere()) {
-                    updateAdapterAndHideLoading(it)
-                    updateFab()
-                }
+            val job = Api.markAllAsRead {
+                updateAdapterAndHideLoading(it)
+                updateFab()
             }
+            jobs.add(job)
         }
         swiperefresh.setOnRefreshListener(this)
 
@@ -136,18 +135,15 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
 
     override fun onAddFeed(url: String) {
         showLoading()
-        Api.createFeed(url, 0, {
-            if (isThere()) {
-                updateAdapterAndHideLoading(Database.getFeeds())
-                updateFab()
-            }
+        val job = Api.createFeed(url, 0, {
+            updateAdapterAndHideLoading(Database.getFeeds())
+            updateFab()
         }, {
-            if (isThere()) {
-                hideLoading()
-                val dialog = AddFeedDialog.getInstance(url)
-                dialog.show(supportFragmentManager, "TAG")
-            }
+            hideLoading()
+            val dialog = AddFeedDialog.getInstance(url)
+            dialog.show(supportFragmentManager, "TAG")
         })
+        jobs.add(job)
     }
 
     override fun onEditFeed(id: Long, title: String, isFolder: Boolean) {
@@ -173,28 +169,23 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
     }
 
     private fun fetchFeeds() {
-        Api.getFeeds({
-            if (isThere()) {
-                updateAdapterAndHideLoading(it)
-                updateFab()
-            }
+        val job = Api.getFeeds({
+            updateAdapterAndHideLoading(it)
+            updateFab()
         }, {
-            if (isThere()) {
-                hideLoading()
-            }
+            hideLoading()
         }, {
-            if (isThere()) {
-                val accountManager = AccountManager.get(this)
-                accountManager.getAccountsByType(BuildConfig.APPLICATION_ID).forEach {
-                    accountManager.removeAccountExplicitly(it)
-                }
-
-                Database.clear()
-
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
+            val accountManager = AccountManager.get(this)
+            accountManager.getAccountsByType(BuildConfig.APPLICATION_ID).forEach {
+                accountManager.removeAccountExplicitly(it)
             }
+
+            Database.clear()
+
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
         })
+        jobs.add(job)
     }
 
     private fun updateAdapterAndHideLoading(feeds: List<Feed>) {
@@ -203,57 +194,45 @@ class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLay
     }
 
     private fun renameFeed(id: Long, title: String) {
-        Api.renameFeed(id, title, {
-            if (isThere()) {
-                updateAdapterAndHideLoading(Database.getFeeds())
-            }
+        val job = Api.renameFeed(id, title, {
+            updateAdapterAndHideLoading(Database.getFeeds())
         }, {
-            if (isThere()) {
-                hideLoading()
-                val dialog = EditFeedDialog.getInstance(id, title, false, true)
-                dialog.show(supportFragmentManager, "TAG")
-            }
+            hideLoading()
+            val dialog = EditFeedDialog.getInstance(id, title, false, true)
+            dialog.show(supportFragmentManager, "TAG")
         })
+        jobs.add(job)
     }
 
     private fun renameFolder(id: Long, title: String) {
-        Api.renameFolder(id, title, {
-            if (isThere()) {
-                updateAdapterAndHideLoading(Database.getFeeds())
-            }
+        val job = Api.renameFolder(id, title, {
+            updateAdapterAndHideLoading(Database.getFeeds())
         }, {
-            if (isThere()) {
-                hideLoading()
-                val dialog = EditFeedDialog.getInstance(id, title, true, true)
-                dialog.show(supportFragmentManager, "TAG")
-            }
+            hideLoading()
+            val dialog = EditFeedDialog.getInstance(id, title, true, true)
+            dialog.show(supportFragmentManager, "TAG")
         })
+        jobs.add(job)
     }
 
     private fun deleteFolder(id: Long) {
-        Api.deleteFolder(id, {
-            if (isThere()) {
-                updateAdapterAndHideLoading(Database.getFeeds())
-                updateFab()
-            }
+        val job = Api.deleteFolder(id, {
+            updateAdapterAndHideLoading(Database.getFeeds())
+            updateFab()
         }, {
-            if (isThere()) {
-                hideLoading()
-            }
+            hideLoading()
         })
+        jobs.add(job)
     }
 
     private fun deleteFeed(id: Long) {
-        Api.deleteFeed(id, {
-            if (isThere()) {
-                updateAdapterAndHideLoading(Database.getFeeds())
-                updateFab()
-            }
+        val job = Api.deleteFeed(id, {
+            updateAdapterAndHideLoading(Database.getFeeds())
+            updateFab()
         }, {
-            if (isThere()) {
-                hideLoading()
-            }
+            hideLoading()
         })
+        jobs.add(job)
     }
 
     private fun hideLoading() {

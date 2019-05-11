@@ -14,6 +14,8 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.TextContent
 import io.ktor.util.InternalAPI
 import io.ktor.util.encodeBase64
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.list
@@ -53,10 +55,10 @@ object Api {
         callback: (NextcloudNewsVersion) -> Unit,
         unauthorized: () -> Unit,
         error: () -> Unit
-    ) {
+    ): CoroutineScope {
         nextcloudUrl = url
         credentials = "$email:$password".encodeBase64()
-        async {
+        return async {
             try {
                 val response = client.get<HttpResponse> {
                     url("$baseUrl/version")
@@ -86,10 +88,10 @@ object Api {
     fun createAccount(
         url: String,
         email: String, password: String, success: () -> Unit, userExists: () -> Unit, error: () -> Unit
-    ) {
+    ) : CoroutineScope {
         nextcloudUrl = url
         credentials = "$email:$password".encodeBase64()
-        async {
+        return async {
             try {
                 val response = client.get<HttpResponse> {
                     url("https://schubert-simon.de/newsout/nx_login.php?email=$email&password=$password")
@@ -127,8 +129,8 @@ object Api {
      * Marks feed as read
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-items-of-a-feed-as-read">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-items-of-a-feed-as-read</a>
      */
-    fun markFeedAsRead(feedId: Long, callback: (List<Item>) -> Unit) {
-        async {
+    fun markFeedAsRead(feedId: Long, callback: (List<Item>) -> Unit): CoroutineScope {
+        return async {
             val feedQueries = Database.getFeedQueries()
             feedQueries?.markAsRead(feedId, false.toLong())
 
@@ -156,8 +158,8 @@ object Api {
      * Marks items of a folder as read
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-items-of-a-folder-as-read">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-items-of-a-folder-as-read</a>
      */
-    fun markFolderAsRead(folderId: Long, callback: (List<Item>) -> Unit) {
-        async {
+    fun markFolderAsRead(folderId: Long, callback: (List<Item>) -> Unit): CoroutineScope {
+        return async {
             val feedQueries = Database.getFeedQueries()
             feedQueries?.markAsRead(folderId, true.toLong())
 
@@ -185,8 +187,8 @@ object Api {
      * Marks all items as read
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-all-items-as-read">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-all-items-as-read</a>
      */
-    fun markAllAsRead(callback: (List<Feed>) -> Unit) {
-        async {
+    fun markAllAsRead(callback: (List<Feed>) -> Unit): CoroutineScope {
+        return async {
             val feedQueries = Database.getFeedQueries()
             feedQueries?.markAllAsRead()
             val itemQueries = Database.getItemQueries()
@@ -209,8 +211,8 @@ object Api {
      * Marks item as read
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-an-item-as-read">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-an-item-as-read</a>
      */
-    fun markItemAsRead(itemId: Long) {
-        async {
+    fun markItemAsRead(itemId: Long): CoroutineScope {
+        return async {
             try {
                 client.put {
                     url("$baseUrl/items/$itemId/read")
@@ -225,8 +227,8 @@ object Api {
      * Marks item as starred
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-an-item-as-starred">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-an-item-as-starred</a>
      */
-    fun markItemAsStarred(feedId: Long, guidHash: String) {
-        async {
+    fun markItemAsStarred(feedId: Long, guidHash: String): CoroutineScope {
+        return async {
             try {
                 client.put {
                     url("$baseUrl/items/$feedId/$guidHash/star")
@@ -241,8 +243,8 @@ object Api {
      * Marks item as unstarred
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-an-item-as-unstarred">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#mark-an-item-as-unstarred</a>
      */
-    fun markItemAsUnstarred(feedId: Long, guidHash: String) {
-        async {
+    fun markItemAsUnstarred(feedId: Long, guidHash: String): CoroutineScope {
+        return async {
             try {
                 client.put {
                     url("$baseUrl/items/$feedId/$guidHash/unstar")
@@ -257,8 +259,8 @@ object Api {
      * Gets feeds
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#get-all-feeds">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#get-all-feeds</a>
      */
-    fun getFeeds(callback: (List<Feed>) -> Unit, error: () -> Unit, unauthorized: () -> Unit) {
-        getFolders({ folders ->
+    fun getFeeds(callback: (List<Feed>) -> Unit, error: () -> Unit, unauthorized: () -> Unit): CoroutineScope {
+        return getFolders({ folders ->
             async {
                 try {
                     val response = client.get<HttpResponse> {
@@ -283,8 +285,8 @@ object Api {
         }, error, unauthorized)
     }
 
-    private fun getFolders(callback: (List<NextcloudNewsFolder>) -> Unit, error: () -> Unit, unauthorized: () -> Unit) {
-        async {
+    private fun getFolders(callback: (List<NextcloudNewsFolder>) -> Unit, error: () -> Unit, unauthorized: () -> Unit): CoroutineScope {
+        return async {
             try {
                 val response = client.get<HttpResponse> {
                     url("$baseUrl/folders")
@@ -315,8 +317,8 @@ object Api {
      * Renames a folder
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#rename-a-folder">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#rename-a-folder</a>
      */
-    fun renameFolder(id: Long, title: String, callback: () -> Unit, error: () -> Unit) {
-        async {
+    fun renameFolder(id: Long, title: String, callback: () -> Unit, error: () -> Unit): CoroutineScope {
+        return async {
             try {
                 client.put<String> {
                     url("$baseUrl/folders/$id")
@@ -340,8 +342,8 @@ object Api {
      * Renames a feed
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#rename-a-feed">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#rename-a-feed</a>
      */
-    fun renameFeed(id: Long, title: String, callback: () -> Unit, error: () -> Unit) {
-        async {
+    fun renameFeed(id: Long, title: String, callback: () -> Unit, error: () -> Unit): CoroutineScope {
+        return async {
             try {
                 client.put<String> {
                     url("$baseUrl/feeds/$id/rename")
@@ -365,8 +367,8 @@ object Api {
      * Deletes a feed
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#delete-a-feed">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#delete-a-feed</a>
      */
-    fun deleteFeed(id: Long, callback: () -> Unit, error: () -> Unit) {
-        async {
+    fun deleteFeed(id: Long, callback: () -> Unit, error: () -> Unit): CoroutineScope {
+        return async {
             try {
                 client.delete<String> {
                     url("$baseUrl/feeds/$id")
@@ -386,8 +388,8 @@ object Api {
      * Deletes a folder
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#delete-a-folder">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#delete-a-folder</a>
      */
-    fun deleteFolder(id: Long, callback: () -> Unit, error: () -> Unit) {
-        async {
+    fun deleteFolder(id: Long, callback: () -> Unit, error: () -> Unit) : CoroutineScope {
+        return async {
             try {
                 client.delete<String> {
                     url("$baseUrl/folders/$id")
@@ -407,8 +409,8 @@ object Api {
      * Creates a feed
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#create-a-feed">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#create-a-feed</a>
      */
-    fun createFeed(url: String, folderId: Long, callback: () -> Unit, error: () -> Unit) {
-        getFolders({ folders ->
+    fun createFeed(url: String, folderId: Long, callback: () -> Unit, error: () -> Unit): CoroutineScope {
+        return getFolders({ folders ->
             async {
                 try {
                     val result: String = client.post {
@@ -434,8 +436,8 @@ object Api {
      * Get starred items
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#initial-sync">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#initial-sync</a>
      */
-    fun getStarredItems(callback: (List<Item>) -> Unit, error: () -> Unit) {
-        async {
+    fun getStarredItems(callback: (List<Item>) -> Unit, error: () -> Unit): CoroutineScope {
+        return async {
             try {
                 val result: String = client.get {
                     url("$baseUrl/items?type=2&getRead=true&batchSize=-1")
@@ -479,8 +481,8 @@ object Api {
      * Get unread items
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#initial-sync">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#initial-sync</a>
      */
-    fun getUnreadItems(callback: (List<Item>) -> Unit, error: () -> Unit) {
-        async {
+    fun getUnreadItems(callback: (List<Item>) -> Unit, error: () -> Unit): CoroutineScope {
+        return async {
             val result: String = client.get {
                 url("$baseUrl/items?type=3&getRead=false&batchSize=-1")
                 header("Authorization", "Basic $credentials")
@@ -520,8 +522,8 @@ object Api {
      * Get items
      * @see <a href="https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#get-items">https://github.com/nextcloud/news/blob/master/docs/externalapi/Legacy.md#get-items</a>
      */
-    fun getItems(id: Long, type: Long, offset: Boolean, callback: (List<Item>) -> Unit, error: () -> Unit) {
-        async {
+    fun getItems(id: Long, type: Long, offset: Boolean, callback: (List<Item>) -> Unit, error: () -> Unit): CoroutineScope {
+        return async {
             try {
                 var offsetString = ""
                 if (offset) {

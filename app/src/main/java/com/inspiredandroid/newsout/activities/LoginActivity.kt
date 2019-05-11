@@ -13,13 +13,15 @@ import com.inspiredandroid.newsout.*
 import com.inspiredandroid.newsout.dialogs.InfoDialog
 import io.ktor.util.InternalAPI
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
 
 /*
  * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
  * that can be found in the LICENSE file.
  */
 @InternalAPI
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
 
     private var mode = MODE_NEWSOUT
 
@@ -102,7 +104,7 @@ class LoginActivity : AppCompatActivity() {
 
         showLoading()
 
-        Api.login(url, email, password, {
+        val job = Api.login(url, email, password, {
             if (isThere()) {
                 saveLogin(url, email, password)
 
@@ -120,6 +122,7 @@ class LoginActivity : AppCompatActivity() {
                 hideLoading()
             }
         })
+        jobs.add(job)
     }
 
     private fun attemptSignup() {
@@ -143,7 +146,7 @@ class LoginActivity : AppCompatActivity() {
 
         showLoading()
 
-        Api.createAccount(url, email, password, {
+        val job = Api.createAccount(url, email, password, {
             if (isThere()) {
                 saveLogin(url, email, password)
 
@@ -161,6 +164,7 @@ class LoginActivity : AppCompatActivity() {
                 hideLoading()
             }
         })
+        jobs.add(job)
     }
 
     private fun saveLogin(url: String, email: String, password: String) {

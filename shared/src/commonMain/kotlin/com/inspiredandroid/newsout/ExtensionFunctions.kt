@@ -11,8 +11,8 @@ import kotlinx.coroutines.*
 /**
  * Launch in coroutine
  */
-fun async(block: suspend CoroutineScope.() -> Unit) {
-    CoroutineScope(Dispatchers.Main).apply {
+fun async(block: suspend CoroutineScope.() -> Unit) : CoroutineScope  {
+    return CoroutineScope(Dispatchers.Main).apply {
         launch(dispatcher) {
             block()
         }
