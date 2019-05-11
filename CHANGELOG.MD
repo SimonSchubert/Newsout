@@ -2,6 +2,7 @@
 
 ## 1.2.1 (unpublished)
 - Changed navigationBar color from dark to light
+- Fix alertDialog unreadable button text on older sdks
 
 ## 1.2.0
 - Added search for feed items

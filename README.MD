@@ -36,7 +36,12 @@ This project shares the Database, Api, Models and Serialization code. Only the i
 * Star/unstar items
 * Mark all feeds or a single feed as read
 * Explore popular feeds
+* Search for items inside feeds
 
-Android strings are hardcoded until I find a nice multiplatform solution.
+## TODOS
+
+* System settings enabled dark mode
+* Multi platform localization
+* Empty state screen when no search results
 
 Compare Dropbox/Google Drive/Nextcloud: [https://nextcloud.com/compare](https://nextcloud.com/compare) 
