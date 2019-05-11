@@ -17,3 +17,5 @@ actual var sqlDriver: SqlDriver? = null
 
 actual fun setupDatabase() {
 }
+
+actual var dispatcher: CoroutineDispatcher = Dispatchers.IO

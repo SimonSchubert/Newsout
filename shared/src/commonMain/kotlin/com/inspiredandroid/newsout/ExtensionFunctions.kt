@@ -1,9 +1,7 @@
 package com.inspiredandroid.newsout
 
 // import com.soywiz.klock.DateTime
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 /*
  * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
@@ -14,8 +12,8 @@ import kotlinx.coroutines.launch
  * Launch in coroutine
  */
 fun async(block: suspend CoroutineScope.() -> Unit) {
-    GlobalScope.apply {
-        launch(ApplicationDispatcher) {
+    CoroutineScope(Dispatchers.Main).apply {
+        launch(dispatcher) {
             block()
         }
     }
