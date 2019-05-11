@@ -3,7 +3,7 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 buildscript {
     val kotlin_version = "1.3.31"
     val sqldelight_version = "1.1.3"
-    val xcodesync_version = "0.1.4"
+    val xcodesync_version = "0.1.5"
 
     repositories {
         google()
@@ -11,10 +11,6 @@ buildscript {
         maven ("https://dl.bintray.com/kotlin/kotlin-eap" )
         jcenter()
         mavenCentral()
-        maven {
-            setUrl("file:///Users/kgalligan/devel_kmp/kotlin-xcode-sync/build/localMaven")
-        }
-
     }
     dependencies {
         classpath("com.android.tools.build:gradle:3.4.0")

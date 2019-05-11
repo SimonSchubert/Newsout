@@ -36,8 +36,11 @@
 /* Begin PBXFileReference section */
 		03663DC3D93A68F83B8B3AFD /* Pods-client-mpp-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-client-mpp-ios.release.xcconfig"; path = "Target Support Files/Pods-client-mpp-ios/Pods-client-mpp-ios.release.xcconfig"; sourceTree = "<group>"; };
 		03C41D90F079278E074EA44A /* Pods-client-mpp-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-client-mpp-ios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-client-mpp-ios/Pods-client-mpp-ios.debug.xcconfig"; sourceTree = "<group>"; };
-		0669105EFB14418709B5F420 /* NextcloudNewsFeed.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = NextcloudNewsFeed.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/models/NextcloudNewsFeed.kt; sourceTree = "<group>"; };
-		24E9759A819012F002A18A65 /* NextcloudNewsItem.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = NextcloudNewsItem.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/models/NextcloudNewsItem.kt; sourceTree = "<group>"; };
+		06992F74E24291C51F7FB76D /* ExtensionFunctions.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ExtensionFunctions.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/ExtensionFunctions.kt; sourceTree = "<group>"; };
+		0D9F64387E6C25E2A5CCD687 /* Database.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Database.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/Database.kt; sourceTree = "<group>"; };
+		19CC6CC8766870177BBD63E0 /* Actual.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Actual.kt; path = ../shared/src/androidMain/kotlin/com/inspiredandroid/newsout/Actual.kt; sourceTree = "<group>"; };
+		24A6FA69F50846D8E7CA990C /* Actual.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Actual.kt; path = ../shared/src/iosMain/kotlin/com/inspiredandroid/newsout/Actual.kt; sourceTree = "<group>"; };
+		278EB657D44F2CF666660B0B /* ExploreFeed.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ExploreFeed.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/models/ExploreFeed.kt; sourceTree = "<group>"; };
 		2C9BE46021183DE400670E90 /* client-mpp-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "client-mpp-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C9BE46321183DE400670E90 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2C9BE46521183DE400670E90 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -45,18 +48,15 @@
 		2C9BE46A21183DE600670E90 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C9BE46D21183DE600670E90 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2C9BE46F21183DE600670E90 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3BD7BA545CE827644B8ECDC8 /* NextcloudNewsVersion.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = NextcloudNewsVersion.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/models/NextcloudNewsVersion.kt; sourceTree = "<group>"; };
-		42355601CAD3BA5732B14B14 /* ExtensionFunctions.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = ExtensionFunctions.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/ExtensionFunctions.kt; sourceTree = "<group>"; };
-		7178B044C0C12C78F644BD52 /* Actual.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = Actual.kt; path = ../shared/src/iosMain/kotlin/com/inspiredandroid/newsout/Actual.kt; sourceTree = "<group>"; };
-		72BB311594ED24F99250361F /* Actual.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = Actual.kt; path = ../shared/src/androidMain/kotlin/com/inspiredandroid/newsout/Actual.kt; sourceTree = "<group>"; };
+		3920463FC805EFDE182114A0 /* Common.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Common.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/Common.kt; sourceTree = "<group>"; };
+		44E54F278FE77B07FA878067 /* NextcloudNewsItem.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = NextcloudNewsItem.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/models/NextcloudNewsItem.kt; sourceTree = "<group>"; };
+		71BE285AB2EE2234020E62B6 /* NextcloudNewsFeed.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = NextcloudNewsFeed.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/models/NextcloudNewsFeed.kt; sourceTree = "<group>"; };
+		77C7BC8B7A84300863BBB039 /* NextcloudNewsFolder.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = NextcloudNewsFolder.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/models/NextcloudNewsFolder.kt; sourceTree = "<group>"; };
 		7AA8658B95419F44900A353B /* Pods-client-mpp-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-client-mpp-ios.debug.xcconfig"; path = "Target Support Files/Pods-client-mpp-ios/Pods-client-mpp-ios.debug.xcconfig"; sourceTree = "<group>"; };
 		85A0FE276788F82DA88EBF86 /* Pods_client_mpp_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_client_mpp_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		90F2D94E227B303D8B567DB9 /* NextcloudNewsFolder.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = NextcloudNewsFolder.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/models/NextcloudNewsFolder.kt; sourceTree = "<group>"; };
-		A4E008F2C70C71ACEB867C35 /* Database.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = Database.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/Database.kt; sourceTree = "<group>"; };
-		AE66AAB75A39D740C5D626CF /* ExploreFeed.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = ExploreFeed.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/models/ExploreFeed.kt; sourceTree = "<group>"; };
-		DFE33BD13158C22A1198DC8A /* Api.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = Api.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/Api.kt; sourceTree = "<group>"; };
-		E0FC061A663FD0F11FA488FD /* Common.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = Common.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/Common.kt; sourceTree = "<group>"; };
-		E604C9A6C6F227C76C6E57A1 /* UnitTest.kt */ = {isa = PBXFileReference; includeInIndex = 1; name = UnitTest.kt; path = ../shared/src/commonTest/kotlin/com/inspiredandroid/newsout/UnitTest.kt; sourceTree = "<group>"; };
+		BE473723BFB9907DEC701C19 /* UnitTest.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = UnitTest.kt; path = ../shared/src/commonTest/kotlin/com/inspiredandroid/newsout/UnitTest.kt; sourceTree = "<group>"; };
+		D5C1C423B499948A6C435C0C /* Api.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Api.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/Api.kt; sourceTree = "<group>"; };
+		E724B0FBB33018FE533E0A5E /* NextcloudNewsVersion.kt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = NextcloudNewsVersion.kt; path = ../shared/src/commonMain/kotlin/com/inspiredandroid/newsout/models/NextcloudNewsVersion.kt; sourceTree = "<group>"; };
 		F41A3F5B2243DFCC0075AB70 /* ItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsViewController.swift; sourceTree = "<group>"; };
 		F4550420226DC375001C08BD /* main.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = main.framework; path = ../shared/build/bin/ios/mainDebugFramework/main.framework; sourceTree = "<group>"; };
 		F4E63EFF2225DEA20055879B /* FeedsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedsViewController.swift; sourceTree = "<group>"; };
@@ -76,22 +76,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		05844754DF2D90A04A29F86E /* com */ = {
-			isa = PBXGroup;
-			children = (
-				4F90071B8A7771604141D643 /* inspiredandroid */,
-			);
-			name = com;
-			sourceTree = "<group>";
-		};
-		09BA775E13F8125987615739 /* inspiredandroid */ = {
-			isa = PBXGroup;
-			children = (
-				FB97081DF04537996F5858EF /* newsout */,
-			);
-			name = inspiredandroid;
-			sourceTree = "<group>";
-		};
 		0BF43523631A3F996C7774D4 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -103,40 +87,43 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		17F399762FBA08793A5DD864 /* commonTest */ = {
+		14E665F199627235A639B8E5 /* inspiredandroid */ = {
 			isa = PBXGroup;
 			children = (
-				912E08D33B4FC2ECD0051B20 /* kotlin */,
+				57746212D6E652477454FE50 /* newsout */,
 			);
-			name = commonTest;
+			name = inspiredandroid;
 			sourceTree = "<group>";
 		};
-		1A03CDA2A15A944DDE7AF739 /* kotlin */ = {
+		1519AEC080DFF0A16A76810F /* com */ = {
 			isa = PBXGroup;
 			children = (
-				F390E3A7A762E561A6E7957E /* com */,
+				2972B40E5F34F0D074953651 /* inspiredandroid */,
 			);
-			name = kotlin;
+			name = com;
 			sourceTree = "<group>";
 		};
-		2783D0E50602EBE259F2E2FB /* newsout */ = {
+		259984E9C771060D1FD2C932 /* newsout */ = {
 			isa = PBXGroup;
 			children = (
-				DFE33BD13158C22A1198DC8A /* Api.kt */,
-				E0FC061A663FD0F11FA488FD /* Common.kt */,
-				A4E008F2C70C71ACEB867C35 /* Database.kt */,
-				42355601CAD3BA5732B14B14 /* ExtensionFunctions.kt */,
-				D0E4E019A0502F70C7A99272 /* models */,
 			);
 			name = newsout;
 			sourceTree = "<group>";
 		};
-		28AD99ADC4A3B72A480CA09E /* sqldelight */ = {
+		2972B40E5F34F0D074953651 /* inspiredandroid */ = {
 			isa = PBXGroup;
 			children = (
-				4657F0DB7AC396F0C9F2A6B3 /* com */,
+				2A49B5FD94C8B7271A7637F2 /* newsout */,
 			);
-			name = sqldelight;
+			name = inspiredandroid;
+			sourceTree = "<group>";
+		};
+		2A49B5FD94C8B7271A7637F2 /* newsout */ = {
+			isa = PBXGroup;
+			children = (
+				19CC6CC8766870177BBD63E0 /* Actual.kt */,
+			);
+			name = newsout;
 			sourceTree = "<group>";
 		};
 		2C9BE45721183DE400670E90 = {
@@ -147,7 +134,7 @@
 				2C9BE46121183DE400670E90 /* Products */,
 				0BF43523631A3F996C7774D4 /* Pods */,
 				3EAD6CCAF9747651A3FE70AE /* Frameworks */,
-				A435E01BD5C58EABDEBC33DB /* Kotlin */,
+				C413FC28515200B3F40B9C6F /* Kotlin */,
 			);
 			sourceTree = "<group>";
 		};
@@ -174,9 +161,22 @@
 			path = "client-mpp-ios";
 			sourceTree = "<group>";
 		};
-		3C88036953C26486DB0CB2DF /* newsout */ = {
+		34F5B95971B1ADBAFB60A923 /* kotlin */ = {
 			isa = PBXGroup;
 			children = (
+				1519AEC080DFF0A16A76810F /* com */,
+			);
+			name = kotlin;
+			sourceTree = "<group>";
+		};
+		3DEF6A17F526B226B6B4930F /* newsout */ = {
+			isa = PBXGroup;
+			children = (
+				D5C1C423B499948A6C435C0C /* Api.kt */,
+				3920463FC805EFDE182114A0 /* Common.kt */,
+				0D9F64387E6C25E2A5CCD687 /* Database.kt */,
+				06992F74E24291C51F7FB76D /* ExtensionFunctions.kt */,
+				C2BC5B532DDC272FAB5E972A /* models */,
 			);
 			name = newsout;
 			sourceTree = "<group>";
@@ -189,162 +189,162 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		42579373FE2191DF0E25AAE4 /* iosMain */ = {
+		43453C9502D05C1CD65DA560 /* commonTest */ = {
 			isa = PBXGroup;
 			children = (
-				B866FFDA97E014070E267436 /* kotlin */,
+				F47F6040ADC6AD67CEAD2149 /* kotlin */,
 			);
-			name = iosMain;
+			name = commonTest;
 			sourceTree = "<group>";
 		};
-		4657F0DB7AC396F0C9F2A6B3 /* com */ = {
+		4FF58B0D596D08B7B1857600 /* inspiredandroid */ = {
 			isa = PBXGroup;
 			children = (
-				ECEBEA84EBBA243D81831595 /* inspiredandroid */,
-			);
-			name = com;
-			sourceTree = "<group>";
-		};
-		4F90071B8A7771604141D643 /* inspiredandroid */ = {
-			isa = PBXGroup;
-			children = (
-				AB7D8D9B4F2CB765C7C96AC2 /* newsout */,
+				259984E9C771060D1FD2C932 /* newsout */,
 			);
 			name = inspiredandroid;
 			sourceTree = "<group>";
 		};
-		7CCEA7AA04C07241ED74F961 /* com */ = {
+		57746212D6E652477454FE50 /* newsout */ = {
 			isa = PBXGroup;
 			children = (
-				DFD18ACBC51B79A5437B96FC /* inspiredandroid */,
+				24A6FA69F50846D8E7CA990C /* Actual.kt */,
+			);
+			name = newsout;
+			sourceTree = "<group>";
+		};
+		68135B708FF70628241F3BF7 /* com */ = {
+			isa = PBXGroup;
+			children = (
+				4FF58B0D596D08B7B1857600 /* inspiredandroid */,
 			);
 			name = com;
 			sourceTree = "<group>";
 		};
-		7EEF22A999795C65510BC59A /* com */ = {
+		8BC56DE3FD4099AD0DAADDF9 /* inspiredandroid */ = {
 			isa = PBXGroup;
 			children = (
-				09BA775E13F8125987615739 /* inspiredandroid */,
+				3DEF6A17F526B226B6B4930F /* newsout */,
 			);
-			name = com;
+			name = inspiredandroid;
 			sourceTree = "<group>";
 		};
-		883985060AAFD5A31D706C11 /* commonMain */ = {
+		99E96D798980403D8E1BB301 /* commonMain */ = {
 			isa = PBXGroup;
 			children = (
-				1A03CDA2A15A944DDE7AF739 /* kotlin */,
-				28AD99ADC4A3B72A480CA09E /* sqldelight */,
+				AE7D5F33473B90BC8700470B /* kotlin */,
+				A81B3CCD8CC81E02B48BD311 /* sqldelight */,
 			);
 			name = commonMain;
 			sourceTree = "<group>";
 		};
-		8FE70561DC9C944EC0600856 /* kotlin */ = {
+		A13A8401A7167B52F71C84B8 /* com */ = {
 			isa = PBXGroup;
 			children = (
-				7EEF22A999795C65510BC59A /* com */,
-			);
-			name = kotlin;
-			sourceTree = "<group>";
-		};
-		912E08D33B4FC2ECD0051B20 /* kotlin */ = {
-			isa = PBXGroup;
-			children = (
-				05844754DF2D90A04A29F86E /* com */,
-			);
-			name = kotlin;
-			sourceTree = "<group>";
-		};
-		A435E01BD5C58EABDEBC33DB /* Kotlin */ = {
-			isa = PBXGroup;
-			children = (
-				B0D165A5E3A4E372C2D0182B /* androidMain */,
-				883985060AAFD5A31D706C11 /* commonMain */,
-				17F399762FBA08793A5DD864 /* commonTest */,
-				42579373FE2191DF0E25AAE4 /* iosMain */,
-			);
-			name = Kotlin;
-			sourceTree = "<group>";
-		};
-		AB7D8D9B4F2CB765C7C96AC2 /* newsout */ = {
-			isa = PBXGroup;
-			children = (
-				E604C9A6C6F227C76C6E57A1 /* UnitTest.kt */,
-			);
-			name = newsout;
-			sourceTree = "<group>";
-		};
-		B0D165A5E3A4E372C2D0182B /* androidMain */ = {
-			isa = PBXGroup;
-			children = (
-				8FE70561DC9C944EC0600856 /* kotlin */,
-			);
-			name = androidMain;
-			sourceTree = "<group>";
-		};
-		B866FFDA97E014070E267436 /* kotlin */ = {
-			isa = PBXGroup;
-			children = (
-				7CCEA7AA04C07241ED74F961 /* com */,
-			);
-			name = kotlin;
-			sourceTree = "<group>";
-		};
-		D0E4E019A0502F70C7A99272 /* models */ = {
-			isa = PBXGroup;
-			children = (
-				AE66AAB75A39D740C5D626CF /* ExploreFeed.kt */,
-				0669105EFB14418709B5F420 /* NextcloudNewsFeed.kt */,
-				90F2D94E227B303D8B567DB9 /* NextcloudNewsFolder.kt */,
-				24E9759A819012F002A18A65 /* NextcloudNewsItem.kt */,
-				3BD7BA545CE827644B8ECDC8 /* NextcloudNewsVersion.kt */,
-			);
-			name = models;
-			sourceTree = "<group>";
-		};
-		D62CB5A00E97A22BAE198B3F /* inspiredandroid */ = {
-			isa = PBXGroup;
-			children = (
-				2783D0E50602EBE259F2E2FB /* newsout */,
-			);
-			name = inspiredandroid;
-			sourceTree = "<group>";
-		};
-		D6D0FCFC17BC1B6A83B164AC /* newsout */ = {
-			isa = PBXGroup;
-			children = (
-				7178B044C0C12C78F644BD52 /* Actual.kt */,
-			);
-			name = newsout;
-			sourceTree = "<group>";
-		};
-		DFD18ACBC51B79A5437B96FC /* inspiredandroid */ = {
-			isa = PBXGroup;
-			children = (
-				D6D0FCFC17BC1B6A83B164AC /* newsout */,
-			);
-			name = inspiredandroid;
-			sourceTree = "<group>";
-		};
-		ECEBEA84EBBA243D81831595 /* inspiredandroid */ = {
-			isa = PBXGroup;
-			children = (
-				3C88036953C26486DB0CB2DF /* newsout */,
-			);
-			name = inspiredandroid;
-			sourceTree = "<group>";
-		};
-		F390E3A7A762E561A6E7957E /* com */ = {
-			isa = PBXGroup;
-			children = (
-				D62CB5A00E97A22BAE198B3F /* inspiredandroid */,
+				8BC56DE3FD4099AD0DAADDF9 /* inspiredandroid */,
 			);
 			name = com;
 			sourceTree = "<group>";
 		};
-		FB97081DF04537996F5858EF /* newsout */ = {
+		A3FC451A672CB0A7CA29FE4A /* androidMain */ = {
 			isa = PBXGroup;
 			children = (
-				72BB311594ED24F99250361F /* Actual.kt */,
+				34F5B95971B1ADBAFB60A923 /* kotlin */,
+			);
+			name = androidMain;
+			sourceTree = "<group>";
+		};
+		A81B3CCD8CC81E02B48BD311 /* sqldelight */ = {
+			isa = PBXGroup;
+			children = (
+				68135B708FF70628241F3BF7 /* com */,
+			);
+			name = sqldelight;
+			sourceTree = "<group>";
+		};
+		AE7D5F33473B90BC8700470B /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				A13A8401A7167B52F71C84B8 /* com */,
+			);
+			name = kotlin;
+			sourceTree = "<group>";
+		};
+		C2BC5B532DDC272FAB5E972A /* models */ = {
+			isa = PBXGroup;
+			children = (
+				278EB657D44F2CF666660B0B /* ExploreFeed.kt */,
+				71BE285AB2EE2234020E62B6 /* NextcloudNewsFeed.kt */,
+				77C7BC8B7A84300863BBB039 /* NextcloudNewsFolder.kt */,
+				44E54F278FE77B07FA878067 /* NextcloudNewsItem.kt */,
+				E724B0FBB33018FE533E0A5E /* NextcloudNewsVersion.kt */,
+			);
+			name = models;
+			sourceTree = "<group>";
+		};
+		C413FC28515200B3F40B9C6F /* Kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				A3FC451A672CB0A7CA29FE4A /* androidMain */,
+				99E96D798980403D8E1BB301 /* commonMain */,
+				43453C9502D05C1CD65DA560 /* commonTest */,
+				DE7FFE2A6F20490A6786E721 /* iosMain */,
+			);
+			name = Kotlin;
+			sourceTree = "<group>";
+		};
+		DE7FFE2A6F20490A6786E721 /* iosMain */ = {
+			isa = PBXGroup;
+			children = (
+				F62A146455B07D48D52A63D9 /* kotlin */,
+			);
+			name = iosMain;
+			sourceTree = "<group>";
+		};
+		DF48C7DBBD3049DE1C8790F2 /* com */ = {
+			isa = PBXGroup;
+			children = (
+				F73BC7B3B5ADEE37E4CADAAD /* inspiredandroid */,
+			);
+			name = com;
+			sourceTree = "<group>";
+		};
+		F47F6040ADC6AD67CEAD2149 /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				DF48C7DBBD3049DE1C8790F2 /* com */,
+			);
+			name = kotlin;
+			sourceTree = "<group>";
+		};
+		F62A146455B07D48D52A63D9 /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				FCB03843D70BCB9A43E1BD1B /* com */,
+			);
+			name = kotlin;
+			sourceTree = "<group>";
+		};
+		F73BC7B3B5ADEE37E4CADAAD /* inspiredandroid */ = {
+			isa = PBXGroup;
+			children = (
+				FE0A33B5FDCD1F746324B582 /* newsout */,
+			);
+			name = inspiredandroid;
+			sourceTree = "<group>";
+		};
+		FCB03843D70BCB9A43E1BD1B /* com */ = {
+			isa = PBXGroup;
+			children = (
+				14E665F199627235A639B8E5 /* inspiredandroid */,
+			);
+			name = com;
+			sourceTree = "<group>";
+		};
+		FE0A33B5FDCD1F746324B582 /* newsout */ = {
+			isa = PBXGroup;
+			children = (
+				BE473723BFB9907DEC701C19 /* UnitTest.kt */,
 			);
 			name = newsout;
 			sourceTree = "<group>";
