@@ -22,9 +22,10 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:padding="12dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/feedUnreadCount"
             app:layout_constraintStart_toEndOf="@+id/feedIcon"
-            app:layout_constraintEnd_toStartOf="@+id/feedUnreadCount"/>
+            app:layout_constraintEnd_toStartOf="@+id/feedUnreadCount"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
             android:id="@+id/feedUnreadCount"
@@ -35,6 +36,7 @@
             tools:text="123"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toEndOf="@+id/feedTitle"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
