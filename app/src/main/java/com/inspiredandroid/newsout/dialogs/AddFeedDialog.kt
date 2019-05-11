@@ -32,7 +32,7 @@ class AddFeedDialog : DialogFragment() {
             view.findViewById<EditText>(R.id.editText).error = "Something went wrong"
         }
 
-        return AlertDialog.Builder(requireContext())
+        return AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
             .setTitle("Add feed")
             .setView(view)
             .setPositiveButton("Add") { _, _ ->

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.inspiredandroid.newsout.R
 import com.inspiredandroid.newsout.callbacks.OnAddFeedInterface
 import com.inspiredandroid.newsout.models.ExploreFeed
 
@@ -23,7 +24,7 @@ class ExploreFeedsDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builderSingle = AlertDialog.Builder(requireContext())
+        val builderSingle = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
         builderSingle.setTitle("Add feed")
 
         val arrayAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1)

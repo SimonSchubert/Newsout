@@ -29,7 +29,7 @@ class InfoDialog : DialogFragment() {
             open("https://nextcloud.com/compare/")
         }
 
-        return AlertDialog.Builder(requireContext())
+        return AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
             .setTitle("Info")
             .setView(view)
             .create()

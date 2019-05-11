@@ -35,7 +35,7 @@ class EditFeedDialog : DialogFragment() {
         }
         view.findViewById<EditText>(R.id.editText).setText(title)
 
-        return AlertDialog.Builder(requireContext())
+        return AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
             .setTitle(
                 if (isFolder) {
                     "Edit folder"
