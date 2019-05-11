@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.2.1 (unpublished)
+## 1.2.1
 - Changed navigationBar color from dark to light
 - Fix alertDialog unreadable button text on older sdks
 
