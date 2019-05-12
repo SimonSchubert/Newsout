@@ -27,7 +27,7 @@ class FeedsViewController: UITableViewController {
         let settingsImage = UIImage(named: "icons8-settings3")!
         let markAsReadImage = UIImage(named: "icons8-checkmark")!
 
-        let markAsReadButton = UIBarButtonItem(image: markAsReadImage, style: .plain, target: self, action: #selector(didTapMaekAsReadButton))
+        let markAsReadButton = UIBarButtonItem(image: markAsReadImage, style: .plain, target: self, action: #selector(didTapMarkAsReadButton))
         let settingsButton = UIBarButtonItem(image: settingsImage, style: .plain, target: self, action: #selector(didTapSettingsButton))
         
         navigationItem.rightBarButtonItems = [markAsReadButton, settingsButton]
@@ -87,8 +87,12 @@ class FeedsViewController: UITableViewController {
         didTapAddFeedButton(url: "")
     }
     
-    @objc func didTapMaekAsReadButton(sender: AnyObject) {
-        // didTapAddFeedButton(url: "")
+    @objc func didTapMarkAsReadButton(sender: AnyObject) {
+        api.markAllAsRead { (Feed) in
+            self.data = self.database.getFeeds() as! [Feed]
+            self.tableView?.reloadData()
+            return KotlinUnit()
+        }
     }
 
     private func logout() {
