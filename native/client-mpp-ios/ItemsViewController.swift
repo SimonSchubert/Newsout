@@ -71,6 +71,9 @@ class ItemsViewController: UITableViewController {
         } else {
             cell.titleLabel?.text = item.title
         }
+        
+        cell.titleLabel?.sizeToFit()
+        self.rowHeights[indexPath.row] = (cell.titleLabel?.bounds.size.height ?? 0) + 16
 
         cell.coverImageView?.kf.setImage(with: URL(string: item.imageUrl)) { result in
             switch result {
@@ -80,12 +83,7 @@ class ItemsViewController: UITableViewController {
                 tableView.beginUpdates()
                 self.rowHeights[indexPath.row] = imageHeight
                 tableView.endUpdates()
-                print("success")
-            case .failure(_):
-                tableView.beginUpdates()
-                self.rowHeights[indexPath.row] = cell.titleLabel?.bounds.size.height
-                tableView.endUpdates()
-                print("fail")
+            case .failure(_): break
             }
         }
 
