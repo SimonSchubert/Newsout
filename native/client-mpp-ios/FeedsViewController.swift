@@ -34,11 +34,13 @@ class FeedsViewController: UITableViewController {
 
         tableView.tableFooterView = UIView()
 
-        self.data = database.getFeeds() as! [Feed]
-        self.tableView?.reloadData()
-
         self.tableView.refreshManually()
         fetchFeedData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.data = database.getFeeds() as! [Feed]
+        self.tableView?.reloadData()
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -183,7 +185,6 @@ class FeedsViewController: UITableViewController {
             (alertAction: UIAlertAction!) in
             alert.dismiss(animated: true, completion: nil)
         }))
-
 
         let user = database.getUser()
 

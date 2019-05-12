@@ -99,11 +99,11 @@
 				2C9BE46521183DE400670E90 /* LoginViewController.swift */,
 				F4E63EFF2225DEA20055879B /* FeedsViewController.swift */,
 				F41A3F5B2243DFCC0075AB70 /* ItemsViewController.swift */,
+				F4F304242287A5300056AC97 /* UiLabelPadding.swift */,
 				2C9BE46721183DE400670E90 /* Main.storyboard */,
 				2C9BE46A21183DE600670E90 /* Assets.xcassets */,
 				2C9BE46C21183DE600670E90 /* LaunchScreen.storyboard */,
 				2C9BE46F21183DE600670E90 /* Info.plist */,
-				F4F304242287A5300056AC97 /* UiLabelPadding.swift */,
 			);
 			path = "client-mpp-ios";
 			sourceTree = "<group>";

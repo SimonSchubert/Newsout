@@ -22,5 +22,4 @@ class UILabelPadding: UILabel {
         let heigth = superContentSize.height + padding.top + padding.bottom
         return CGSize(width: width, height: heigth)
     }
-
 }
