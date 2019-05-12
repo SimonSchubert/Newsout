@@ -73,7 +73,7 @@
                                     <segment title="Newsout"/>
                                     <segment title="Nextcloud"/>
                                 </segments>
-                                <color key="tintColor" red="0.14022815229999999" green="0.1376029849" blue="0.12869930269999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" red="0.34505695104598999" green="0.34512165188789368" blue="0.34505286812782288" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </segmentedControl>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="UBs-w2-qSL">
                                 <rect key="frame" x="177.5" y="522" width="20" height="20"/>
@@ -204,18 +204,26 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j5S-Je-dbO">
-                                            <rect key="frame" x="108" y="12" width="251" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="i3t-nu-QdZ">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label test est et est se tes ts et se t se t set asd asd a sdsad" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j5S-Je-dbO" customClass="UILabelPadding" customModule="client_mpp_ios" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="45.5"/>
+                                            <color key="backgroundColor" red="0.99990516900000004" green="1" blue="0.99987047910000004" alpha="0.43581442636986301" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i3t-nu-QdZ">
-                                            <rect key="frame" x="16" y="0.0" width="84" height="43"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        </imageView>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="i3t-nu-QdZ" firstAttribute="top" secondItem="UcF-iL-OmK" secondAttribute="top" id="IRs-Cf-1GA"/>
+                                        <constraint firstAttribute="bottom" secondItem="i3t-nu-QdZ" secondAttribute="bottom" id="RIB-g0-wbD"/>
+                                        <constraint firstAttribute="trailing" secondItem="j5S-Je-dbO" secondAttribute="trailing" id="T70-Qy-ow1"/>
+                                        <constraint firstAttribute="trailing" secondItem="i3t-nu-QdZ" secondAttribute="trailing" id="Vze-lc-gKV"/>
+                                        <constraint firstItem="j5S-Je-dbO" firstAttribute="top" secondItem="UcF-iL-OmK" secondAttribute="top" id="Yu2-KO-S47"/>
+                                        <constraint firstItem="j5S-Je-dbO" firstAttribute="leading" secondItem="UcF-iL-OmK" secondAttribute="leading" id="qT8-UB-e0E"/>
+                                        <constraint firstItem="i3t-nu-QdZ" firstAttribute="leading" secondItem="UcF-iL-OmK" secondAttribute="leading" id="xUD-Iz-TTe"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="coverImageView" destination="i3t-nu-QdZ" id="XBs-tv-FrS"/>
@@ -232,7 +240,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hTW-Ik-94z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2521" y="134"/>
+            <point key="canvasLocation" x="2520.8000000000002" y="133.5832083958021"/>
         </scene>
     </scenes>
     <resources>

@@ -17,6 +17,7 @@
 		F4550421226DC375001C08BD /* main.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4550420226DC375001C08BD /* main.framework */; };
 		F4550423226DC37B001C08BD /* main.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4550420226DC375001C08BD /* main.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F4E63F002225DEA20055879B /* FeedsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E63EFF2225DEA20055879B /* FeedsViewController.swift */; };
+		F4F304252287A5300056AC97 /* UiLabelPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F304242287A5300056AC97 /* UiLabelPadding.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,6 +48,7 @@
 		F41A3F5B2243DFCC0075AB70 /* ItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsViewController.swift; sourceTree = "<group>"; };
 		F4550420226DC375001C08BD /* main.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = main.framework; path = ../shared/build/bin/ios/mainDebugFramework/main.framework; sourceTree = "<group>"; };
 		F4E63EFF2225DEA20055879B /* FeedsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedsViewController.swift; sourceTree = "<group>"; };
+		F4F304242287A5300056AC97 /* UiLabelPadding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UiLabelPadding.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 				2C9BE46A21183DE600670E90 /* Assets.xcassets */,
 				2C9BE46C21183DE600670E90 /* LaunchScreen.storyboard */,
 				2C9BE46F21183DE600670E90 /* Info.plist */,
+				F4F304242287A5300056AC97 /* UiLabelPadding.swift */,
 			);
 			path = "client-mpp-ios";
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 				F41A3F5C2243DFCC0075AB70 /* ItemsViewController.swift in Sources */,
 				2C9BE46621183DE400670E90 /* LoginViewController.swift in Sources */,
 				2C9BE46421183DE400670E90 /* AppDelegate.swift in Sources */,
+				F4F304252287A5300056AC97 /* UiLabelPadding.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
