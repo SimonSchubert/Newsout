@@ -59,7 +59,19 @@ class ItemsViewController: UITableViewController {
 
         let item = data[indexPath.row]
 
-        cell.titleLabel?.text = item.title
+        if(item.isUnread == 1) {
+            let attachment: NSTextAttachment = NSTextAttachment()
+            attachment.image = UIImage(named: "icons8-bell")!
+            attachment.bounds = CGRect(x: 0, y: -4, width: 20, height: 20)
+            
+            let attachmentString: NSAttributedString = NSAttributedString(attachment: attachment)
+            let myString: NSMutableAttributedString = NSMutableAttributedString(string: item.title)
+            myString.insert(attachmentString, at: 0)
+            cell.titleLabel?.attributedText = myString
+        } else {
+            cell.titleLabel?.text = item.title
+        }
+
         cell.coverImageView?.kf.setImage(with: URL(string: item.imageUrl)) { result in
             switch result {
             case .success(let value):
