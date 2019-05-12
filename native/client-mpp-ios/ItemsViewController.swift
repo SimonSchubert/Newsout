@@ -16,6 +16,7 @@ class ItemsViewController: UITableViewController {
     var rowHeights: [Int: CGFloat] = [:]
     var defaultHeight: CGFloat = 43
     var unreadMap: [Int64: Bool] = [:]
+    var isReloadingData: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +31,7 @@ class ItemsViewController: UITableViewController {
 
         let markAsReadImage = UIImage(named: "icons8-checkmark")!
 
-        let markAsReadButton = UIBarButtonItem(image: markAsReadImage, style: .plain, target: self, action: #selector(didTapMaekAsReadButton))
+        let markAsReadButton = UIBarButtonItem(image: markAsReadImage, style: .plain, target: self, action: #selector(didTapMarkAsReadButton))
 
         navigationItem.rightBarButtonItems = [markAsReadButton]
 
@@ -47,7 +48,8 @@ class ItemsViewController: UITableViewController {
         fetchItemData()
     }
 
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) ->
+    CGFloat {
         if let height = self.rowHeights[indexPath.row] {
             return height
         } else {
@@ -78,16 +80,18 @@ class ItemsViewController: UITableViewController {
         }
 
         cell.titleLabel?.sizeToFit()
-        self.rowHeights[indexPath.row] = (cell.titleLabel?.bounds.size.height ?? 0) + 16
-
+        let labelHeight = (cell.titleLabel?.bounds.size.height ?? 0) + 16
+        self.rowHeights[indexPath.row] = labelHeight
+        
         cell.coverImageView?.kf.setImage(with: URL(string: item.imageUrl)) { result in
             switch result {
             case .success(let value):
-                let aspectRatio = value.image.size.height / value.image.size.width
-                let imageHeight = self.view.frame.width * aspectRatio
-                tableView.beginUpdates()
-                self.rowHeights[indexPath.row] = imageHeight
-                tableView.endUpdates()
+                if(self.rowHeights[indexPath.row] == labelHeight) {
+                    let aspectRatio = value.image.size.height / value.image.size.width
+                    let imageHeight = self.view.frame.width * aspectRatio
+                    self.rowHeights[indexPath.row] = imageHeight
+                    self.tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.none)
+                }
             case .failure(_): break
             }
         }
@@ -103,14 +107,19 @@ class ItemsViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        print(indexPath.row)
+        if(isReloadingData) {
+            return
+        }
+
         let item = data[indexPath.row]
         let id = item.id
 
-        unreadMap[id] = false
-        database.getItemQueries()?.markItemAsRead(id: id)
-        database.getFeedQueries()?.decreaseUnreadCount(id: feedId, isFolder: type)
-        api.markItemAsRead(itemId: id)
+        if(unreadMap[id] ?? false) {
+            unreadMap[id] = false
+            database.getItemQueries()?.markItemAsRead(id: id)
+            database.getFeedQueries()?.decreaseUnreadCount(id: feedId, isFolder: type)
+            api.markItemAsRead(itemId: id)
+        }
     }
 
     @objc private func refreshItemData(_ sender: Any) {
@@ -125,9 +134,11 @@ class ItemsViewController: UITableViewController {
                          items.forEach { (item) in
                              self.unreadMap[item.id] = item.isUnread == 1 ? true : false
                          }
+                         self.isReloadingData = true
                          self.data = items
                          self.tableView?.reloadData()
                          self.refreshControl?.endRefreshing()
+                         self.isReloadingData = false
                          return KotlinUnit()
                      }) { () in
             self.refreshControl?.endRefreshing()
@@ -135,7 +146,7 @@ class ItemsViewController: UITableViewController {
         }
     }
 
-    @objc func didTapMaekAsReadButton(sender: AnyObject) {
+    @objc func didTapMarkAsReadButton(sender: AnyObject) {
         switch type {
         case database.TYPE_FEED:
             api.markFeedAsRead(feedId: feedId, callback: { (items) in
