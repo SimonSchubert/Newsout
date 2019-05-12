@@ -34,4 +34,4 @@ actual fun setupDatabase() {
   sqlDriver = NativeSqliteDriver(SqlDelightDatabase.Schema, "1.db")
 }
 
-actual var dispatcher: CoroutineDispatcher = Dispatchers.Default
+actual var dispatcher: CoroutineDispatcher = ApplicationDispatcher
