@@ -15,6 +15,7 @@ class ItemsViewController: UITableViewController {
     var type: Int64 = 0
     var rowHeights: [Int: CGFloat] = [:]
     var defaultHeight: CGFloat = 43
+    var unreadMap: [Int64: Bool] = [:]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +36,11 @@ class ItemsViewController: UITableViewController {
 
         tableView.tableFooterView = UIView()
 
-        self.data = database.getItems(feedId: feedId, type: type) as! [Item]
+        let items = database.getItems(feedId: feedId, type: type) as! [Item]
+        items.forEach { (item) in
+            unreadMap[item.id] = item.isUnread == 1 ? true : false
+        }
+        self.data = items
         self.tableView?.reloadData()
 
         self.tableView.refreshManually()
@@ -59,11 +64,11 @@ class ItemsViewController: UITableViewController {
 
         let item = data[indexPath.row]
 
-        if(item.isUnread == 1) {
+        if(unreadMap[item.id] ?? false) {
             let attachment: NSTextAttachment = NSTextAttachment()
             attachment.image = UIImage(named: "icons8-bell")!
             attachment.bounds = CGRect(x: 0, y: -4, width: 20, height: 20)
-            
+
             let attachmentString: NSAttributedString = NSAttributedString(attachment: attachment)
             let myString: NSMutableAttributedString = NSMutableAttributedString(string: item.title)
             myString.insert(attachmentString, at: 0)
@@ -71,7 +76,7 @@ class ItemsViewController: UITableViewController {
         } else {
             cell.titleLabel?.text = item.title
         }
-        
+
         cell.titleLabel?.sizeToFit()
         self.rowHeights[indexPath.row] = (cell.titleLabel?.bounds.size.height ?? 0) + 16
 
@@ -97,6 +102,17 @@ class ItemsViewController: UITableViewController {
         UIApplication.shared.open(url)
     }
 
+    override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        print(indexPath.row)
+        let item = data[indexPath.row]
+        let id = item.id
+
+        unreadMap[id] = false
+        database.getItemQueries()?.markItemAsRead(id: id)
+        database.getFeedQueries()?.decreaseUnreadCount(id: feedId, isFolder: type)
+        api.markItemAsRead(itemId: id)
+    }
+
     @objc private func refreshItemData(_ sender: Any) {
         fetchItemData()
     }
@@ -106,6 +122,9 @@ class ItemsViewController: UITableViewController {
                      , type: type
                      , offset: false
                      , callback: { (items) in
+                         items.forEach { (item) in
+                             self.unreadMap[item.id] = item.isUnread == 1 ? true : false
+                         }
                          self.data = items
                          self.tableView?.reloadData()
                          self.refreshControl?.endRefreshing()
