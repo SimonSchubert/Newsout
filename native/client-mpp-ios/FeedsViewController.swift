@@ -24,13 +24,13 @@ class FeedsViewController: UITableViewController {
         }
         refreshControl.addTarget(self, action: #selector(refreshFeedData(_:)), for: .valueChanged)
 
-        let addImage = UIImage(named: "icons8-plus_math")!
         let settingsImage = UIImage(named: "icons8-settings3")!
+        let markAsReadImage = UIImage(named: "icons8-checkmark")!
 
-        let addButton = UIBarButtonItem(image: addImage, style: .plain, target: self, action: #selector(didTapAddButton))
+        let markAsReadButton = UIBarButtonItem(image: markAsReadImage, style: .plain, target: self, action: #selector(didTapMaekAsReadButton))
         let settingsButton = UIBarButtonItem(image: settingsImage, style: .plain, target: self, action: #selector(didTapSettingsButton))
-
-        navigationItem.rightBarButtonItems = [settingsButton, addButton]
+        
+        navigationItem.rightBarButtonItems = [markAsReadButton, settingsButton]
 
         tableView.tableFooterView = UIView()
 
@@ -72,7 +72,7 @@ class FeedsViewController: UITableViewController {
             let vc = segue.destination as? ItemsViewController
             if sender is Feed {
                 let feed = (sender as? Feed)
-                vc?.itemId = feed?.id ?? 0
+                vc?.feedId = feed?.id ?? 0
                 vc?.type = feed?.isFolder ?? 0
                 vc?.title = feed?.title ?? ""
             }
@@ -85,6 +85,10 @@ class FeedsViewController: UITableViewController {
 
     @objc func didTapAddButton(sender: AnyObject) {
         didTapAddFeedButton(url: "")
+    }
+    
+    @objc func didTapMaekAsReadButton(sender: AnyObject) {
+        // didTapAddFeedButton(url: "")
     }
 
     private func logout() {
@@ -165,6 +169,9 @@ class FeedsViewController: UITableViewController {
     @objc func didTapSettingsButton(sender: AnyObject) {
         let alert = UIAlertController(title: "Settings", message: "", preferredStyle: UIAlertController.Style.alert)
 
+        alert.addAction(UIAlertAction(title: "Add feed", style: UIAlertAction.Style.default, handler: { (_) in
+            self.didTapAddFeedButton(url: "")
+        }))
         alert.addAction(UIAlertAction(title: "Logout", style: UIAlertAction.Style.destructive, handler: { (_) in
             self.logout()
         }))
@@ -194,7 +201,7 @@ class FeedsViewController: UITableViewController {
 
         alert.view.layoutIfNeeded()
 
-        let height: CGFloat = alert.view.bounds.height + CGFloat(52) + folderSwitch.bounds.size.height +
+        let height: CGFloat = alert.view.bounds.height + CGFloat(52)*3 + folderSwitch.bounds.size.height +
             sortingSegment.bounds.size.height + 30
         alert.view.heightAnchor.constraint(equalToConstant: height).isActive = true
 

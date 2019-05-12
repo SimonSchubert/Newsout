@@ -14,20 +14,20 @@
 		2C9BE46E21183DE600670E90 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C9BE46C21183DE600670E90 /* LaunchScreen.storyboard */; };
 		A605AB3AE76AF34763DA12A7 /* Pods_client_mpp_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0FE276788F82DA88EBF86 /* Pods_client_mpp_ios.framework */; };
 		F41A3F5C2243DFCC0075AB70 /* ItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41A3F5B2243DFCC0075AB70 /* ItemsViewController.swift */; };
-		F4550421226DC375001C08BD /* main.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4550420226DC375001C08BD /* main.framework */; };
-		F4550423226DC37B001C08BD /* main.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4550420226DC375001C08BD /* main.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F4E63F002225DEA20055879B /* FeedsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E63EFF2225DEA20055879B /* FeedsViewController.swift */; };
 		F4F304252287A5300056AC97 /* UiLabelPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F304242287A5300056AC97 /* UiLabelPadding.swift */; };
+		F4F30426228818FB0056AC97 /* main.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4550420226DC375001C08BD /* main.framework */; };
+		F4F30427228818FB0056AC97 /* main.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4550420226DC375001C08BD /* main.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		F49AB4B622439F020000158B /* Embed Frameworks */ = {
+		F4F30428228818FB0056AC97 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				F4550423226DC37B001C08BD /* main.framework in Embed Frameworks */,
+				F4F30427228818FB0056AC97 /* main.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -57,7 +57,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A605AB3AE76AF34763DA12A7 /* Pods_client_mpp_ios.framework in Frameworks */,
-				F4550421226DC375001C08BD /* main.framework in Frameworks */,
+				F4F30426228818FB0056AC97 /* main.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,8 +128,8 @@
 				2C9BE45C21183DE400670E90 /* Sources */,
 				2C9BE45D21183DE400670E90 /* Frameworks */,
 				2C9BE45E21183DE400670E90 /* Resources */,
-				F49AB4B622439F020000158B /* Embed Frameworks */,
 				524978B96E198478689F9B4F /* [CP] Embed Pods Frameworks */,
+				F4F30428228818FB0056AC97 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

@@ -1,8 +1,8 @@
 #import <Foundation/Foundation.h>
 
-@class MainFeedImpl, MainSqldelight_runtimeQuery, MainKotlinUnit, MainSqldelight_runtimeTransacterTransaction, MainItemImpl, MainMaxIdImpl, MainMaxIdAllImpl, MainMinIdImpl, MainSqlDelightDatabaseCompanion, MainUserImpl, MainApi, MainNextcloudNewsVersion, MainDatabase, MainExploreFeed, MainExploreFeedCompanion, MainExploreFeed$serializer, MainKotlinArray, MainNextcloudNewsFeed, MainNextcloudNewsFeedCompanion, MainNextcloudNewsFeed$serializer, MainNextcloudNewsFolder, MainNextcloudNewsFolderCompanion, MainNextcloudNewsFolder$serializer, MainNextcloudNewsItem, MainNextcloudNewsItemCompanion, MainNextcloudNewsItem$serializer, MainNextcloudNewsVersionCompanion, MainNextcloudNewsVersion$serializer, MainKotlinx_serialization_runtime_nativeEnumDescriptor, MainKotlinx_serialization_runtime_nativeSerialKind, MainKotlinNothing, MainKotlinx_serialization_runtime_nativeUpdateMode, MainKotlinByteArray, MainKotlinx_serialization_runtime_nativeSerialClassDescImpl, MainKotlinEnum, MainKotlinByteIterator;
+@class MainFeedImpl, MainSqldelight_runtimeQuery, MainKotlinUnit, MainSqldelight_runtimeTransacterTransaction, MainItemImpl, MainMaxIdImpl, MainMaxIdAllImpl, MainMinIdImpl, MainSqlDelightDatabaseCompanion, MainUserImpl, MainApi, MainNextcloudNewsVersion, MainDatabase, MainExploreFeed, MainExploreFeedCompanion, MainExploreFeed$serializer, MainKotlinArray, MainNextcloudNewsFeed, MainNextcloudNewsFeedCompanion, MainNextcloudNewsFeed$serializer, MainNextcloudNewsFolder, MainNextcloudNewsFolderCompanion, MainNextcloudNewsFolder$serializer, MainNextcloudNewsItem, MainNextcloudNewsItemCompanion, MainNextcloudNewsItem$serializer, MainNextcloudNewsVersionCompanion, MainNextcloudNewsVersion$serializer, MainKotlinx_coroutines_coreCoroutineDispatcher, MainKotlinx_serialization_runtime_nativeEnumDescriptor, MainKotlinx_serialization_runtime_nativeSerialKind, MainKotlinNothing, MainKotlinx_serialization_runtime_nativeUpdateMode, MainKotlinAbstractCoroutineContextElement, MainKotlinByteArray, MainKotlinx_serialization_runtime_nativeSerialClassDescImpl, MainKotlinEnum, MainKotlinByteIterator;
 
-@protocol MainFeed, MainFeedQueries, MainSqldelight_runtimeTransacter, MainItem, MainItemQueries, MainMaxId, MainMaxIdAll, MainMinId, MainSqlDelightDatabase, MainUserQueries, MainSqldelight_runtimeSqlDriver, MainSqldelight_runtimeSqlDriverSchema, MainUser, MainKotlinx_serialization_runtime_nativeKSerializer, MainKotlinx_serialization_runtime_nativeGeneratedSerializer, MainKotlinx_serialization_runtime_nativeSerializationStrategy, MainKotlinx_serialization_runtime_nativeEncoder, MainKotlinx_serialization_runtime_nativeSerialDescriptor, MainKotlinx_serialization_runtime_nativeDeserializationStrategy, MainKotlinx_serialization_runtime_nativeDecoder, MainKotlinSuspendFunction1, MainSqldelight_runtimeSqlCursor, MainSqldelight_runtimeQueryListener, MainSqldelight_runtimeSqlPreparedStatement, MainSqldelight_runtimeCloseable, MainKotlinIterator, MainKotlinx_serialization_runtime_nativeCompositeEncoder, MainKotlinx_serialization_runtime_nativeSerialModule, MainKotlinAnnotation, MainKotlinx_serialization_runtime_nativeCompositeDecoder, MainKotlinSuspendFunction, MainKotlinx_serialization_runtime_nativeSerialModuleCollector, MainKotlinKClass, MainKotlinComparable, MainKotlinKDeclarationContainer, MainKotlinKAnnotatedElement, MainKotlinKClassifier;
+@protocol MainFeed, MainFeedQueries, MainSqldelight_runtimeTransacter, MainItem, MainItemQueries, MainMaxId, MainMaxIdAll, MainMinId, MainSqlDelightDatabase, MainUserQueries, MainSqldelight_runtimeSqlDriver, MainSqldelight_runtimeSqlDriverSchema, MainUser, MainKotlinx_serialization_runtime_nativeKSerializer, MainKotlinx_serialization_runtime_nativeGeneratedSerializer, MainKotlinx_serialization_runtime_nativeSerializationStrategy, MainKotlinx_serialization_runtime_nativeEncoder, MainKotlinx_serialization_runtime_nativeSerialDescriptor, MainKotlinx_serialization_runtime_nativeDeserializationStrategy, MainKotlinx_serialization_runtime_nativeDecoder, MainKotlinSuspendFunction1, MainSqldelight_runtimeSqlCursor, MainSqldelight_runtimeQueryListener, MainSqldelight_runtimeSqlPreparedStatement, MainSqldelight_runtimeCloseable, MainKotlinIterator, MainKotlinx_serialization_runtime_nativeCompositeEncoder, MainKotlinx_serialization_runtime_nativeSerialModule, MainKotlinAnnotation, MainKotlinx_serialization_runtime_nativeCompositeDecoder, MainKotlinCoroutineContextElement, MainKotlinCoroutineContextKey, MainKotlinCoroutineContext, MainKotlinContinuationInterceptor, MainKotlinContinuation, MainKotlinx_coroutines_coreRunnable, MainKotlinSuspendFunction, MainKotlinx_serialization_runtime_nativeSerialModuleCollector, MainKotlinKClass, MainKotlinComparable, MainKotlinKDeclarationContainer, MainKotlinKAnnotatedElement, MainKotlinKClassifier;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -234,6 +234,8 @@ __attribute__((swift_name("ItemQueries")))
 @required
 - (MainSqldelight_runtimeQuery *)selectAllByFeedIdAndTypeFeedId:(int64_t)feedId isFolder:(int64_t)isFolder mapper:(id (^)(MainLong *, NSString *, MainLong *, NSString *, NSString *, NSString *, MainLong *, MainLong *, MainLong *, MainLong *))mapper __attribute__((swift_name("selectAllByFeedIdAndType(feedId:isFolder:mapper:)")));
 - (MainSqldelight_runtimeQuery *)selectAllByFeedIdAndTypeFeedId:(int64_t)feedId isFolder:(int64_t)isFolder __attribute__((swift_name("selectAllByFeedIdAndType(feedId:isFolder:)")));
+- (MainSqldelight_runtimeQuery *)selectAllByFeedIdAndTypeAndQueryFeedId:(int64_t)feedId isFolder:(int64_t)isFolder title:(NSString *)title mapper:(id (^)(MainLong *, NSString *, MainLong *, NSString *, NSString *, NSString *, MainLong *, MainLong *, MainLong *, MainLong *))mapper __attribute__((swift_name("selectAllByFeedIdAndTypeAndQuery(feedId:isFolder:title:mapper:)")));
+- (MainSqldelight_runtimeQuery *)selectAllByFeedIdAndTypeAndQueryFeedId:(int64_t)feedId isFolder:(int64_t)isFolder title:(NSString *)title __attribute__((swift_name("selectAllByFeedIdAndTypeAndQuery(feedId:isFolder:title:)")));
 - (MainSqldelight_runtimeQuery *)selectUnreadMapper:(id (^)(MainLong *, NSString *, MainLong *, NSString *, NSString *, NSString *, MainLong *, MainLong *, MainLong *, MainLong *))mapper __attribute__((swift_name("selectUnread(mapper:)")));
 - (MainSqldelight_runtimeQuery *)selectUnread __attribute__((swift_name("selectUnread()")));
 - (MainSqldelight_runtimeQuery *)selectStarredMapper:(id (^)(MainLong *, NSString *, MainLong *, NSString *, NSString *, NSString *, MainLong *, MainLong *, MainLong *, MainLong *))mapper __attribute__((swift_name("selectStarred(mapper:)")));
@@ -387,12 +389,17 @@ __attribute__((swift_name("Database")))
 - (id<MainUserQueries> _Nullable)getUserQueries __attribute__((swift_name("getUserQueries()")));
 - (NSMutableArray<id<MainFeed>> *)getFeeds __attribute__((swift_name("getFeeds()")));
 - (NSMutableArray<id<MainItem>> *)getItemsFeedId:(int64_t)feedId type:(int64_t)type __attribute__((swift_name("getItems(feedId:type:)")));
+- (NSMutableArray<id<MainItem>> *)getItemsByQueryFeedId:(int64_t)feedId type:(int64_t)type query:(NSString *)query __attribute__((swift_name("getItemsByQuery(feedId:type:query:)")));
 - (id<MainUser> _Nullable)getUser __attribute__((swift_name("getUser()")));
 - (int64_t)getTotalUnreadCount __attribute__((swift_name("getTotalUnreadCount()")));
 - (int64_t)getTotalStarredCount __attribute__((swift_name("getTotalStarredCount()")));
 - (void)clear __attribute__((swift_name("clear()")));
 @property (readonly) int64_t SORT_UNREADCOUNT __attribute__((swift_name("SORT_UNREADCOUNT")));
 @property (readonly) int64_t SORT_TITLE __attribute__((swift_name("SORT_TITLE")));
+@property (readonly) int64_t TYPE_FEED __attribute__((swift_name("TYPE_FEED")));
+@property (readonly) int64_t TYPE_FOLDER __attribute__((swift_name("TYPE_FOLDER")));
+@property (readonly) int64_t TYPE_STARRED __attribute__((swift_name("TYPE_STARRED")));
+@property (readonly) int64_t TYPE_UNREAD __attribute__((swift_name("TYPE_UNREAD")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -592,6 +599,7 @@ __attribute__((swift_name("ActualKt")))
 @interface MainActualKt : KotlinBase
 + (void)setupDatabase __attribute__((swift_name("setupDatabase()")));
 @property (class) id<MainSqldelight_runtimeSqlDriver> _Nullable sqlDriver __attribute__((swift_name("sqlDriver")));
+@property (class) MainKotlinx_coroutines_coreCoroutineDispatcher *dispatcher __attribute__((swift_name("dispatcher")));
 @end;
 
 __attribute__((objc_subclassing_restricted))
@@ -737,6 +745,44 @@ __attribute__((swift_name("Kotlinx_serialization_runtime_nativeDecoder")))
 - (id _Nullable)updateSerializableValueDeserializer:(id<MainKotlinx_serialization_runtime_nativeDeserializationStrategy>)deserializer old:(id _Nullable)old __attribute__((swift_name("updateSerializableValue(deserializer:old:)")));
 @property (readonly) id<MainKotlinx_serialization_runtime_nativeSerialModule> context __attribute__((swift_name("context")));
 @property (readonly) MainKotlinx_serialization_runtime_nativeUpdateMode *updateMode __attribute__((swift_name("updateMode")));
+@end;
+
+__attribute__((swift_name("KotlinCoroutineContext")))
+@protocol MainKotlinCoroutineContext
+@required
+- (id _Nullable)foldInitial:(id _Nullable)initial operation:(id _Nullable (^)(id _Nullable, id<MainKotlinCoroutineContextElement>))operation __attribute__((swift_name("fold(initial:operation:)")));
+- (id<MainKotlinCoroutineContextElement> _Nullable)getKey:(id<MainKotlinCoroutineContextKey>)key __attribute__((swift_name("get(key:)")));
+- (id<MainKotlinCoroutineContext>)minusKeyKey:(id<MainKotlinCoroutineContextKey>)key __attribute__((swift_name("minusKey(key:)")));
+- (id<MainKotlinCoroutineContext>)plusContext:(id<MainKotlinCoroutineContext>)context __attribute__((swift_name("plus(context:)")));
+@end;
+
+__attribute__((swift_name("KotlinCoroutineContextElement")))
+@protocol MainKotlinCoroutineContextElement <MainKotlinCoroutineContext>
+@required
+@property (readonly) id<MainKotlinCoroutineContextKey> key __attribute__((swift_name("key")));
+@end;
+
+__attribute__((swift_name("KotlinAbstractCoroutineContextElement")))
+@interface MainKotlinAbstractCoroutineContextElement : KotlinBase <MainKotlinCoroutineContextElement>
+- (instancetype)initWithKey:(id<MainKotlinCoroutineContextKey>)key __attribute__((swift_name("init(key:)"))) __attribute__((objc_designated_initializer));
+@end;
+
+__attribute__((swift_name("KotlinContinuationInterceptor")))
+@protocol MainKotlinContinuationInterceptor <MainKotlinCoroutineContextElement>
+@required
+- (id<MainKotlinContinuation>)interceptContinuationContinuation:(id<MainKotlinContinuation>)continuation __attribute__((swift_name("interceptContinuation(continuation:)")));
+- (void)releaseInterceptedContinuationContinuation:(id<MainKotlinContinuation>)continuation __attribute__((swift_name("releaseInterceptedContinuation(continuation:)")));
+@end;
+
+__attribute__((swift_name("Kotlinx_coroutines_coreCoroutineDispatcher")))
+@interface MainKotlinx_coroutines_coreCoroutineDispatcher : MainKotlinAbstractCoroutineContextElement <MainKotlinContinuationInterceptor>
+- (instancetype)init __attribute__((swift_name("init()"))) __attribute__((objc_designated_initializer));
++ (instancetype)new __attribute__((availability(swift, unavailable, message="use object initializers instead")));
+- (instancetype)initWithKey:(id<MainKotlinCoroutineContextKey>)key __attribute__((swift_name("init(key:)"))) __attribute__((objc_designated_initializer)) __attribute__((unavailable));
+- (void)dispatchContext:(id<MainKotlinCoroutineContext>)context block:(id<MainKotlinx_coroutines_coreRunnable>)block __attribute__((swift_name("dispatch(context:block:)")));
+- (void)dispatchYieldContext:(id<MainKotlinCoroutineContext>)context block:(id<MainKotlinx_coroutines_coreRunnable>)block __attribute__((swift_name("dispatchYield(context:block:)")));
+- (BOOL)isDispatchNeededContext:(id<MainKotlinCoroutineContext>)context __attribute__((swift_name("isDispatchNeeded(context:)")));
+- (MainKotlinx_coroutines_coreCoroutineDispatcher *)plusOther:(MainKotlinx_coroutines_coreCoroutineDispatcher *)other __attribute__((swift_name("plus(other:)")));
 @end;
 
 __attribute__((swift_name("KotlinSuspendFunction")))
@@ -889,6 +935,24 @@ __attribute__((swift_name("Kotlinx_serialization_runtime_nativeUpdateMode")))
 @property (class, readonly) MainKotlinx_serialization_runtime_nativeUpdateMode *update __attribute__((swift_name("update")));
 - (instancetype)initWithName:(NSString *)name ordinal:(int32_t)ordinal __attribute__((swift_name("init(name:ordinal:)"))) __attribute__((objc_designated_initializer)) __attribute__((unavailable));
 - (int32_t)compareToOther:(MainKotlinx_serialization_runtime_nativeUpdateMode *)other __attribute__((swift_name("compareTo(other:)")));
+@end;
+
+__attribute__((swift_name("KotlinCoroutineContextKey")))
+@protocol MainKotlinCoroutineContextKey
+@required
+@end;
+
+__attribute__((swift_name("KotlinContinuation")))
+@protocol MainKotlinContinuation
+@required
+- (void)resumeWithResult:(id _Nullable)result __attribute__((swift_name("resumeWith(result:)")));
+@property (readonly) id<MainKotlinCoroutineContext> context __attribute__((swift_name("context")));
+@end;
+
+__attribute__((swift_name("Kotlinx_coroutines_coreRunnable")))
+@protocol MainKotlinx_coroutines_coreRunnable
+@required
+- (void)run __attribute__((swift_name("run()")));
 @end;
 
 __attribute__((objc_subclassing_restricted))

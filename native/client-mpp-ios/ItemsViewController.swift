@@ -9,8 +9,9 @@ import main
 
 class ItemsViewController: UITableViewController {
     let api = Api()
+    let database = Database()
     var data = ([Item])()
-    var itemId: Int64 = 0
+    var feedId: Int64 = 0
     var type: Int64 = 0
     var rowHeights: [Int: CGFloat] = [:]
     var defaultHeight: CGFloat = 43
@@ -26,10 +27,15 @@ class ItemsViewController: UITableViewController {
         }
         refreshControl.addTarget(self, action: #selector(refreshItemData(_:)), for: .valueChanged)
 
+        let markAsReadImage = UIImage(named: "icons8-checkmark")!
+
+        let markAsReadButton = UIBarButtonItem(image: markAsReadImage, style: .plain, target: self, action: #selector(didTapMaekAsReadButton))
+
+        navigationItem.rightBarButtonItems = [markAsReadButton]
+
         tableView.tableFooterView = UIView()
 
-        let database = Database()
-        self.data = database.getItems(feedId: itemId, type: type) as! [Item]
+        self.data = database.getItems(feedId: feedId, type: type) as! [Item]
         self.tableView?.reloadData()
 
         self.tableView.refreshManually()
@@ -52,13 +58,13 @@ class ItemsViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "item", for: indexPath) as! ItemTableViewCell
 
         let item = data[indexPath.row]
-        
+
         cell.titleLabel?.text = item.title
         cell.coverImageView?.kf.setImage(with: URL(string: item.imageUrl)) { result in
             switch result {
             case .success(let value):
-                let aspectRatio = value.image.size.height/value.image.size.width
-                let imageHeight = self.view.frame.width*aspectRatio
+                let aspectRatio = value.image.size.height / value.image.size.width
+                let imageHeight = self.view.frame.width * aspectRatio
                 tableView.beginUpdates()
                 self.rowHeights[indexPath.row] = imageHeight
                 tableView.endUpdates()
@@ -86,7 +92,7 @@ class ItemsViewController: UITableViewController {
     }
 
     private func fetchItemData() {
-        api.getItems(id: itemId
+        api.getItems(id: feedId
                      , type: type
                      , offset: false
                      , callback: { (items) in
@@ -97,6 +103,24 @@ class ItemsViewController: UITableViewController {
                      }) { () in
             self.refreshControl?.endRefreshing()
             return KotlinUnit()
+        }
+    }
+
+    @objc func didTapMaekAsReadButton(sender: AnyObject) {
+        switch type {
+        case database.TYPE_FEED:
+            api.markFeedAsRead(feedId: feedId, callback: { (items) in
+                self.data = items
+                self.tableView?.reloadData()
+                return KotlinUnit()
+            })
+        case database.TYPE_FOLDER:
+            api.markFolderAsRead(folderId: feedId, callback: { (items) in
+                self.data = items
+                self.tableView?.reloadData()
+                return KotlinUnit()
+            })
+        default: break
         }
     }
 }
