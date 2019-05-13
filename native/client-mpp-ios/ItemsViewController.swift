@@ -17,6 +17,7 @@ class ItemsViewController: UITableViewController {
     var defaultHeight: CGFloat = 43
     var unreadMap: [Int64: Bool] = [:]
     var isReloadingData: Bool = false
+    var isUserDragging = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,10 +108,10 @@ class ItemsViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if(isReloadingData) {
+        if(isReloadingData || !isUserDragging) {
             return
         }
-
+        
         let item = data[indexPath.row]
         let id = item.id
 
@@ -120,6 +121,14 @@ class ItemsViewController: UITableViewController {
             database.getFeedQueries()?.decreaseUnreadCount(id: feedId, isFolder: type)
             api.markItemAsRead(itemId: id)
         }
+    }
+    
+    override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        isUserDragging = false
+    }
+    
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        isUserDragging = true
     }
 
     @objc private func refreshItemData(_ sender: Any) {
