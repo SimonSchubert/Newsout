@@ -426,7 +426,7 @@
 					"$(PROJECT_DIR)/build/bin/iosX64/main/debug/framework",
 					"$(PROJECT_DIR)/build/bin/iosArm64/main/debug/framework",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.inspiredandroid.purenews;
+				PRODUCT_BUNDLE_IDENTIFIER = com.inspiredandroid.newsout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -457,7 +457,7 @@
 					"$(PROJECT_DIR)/build/bin/iosX64/main/debug/framework",
 					"$(PROJECT_DIR)/build/bin/iosArm64/main/debug/framework",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.inspiredandroid.purenews;
+				PRODUCT_BUNDLE_IDENTIFIER = com.inspiredandroid.newsout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

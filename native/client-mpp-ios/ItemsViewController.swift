@@ -177,4 +177,20 @@ class ItemsViewController: UITableViewController {
 class ItemTableViewCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var coverImageView: UIImageView!
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        
+        if highlighted {
+            titleLabel?.backgroundColor = UIColor(white: 217.0 / 255.0, alpha: 1.0)
+        } else {
+            titleLabel?.backgroundColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.71)
+        }
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        
+        titleLabel?.backgroundColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.71)
+    }
 }
