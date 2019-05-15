@@ -48,4 +48,10 @@ This project shares the Database, Api, Models and Serialization code. Only the i
 
 Pull requests are very welcome. Let me know before you start working on a fundamental change.
 
+## XCODE DEBUGGING
+
+To debug kotlin files in Xcode install the following Xcode plugin: https://github.com/touchlab/xcode-kotlin
+
+## Misc
+
 Compare Dropbox/Google Drive/Nextcloud: [https://nextcloud.com/compare](https://nextcloud.com/compare) 
