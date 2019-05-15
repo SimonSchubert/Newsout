@@ -89,8 +89,10 @@ class ItemsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
                 super.onScrollStateChanged(recyclerView, newState)
 
                 if (!recyclerView.canScrollVertically(1) && (type == Database.TYPE_FOLDER || type == Database.TYPE_FEED)) {
-                    showLoading()
-                    fetchItems(true)
+                    if(adapter.query.isEmpty()) {
+                        showLoading()
+                        fetchItems(true)
+                    }
                 }
             }
         }
