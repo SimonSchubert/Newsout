@@ -6,6 +6,8 @@ import com.inspiredandroid.newsout.models.NextcloudNewsItem
 import com.inspiredandroid.newsout.models.NextcloudNewsVersion
 // import com.soywiz.klock.DateTime
 import io.ktor.client.HttpClient
+import io.ktor.client.features.auth.Auth
+import io.ktor.client.features.auth.providers.basic
 import io.ktor.client.request.*
 import io.ktor.client.response.HttpResponse
 import io.ktor.client.response.readText
@@ -26,7 +28,7 @@ import kotlin.native.concurrent.ThreadLocal
 @ThreadLocal
 object Api {
     @ThreadLocal
-    private val client = HttpClient()
+    private var client = HttpClient()
     @ThreadLocal
     private var credentials = ""
     @ThreadLocal
@@ -36,8 +38,16 @@ object Api {
         get() = "$nextcloudUrl/index.php/apps/news/api/v1-2"
 
     @InternalAPI
-    fun setCredentials(url: String, email: String, password: String) {
-        credentials = "$email:$password".encodeBase64()
+    fun setCredentials(url: String, email: String, pw: String) {
+        // credentials = "$email:$password".encodeBase64()
+        client = HttpClient {
+            install(Auth) {
+                basic {
+                    username = email
+                    password = pw
+                }
+            }
+        }
         nextcloudUrl = url
     }
 
@@ -54,13 +64,13 @@ object Api {
         unauthorized: () -> Unit,
         error: () -> Unit
     ) {
-        nextcloudUrl = url
-        credentials = "$email:$password".encodeBase64()
+        setCredentials(url, email, password)
+        // nextcloudUrl = url
+        // credentials = "$email:$password".encodeBase64()
         async {
             try {
                 val response = client.get<HttpResponse> {
                     url("$baseUrl/version")
-                    header("Authorization", "Basic $credentials")
                 }
 
                 if (response.status == HttpStatusCode.OK) {
@@ -145,7 +155,6 @@ object Api {
             try {
                 client.put {
                     url("$baseUrl/feeds/$feedId/read?newestItemId=$maxId")
-                    header("Authorization", "Basic $credentials")
                 }
             } catch (ignore: Throwable) {
             }
@@ -174,7 +183,6 @@ object Api {
             try {
                 client.put {
                     url("$baseUrl/folders/$folderId/read?newestItemId=$maxId")
-                    header("Authorization", "Basic $credentials")
                 }
             } catch (ignore: Throwable) {
             }
@@ -198,7 +206,6 @@ object Api {
             try {
                 client.put {
                     url("$baseUrl/items/read?newestItemId=$maxId")
-                    header("Authorization", "Basic $credentials")
                 }
             } catch (ignore: Throwable) {
             }
@@ -214,7 +221,6 @@ object Api {
             try {
                 client.put {
                     url("$baseUrl/items/$itemId/read")
-                    header("Authorization", "Basic $credentials")
                 }
             } catch (ignore: Throwable) {
             }
@@ -230,7 +236,6 @@ object Api {
             try {
                 client.put {
                     url("$baseUrl/items/$feedId/$guidHash/star")
-                    header("Authorization", "Basic $credentials")
                 }
             } catch (ignore: Throwable) {
             }
@@ -246,7 +251,6 @@ object Api {
             try {
                 client.put {
                     url("$baseUrl/items/$feedId/$guidHash/unstar")
-                    header("Authorization", "Basic $credentials")
                 }
             } catch (ignore: Throwable) {
             }
@@ -263,7 +267,6 @@ object Api {
                 try {
                     val response = client.get<HttpResponse> {
                         url("$baseUrl/feeds")
-                        header("Authorization", "Basic $credentials")
                     }
                     when {
                         response.status == HttpStatusCode.OK -> {
@@ -288,7 +291,6 @@ object Api {
             try {
                 val response = client.get<HttpResponse> {
                     url("$baseUrl/folders")
-                    header("Authorization", "Basic $credentials")
                 }
 
                 when {
@@ -320,7 +322,6 @@ object Api {
             try {
                 client.put<String> {
                     url("$baseUrl/folders/$id")
-                    header("Authorization", "Basic $credentials")
                     body = TextContent(
                         text = "{\"name\": \"$title\"}",
                         contentType = ContentType.Application.Json
@@ -345,7 +346,6 @@ object Api {
             try {
                 client.put<String> {
                     url("$baseUrl/feeds/$id/rename")
-                    header("Authorization", "Basic $credentials")
                     body = TextContent(
                         text = "{\"feedTitle\": \"$title\"}",
                         contentType = ContentType.Application.Json
@@ -370,7 +370,6 @@ object Api {
             try {
                 client.delete<String> {
                     url("$baseUrl/feeds/$id")
-                    header("Authorization", "Basic $credentials")
                 }
 
                 Database.getFeedQueries()?.deleteFeed(id)
@@ -391,7 +390,6 @@ object Api {
             try {
                 client.delete<String> {
                     url("$baseUrl/folders/$id")
-                    header("Authorization", "Basic $credentials")
                 }
 
                 Database.getFeedQueries()?.deleteFolderFeed(id)
@@ -413,7 +411,6 @@ object Api {
                 try {
                     val result: String = client.post {
                         url("$baseUrl/feeds")
-                        header("Authorization", "Basic $credentials")
                         body = TextContent(
                             text = "{\"url\": \"$url\",\"folderId\": $folderId}",
                             contentType = ContentType.Application.Json
@@ -439,7 +436,6 @@ object Api {
             try {
                 val result: String = client.get {
                     url("$baseUrl/items?type=2&getRead=true&batchSize=-1")
-                    header("Authorization", "Basic $credentials")
                 }
 
                 val array = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("items")
@@ -483,7 +479,6 @@ object Api {
         async {
             val result: String = client.get {
                 url("$baseUrl/items?type=3&getRead=false&batchSize=-1")
-                header("Authorization", "Basic $credentials")
             }
 
             val array = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("items")
@@ -530,7 +525,6 @@ object Api {
                 }
                 val result: String = client.get {
                     url("$baseUrl/items?getRead=true&batchSize=20&type=$type&id=$id$offsetString")
-                    header("Authorization", "Basic $credentials")
                 }
 
                 val array = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("items")
