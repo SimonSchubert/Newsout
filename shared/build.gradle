@@ -65,6 +65,8 @@ kotlin {
             implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
             implementation "com.squareup.sqldelight:runtime-jvm:$sqldelight_version"
             implementation "io.ktor:ktor-client-android:$ktor_version"
+            implementation "io.ktor:ktor-client-core-jvm:$ktor_version"
+            implementation "io.ktor:ktor-client-auth-jvm:$ktor_version"
             implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"
         }
 
