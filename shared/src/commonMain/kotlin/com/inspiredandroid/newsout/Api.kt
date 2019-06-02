@@ -8,14 +8,16 @@ import com.inspiredandroid.newsout.models.NextcloudNewsVersion
 import io.ktor.client.HttpClient
 import io.ktor.client.features.auth.Auth
 import io.ktor.client.features.auth.providers.basic
+import io.ktor.client.features.logging.DEFAULT
+import io.ktor.client.features.logging.LogLevel
+import io.ktor.client.features.logging.Logger
+import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.*
 import io.ktor.client.response.HttpResponse
 import io.ktor.client.response.readText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.TextContent
-import io.ktor.util.InternalAPI
-import io.ktor.util.encodeBase64
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.list
@@ -28,18 +30,22 @@ import kotlin.native.concurrent.ThreadLocal
 @ThreadLocal
 object Api {
     @ThreadLocal
-    private var client = HttpClient()
-    @ThreadLocal
-    private var credentials = ""
+    private var client = HttpClient {
+        install(Auth) {
+            basic {
+                username = "test@test.test"
+                password = "testtest"
+            }
+        }
+    }
     @ThreadLocal
     private var nextcloudUrl = ""
     @ThreadLocal
     private val baseUrl
         get() = "$nextcloudUrl/index.php/apps/news/api/v1-2"
 
-    @InternalAPI
     fun setCredentials(url: String, email: String, pw: String) {
-        // credentials = "$email:$password".encodeBase64()
+        /*
         client = HttpClient {
             install(Auth) {
                 basic {
@@ -48,41 +54,49 @@ object Api {
                 }
             }
         }
+        */
         nextcloudUrl = url
     }
 
     fun isCredentialsAvailable(): Boolean {
-        return credentials.isNotEmpty() && nextcloudUrl.isNotEmpty()
+        return nextcloudUrl.isNotEmpty()
     }
 
-    @InternalAPI
     fun login(
         url: String,
         email: String,
-        password: String,
+        pw: String,
         callback: (NextcloudNewsVersion) -> Unit,
         unauthorized: () -> Unit,
         error: () -> Unit
     ) {
-        setCredentials(url, email, password)
-        // nextcloudUrl = url
-        // credentials = "$email:$password".encodeBase64()
+        println("login $email $pw")
+        setCredentials(url, email, pw)
+        println("attrs: ${client.attributes.allKeys}")
+
         async {
             try {
                 val response = client.get<HttpResponse> {
                     url("$baseUrl/version")
+                    header("test", "huch")
                 }
+                println("info: ${response.call.request.attributes}")
+                println("info 2: ${response.call.request.content.headers}")
 
-                if (response.status == HttpStatusCode.OK) {
-                    val obj: NextcloudNewsVersion =
-                        Json.nonstrict.parse(NextcloudNewsVersion.serializer(), response.readText())
-                    done {
-                        callback(obj)
+                println("login ${response.status}")
+
+                when {
+                    response.status == HttpStatusCode.OK -> {
+                        val obj: NextcloudNewsVersion =
+                            Json.nonstrict.parse(NextcloudNewsVersion.serializer(), response.readText())
+                        done {
+                            callback(obj)
+                        }
                     }
-                } else if (response.status == HttpStatusCode.Unauthorized) {
-                    done {
+                    response.status == HttpStatusCode.Unauthorized -> done {
                         unauthorized()
                     }
+                    else -> error()
                 }
             } catch (ignore: Throwable) {
                 done {
@@ -92,13 +106,12 @@ object Api {
         }
     }
 
-    @InternalAPI
     fun createAccount(
         url: String,
         email: String, password: String, success: () -> Unit, userExists: () -> Unit, error: () -> Unit
     ) {
-        nextcloudUrl = url
-        credentials = "$email:$password".encodeBase64()
+        println("createAccount")
+
         async {
             try {
                 val response = client.get<HttpResponse> {
@@ -114,8 +127,12 @@ object Api {
                         )?.get("statuscode")?.intOrNull ?: -1
 
                     done {
+                        println("status $statusCode")
                         when (statusCode) {
-                            100 -> success()
+                            100 -> {
+                                setCredentials(url, email, password)
+                                success()
+                            }
                             102 -> userExists()
                             else -> error()
                         }
@@ -125,6 +142,7 @@ object Api {
                         error()
                     }
                 }
+                response.close()
             } catch (ignore: Throwable) {
                 done {
                     error()

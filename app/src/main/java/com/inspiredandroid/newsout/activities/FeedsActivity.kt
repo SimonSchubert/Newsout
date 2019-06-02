@@ -17,7 +17,6 @@ import com.inspiredandroid.newsout.callbacks.OnSortingChangeInterface
 import com.inspiredandroid.newsout.dialogs.AddFeedDialog
 import com.inspiredandroid.newsout.dialogs.EditFeedDialog
 import com.inspiredandroid.newsout.dialogs.SettingsDialog
-import io.ktor.util.InternalAPI
 import kotlinx.android.synthetic.main.activity_feeds.*
 import kotlinx.android.synthetic.main.content_feeds.*
 
@@ -25,7 +24,6 @@ import kotlinx.android.synthetic.main.content_feeds.*
  * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
  * that can be found in the LICENSE file.
  */
-@InternalAPI
 class FeedsActivity : AppCompatActivity(), OnFeedClickInterface, SwipeRefreshLayout.OnRefreshListener,
     OnSortingChangeInterface, OnAddFeedInterface, OnEditFeedInterface {
 
