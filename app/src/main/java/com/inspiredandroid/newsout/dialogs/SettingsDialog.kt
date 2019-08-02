@@ -18,7 +18,6 @@ import com.inspiredandroid.newsout.activities.LoginActivity
 import com.inspiredandroid.newsout.callbacks.OnSortingChangeInterface
 import com.inspiredandroid.newsout.toBoolean
 import com.inspiredandroid.newsout.toLong
-import io.ktor.util.InternalAPI
 import kotlinx.android.synthetic.main.dialog_settings.view.*
 
 /*
@@ -37,7 +36,6 @@ class SettingsDialog : DialogFragment(), AdapterView.OnItemSelectedListener, Com
         callback = activity as? OnSortingChangeInterface
     }
 
-    @InternalAPI
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_settings, null)

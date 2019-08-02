@@ -11,14 +11,12 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.inspiredandroid.newsout.*
 import com.inspiredandroid.newsout.dialogs.InfoDialog
-import io.ktor.util.InternalAPI
 import kotlinx.android.synthetic.main.activity_login.*
 
 /*
  * Copyright 2019 Simon Schubert Use of this source code is governed by the Apache 2.0 license
  * that can be found in the LICENSE file.
  */
-@InternalAPI
 class LoginActivity : AppCompatActivity() {
 
     private var mode = MODE_NEWSOUT
@@ -75,6 +73,11 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this@LoginActivity, FeedsActivity::class.java))
             finish()
         }
+
+        if(BuildConfig.DEBUG) {
+            emailEt.setText("test@test.test")
+            passwordEt.setText("testtest")
+        }
     }
 
     private fun updateMode() {
@@ -98,7 +101,8 @@ class LoginActivity : AppCompatActivity() {
         val email = emailEt.text.toString()
         val password = passwordEt.text.toString()
 
-        val url = serverPathEt.text.toString()
+        // val url = serverPathEt.text.toString()
+        val url = "https://nx3217.your-next.cloud"
 
         showLoading()
 

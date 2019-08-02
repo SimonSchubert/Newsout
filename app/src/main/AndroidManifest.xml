@@ -16,6 +16,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:testOnly="false"
+            android:networkSecurityConfig="@xml/network_security_config"
             android:debuggable="false">
 
         <service android:name=".NewsAccountTypeService">

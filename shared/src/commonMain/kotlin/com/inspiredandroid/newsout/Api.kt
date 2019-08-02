@@ -4,16 +4,15 @@ import com.inspiredandroid.newsout.models.NextcloudNewsFeed
 import com.inspiredandroid.newsout.models.NextcloudNewsFolder
 import com.inspiredandroid.newsout.models.NextcloudNewsItem
 import com.inspiredandroid.newsout.models.NextcloudNewsVersion
-// import com.soywiz.klock.DateTime
 import io.ktor.client.HttpClient
+import io.ktor.client.features.auth.Auth
+import io.ktor.client.features.auth.providers.basic
 import io.ktor.client.request.*
 import io.ktor.client.response.HttpResponse
 import io.ktor.client.response.readText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.TextContent
-import io.ktor.util.InternalAPI
-import io.ktor.util.encodeBase64
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.list
@@ -26,53 +25,58 @@ import kotlin.native.concurrent.ThreadLocal
 @ThreadLocal
 object Api {
     @ThreadLocal
-    private val client = HttpClient()
-    @ThreadLocal
-    private var credentials = ""
+    private var client = HttpClient()
     @ThreadLocal
     private var nextcloudUrl = ""
     @ThreadLocal
     private val baseUrl
         get() = "$nextcloudUrl/index.php/apps/news/api/v1-2"
 
-    @InternalAPI
-    fun setCredentials(url: String, email: String, password: String) {
-        credentials = "$email:$password".encodeBase64()
+    fun setCredentials(url: String, email: String, pw: String) {
+        client = HttpClient {
+            install(Auth) {
+                basic {
+                    username = email
+                    password = pw
+                    sendWithoutRequest = true
+                }
+            }
+        }
         nextcloudUrl = url
     }
 
     fun isCredentialsAvailable(): Boolean {
-        return credentials.isNotEmpty() && nextcloudUrl.isNotEmpty()
+        return nextcloudUrl.isNotEmpty()
     }
 
-    @InternalAPI
     fun login(
         url: String,
         email: String,
-        password: String,
+        pw: String,
         callback: (NextcloudNewsVersion) -> Unit,
         unauthorized: () -> Unit,
         error: () -> Unit
     ) {
-        nextcloudUrl = url
-        credentials = "$email:$password".encodeBase64()
+        setCredentials(url, email, pw)
+
         async {
             try {
                 val response = client.get<HttpResponse> {
                     url("$baseUrl/version")
-                    header("Authorization", "Basic $credentials")
                 }
 
-                if (response.status == HttpStatusCode.OK) {
-                    val obj: NextcloudNewsVersion =
-                        Json.nonstrict.parse(NextcloudNewsVersion.serializer(), response.readText())
-                    done {
-                        callback(obj)
+                when {
+                    response.status == HttpStatusCode.OK -> {
+                        val obj: NextcloudNewsVersion =
+                            Json.nonstrict.parse(NextcloudNewsVersion.serializer(), response.readText())
+                        done {
+                            callback(obj)
+                        }
                     }
-                } else if (response.status == HttpStatusCode.Unauthorized) {
-                    done {
+                    response.status == HttpStatusCode.Unauthorized -> done {
                         unauthorized()
                     }
+                    else -> error()
                 }
             } catch (ignore: Throwable) {
                 done {
@@ -82,13 +86,10 @@ object Api {
         }
     }
 
-    @InternalAPI
     fun createAccount(
         url: String,
         email: String, password: String, success: () -> Unit, userExists: () -> Unit, error: () -> Unit
     ) {
-        nextcloudUrl = url
-        credentials = "$email:$password".encodeBase64()
         async {
             try {
                 val response = client.get<HttpResponse> {
@@ -105,7 +106,10 @@ object Api {
 
                     done {
                         when (statusCode) {
-                            100 -> success()
+                            100 -> {
+                                setCredentials(url, email, password)
+                                success()
+                            }
                             102 -> userExists()
                             else -> error()
                         }
@@ -115,6 +119,7 @@ object Api {
                         error()
                     }
                 }
+                response.close()
             } catch (ignore: Throwable) {
                 done {
                     error()
@@ -145,7 +150,6 @@ object Api {
             try {
                 client.put {
                     url("$baseUrl/feeds/$feedId/read?newestItemId=$maxId")
-                    header("Authorization", "Basic $credentials")
                 }
             } catch (ignore: Throwable) {
             }
@@ -174,7 +178,6 @@ object Api {
             try {
                 client.put {
                     url("$baseUrl/folders/$folderId/read?newestItemId=$maxId")
-                    header("Authorization", "Basic $credentials")
                 }
             } catch (ignore: Throwable) {
             }
@@ -198,7 +201,6 @@ object Api {
             try {
                 client.put {
                     url("$baseUrl/items/read?newestItemId=$maxId")
-                    header("Authorization", "Basic $credentials")
                 }
             } catch (ignore: Throwable) {
             }
@@ -214,7 +216,6 @@ object Api {
             try {
                 client.put {
                     url("$baseUrl/items/$itemId/read")
-                    header("Authorization", "Basic $credentials")
                 }
             } catch (ignore: Throwable) {
             }
@@ -230,7 +231,6 @@ object Api {
             try {
                 client.put {
                     url("$baseUrl/items/$feedId/$guidHash/star")
-                    header("Authorization", "Basic $credentials")
                 }
             } catch (ignore: Throwable) {
             }
@@ -246,7 +246,6 @@ object Api {
             try {
                 client.put {
                     url("$baseUrl/items/$feedId/$guidHash/unstar")
-                    header("Authorization", "Basic $credentials")
                 }
             } catch (ignore: Throwable) {
             }
@@ -263,7 +262,6 @@ object Api {
                 try {
                     val response = client.get<HttpResponse> {
                         url("$baseUrl/feeds")
-                        header("Authorization", "Basic $credentials")
                     }
                     when {
                         response.status == HttpStatusCode.OK -> {
@@ -288,7 +286,6 @@ object Api {
             try {
                 val response = client.get<HttpResponse> {
                     url("$baseUrl/folders")
-                    header("Authorization", "Basic $credentials")
                 }
 
                 when {
@@ -320,7 +317,6 @@ object Api {
             try {
                 client.put<String> {
                     url("$baseUrl/folders/$id")
-                    header("Authorization", "Basic $credentials")
                     body = TextContent(
                         text = "{\"name\": \"$title\"}",
                         contentType = ContentType.Application.Json
@@ -345,7 +341,6 @@ object Api {
             try {
                 client.put<String> {
                     url("$baseUrl/feeds/$id/rename")
-                    header("Authorization", "Basic $credentials")
                     body = TextContent(
                         text = "{\"feedTitle\": \"$title\"}",
                         contentType = ContentType.Application.Json
@@ -370,7 +365,6 @@ object Api {
             try {
                 client.delete<String> {
                     url("$baseUrl/feeds/$id")
-                    header("Authorization", "Basic $credentials")
                 }
 
                 Database.getFeedQueries()?.deleteFeed(id)
@@ -391,7 +385,6 @@ object Api {
             try {
                 client.delete<String> {
                     url("$baseUrl/folders/$id")
-                    header("Authorization", "Basic $credentials")
                 }
 
                 Database.getFeedQueries()?.deleteFolderFeed(id)
@@ -413,7 +406,6 @@ object Api {
                 try {
                     val result: String = client.post {
                         url("$baseUrl/feeds")
-                        header("Authorization", "Basic $credentials")
                         body = TextContent(
                             text = "{\"url\": \"$url\",\"folderId\": $folderId}",
                             contentType = ContentType.Application.Json
@@ -439,7 +431,6 @@ object Api {
             try {
                 val result: String = client.get {
                     url("$baseUrl/items?type=2&getRead=true&batchSize=-1")
-                    header("Authorization", "Basic $credentials")
                 }
 
                 val array = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("items")
@@ -483,7 +474,6 @@ object Api {
         async {
             val result: String = client.get {
                 url("$baseUrl/items?type=3&getRead=false&batchSize=-1")
-                header("Authorization", "Basic $credentials")
             }
 
             val array = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("items")
@@ -530,7 +520,6 @@ object Api {
                 }
                 val result: String = client.get {
                     url("$baseUrl/items?getRead=true&batchSize=20&type=$type&id=$id$offsetString")
-                    header("Authorization", "Basic $credentials")
                 }
 
                 val array = Json.nonstrict.parseJson(result).jsonObject.getArrayOrNull("items")
