@@ -4,14 +4,9 @@ import com.inspiredandroid.newsout.models.NextcloudNewsFeed
 import com.inspiredandroid.newsout.models.NextcloudNewsFolder
 import com.inspiredandroid.newsout.models.NextcloudNewsItem
 import com.inspiredandroid.newsout.models.NextcloudNewsVersion
-// import com.soywiz.klock.DateTime
 import io.ktor.client.HttpClient
 import io.ktor.client.features.auth.Auth
 import io.ktor.client.features.auth.providers.basic
-import io.ktor.client.features.logging.DEFAULT
-import io.ktor.client.features.logging.LogLevel
-import io.ktor.client.features.logging.Logger
-import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.*
 import io.ktor.client.response.HttpResponse
 import io.ktor.client.response.readText
@@ -30,14 +25,7 @@ import kotlin.native.concurrent.ThreadLocal
 @ThreadLocal
 object Api {
     @ThreadLocal
-    private var client = HttpClient {
-        install(Auth) {
-            basic {
-                username = "test@test.test"
-                password = "testtest"
-            }
-        }
-    }
+    private var client = HttpClient()
     @ThreadLocal
     private var nextcloudUrl = ""
     @ThreadLocal
@@ -45,16 +33,15 @@ object Api {
         get() = "$nextcloudUrl/index.php/apps/news/api/v1-2"
 
     fun setCredentials(url: String, email: String, pw: String) {
-        /*
         client = HttpClient {
             install(Auth) {
                 basic {
                     username = email
                     password = pw
+                    sendWithoutRequest = true
                 }
             }
         }
-        */
         nextcloudUrl = url
     }
 
@@ -70,20 +57,13 @@ object Api {
         unauthorized: () -> Unit,
         error: () -> Unit
     ) {
-        println("login $email $pw")
         setCredentials(url, email, pw)
-        println("attrs: ${client.attributes.allKeys}")
 
         async {
             try {
                 val response = client.get<HttpResponse> {
                     url("$baseUrl/version")
-                    header("test", "huch")
                 }
-                println("info: ${response.call.request.attributes}")
-                println("info 2: ${response.call.request.content.headers}")
-
-                println("login ${response.status}")
 
                 when {
                     response.status == HttpStatusCode.OK -> {
@@ -110,8 +90,6 @@ object Api {
         url: String,
         email: String, password: String, success: () -> Unit, userExists: () -> Unit, error: () -> Unit
     ) {
-        println("createAccount")
-
         async {
             try {
                 val response = client.get<HttpResponse> {
@@ -127,7 +105,6 @@ object Api {
                         )?.get("statuscode")?.intOrNull ?: -1
 
                     done {
-                        println("status $statusCode")
                         when (statusCode) {
                             100 -> {
                                 setCredentials(url, email, password)
