@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 class LoginActivity : AppCompatActivity() {
 
     private var mode = MODE_NEWSOUT
+    private val DEFAULT_NEXTCLOUD_URL = "https://nx3217.your-storageshare.de"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
             dialog.show(supportFragmentManager, "TAG")
         }
         tvResetPassword.setOnClickListener {
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://nx3217.your-next.cloud"))
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(DEFAULT_NEXTCLOUD_URL))
             startActivity(browserIntent)
         }
 
@@ -101,8 +102,8 @@ class LoginActivity : AppCompatActivity() {
         val email = emailEt.text.toString()
         val password = passwordEt.text.toString()
 
-        // val url = serverPathEt.text.toString()
-        val url = "https://nx3217.your-next.cloud"
+        val url = serverPathEt.text.toString()
+        // val url = "https://nx3217.your-storageshare.de"
 
         showLoading()
 
@@ -134,7 +135,6 @@ class LoginActivity : AppCompatActivity() {
 
         val email = emailEt.text.toString()
         val password = passwordEt.text.toString()
-        val url = "https://nx3217.your-next.cloud"
 
         if (!email.isEmailValid()) {
             emailEt.error = "Please enter a correct email address"
@@ -147,16 +147,16 @@ class LoginActivity : AppCompatActivity() {
 
         showLoading()
 
-        Api.createAccount(url, email, password, {
+        Api.createAccount(DEFAULT_NEXTCLOUD_URL, email, password, {
             if (isThere()) {
-                saveLogin(url, email, password)
+                saveLogin(DEFAULT_NEXTCLOUD_URL, email, password)
 
                 startActivity(Intent(this@LoginActivity, FeedsActivity::class.java))
                 finish()
             }
         }, {
             if (isThere()) {
-                serverPathEt?.setText(url)
+                serverPathEt?.setText(DEFAULT_NEXTCLOUD_URL)
                 attemptLogin()
             }
         }, {
