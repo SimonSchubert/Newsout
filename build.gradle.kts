@@ -1,8 +1,8 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 buildscript {
-    val kotlin_version = "1.3.41"
-    val sqldelight_version = "1.1.4"
+    val kotlin_version = "1.3.50"
+    val sqldelight_version = "1.2.0"
     val xcodesync_version = "0.1.5"
 
     repositories {
@@ -13,7 +13,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.4.2")
+        classpath("com.android.tools.build:gradle:3.5.0")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
         classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlin_version")
         classpath("gradle.plugin.com.wiredforcode:gradle-spawn-plugin:0.8.2")
@@ -23,7 +23,7 @@ buildscript {
 }
 
 plugins {
-    id("com.github.ben-manes.versions") version "0.21.0"
+    id("com.github.ben-manes.versions") version "0.25.0"
 }
 
 allprojects {
