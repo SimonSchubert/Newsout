@@ -55,3 +55,7 @@ To debug kotlin files in Xcode install the following Xcode plugin: https://githu
 ## Misc
 
 Compare Dropbox/Google Drive/Nextcloud: [https://nextcloud.com/compare](https://nextcloud.com/compare) 
+
+## Acknowledgments ♥
+
+https://kotlinlang.org, https://ktor.io, https://github.com/cashapp/sqldelight, https://touchlab.co, https://soywiz.com, https://bumptech.github.io/glide, https://nextcloud.com, https://github.com/nextcloud/news and everyone else I missed to mention.
