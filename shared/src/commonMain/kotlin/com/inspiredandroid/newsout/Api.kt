@@ -8,8 +8,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.features.auth.Auth
 import io.ktor.client.features.auth.providers.basic
 import io.ktor.client.request.*
-import io.ktor.client.response.HttpResponse
-import io.ktor.client.response.readText
+import io.ktor.client.statement.HttpStatement
+import io.ktor.client.statement.readText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.TextContent
@@ -61,9 +61,9 @@ object Api {
 
         async {
             try {
-                val response = client.get<HttpResponse> {
+                val response = client.get<HttpStatement> {
                     url("$baseUrl/version")
-                }
+                }.execute()
 
                 when {
                     response.status == HttpStatusCode.OK -> {
@@ -92,11 +92,11 @@ object Api {
     ) {
         async {
             try {
-                val response = client.get<HttpResponse> {
+                val response = client.get<HttpStatement> {
                     url("https://schubert-simon.de/newsout/nx_login.php?email=$email&password=$password")
                     header("OCS-APIRequest", "true")
                     header("Accept", "application/json")
-                }
+                }.execute()
 
                 if (response.status == HttpStatusCode.OK) {
                     val statusCode =
@@ -119,7 +119,7 @@ object Api {
                         error()
                     }
                 }
-                response.close()
+                response.call.client.close()
             } catch (ignore: Throwable) {
                 done {
                     error()
@@ -260,9 +260,7 @@ object Api {
         getFolders({ folders ->
             async {
                 try {
-                    val response = client.get<HttpResponse> {
-                        url("$baseUrl/feeds")
-                    }
+                    val response = client.get<HttpStatement>("$baseUrl/feeds").execute()
                     when {
                         response.status == HttpStatusCode.OK -> {
                             mergeFeedsAndFolders(folders, response.readText(), true)
@@ -284,9 +282,9 @@ object Api {
     private fun getFolders(callback: (List<NextcloudNewsFolder>) -> Unit, error: () -> Unit, unauthorized: () -> Unit) {
         async {
             try {
-                val response = client.get<HttpResponse> {
+                val response = client.get<HttpStatement> {
                     url("$baseUrl/folders")
-                }
+                }.execute()
 
                 when {
                     response.status == HttpStatusCode.OK -> {
