@@ -7,6 +7,7 @@ import platform.darwin.dispatch_get_main_queue
 import platform.darwin.dispatch_queue_t
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
+import kotlin.properties.Delegates
 
 internal actual val ApplicationDispatcher: CoroutineDispatcher = NsQueueDispatcher(dispatch_get_main_queue())
 
@@ -28,7 +29,7 @@ internal actual fun done(block: suspend CoroutineScope.() -> Unit) {
   }
 }
 
-actual var sqlDriver: SqlDriver? = null
+actual var sqlDriver: SqlDriver by Delegates.notNull()
 
 actual fun setupDatabase() {
   sqlDriver = NativeSqliteDriver(SqlDelightDatabase.Schema, "1.db")
